@@ -11,5 +11,4 @@ All notable changes to this project will be documented in this file.
 - Implemented static registerUser() to register a user.
 - Implemented static deleteUser() to delete a user. But be warned: This API(!) is buggy, because there is currently no way to check if the call really work, as the API returns “ok” all the time.
 
-[Unreleased]: https://github.com/FabianBeiner/Todoist-PHP-SDK/compare/v0.1.1...HEAD
-[0.1.0]: https://github.com/FabianBeiner/Todoist-PHP-SDK/compare/v0.1.0...v0.1.1
+[Unreleased]: https://github.com/FabianBeiner/Todoist-PHP-SDK/compare/v0.1.0...HEAD
