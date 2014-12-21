@@ -1,0 +1,8 @@
+.AppleDouble
+.DS_Store
+.idea/
+.LSOverride
+composer.phar
+Desktop.ini
+Thumbs.db
+vendor/
