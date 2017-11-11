@@ -68,7 +68,7 @@ trait TodoistLabels
 
         $result = $this->client->post('labels?' . $this->tokenQuery, [
             RequestOptions::JSON => ['name' => trim($name)],
-            'X-Request-Id'       => Uuid::uuid4()
+            'X-Request-Id'       => $this->guidv4()
         ]);
         $status = $result->getStatusCode();
 
@@ -129,7 +129,7 @@ trait TodoistLabels
 
         $result = $this->client->post('labels/' . $labelId . '?' . $this->tokenQuery, [
             RequestOptions::JSON => ['name' => trim($name)],
-            'X-Request-Id'       => Uuid::uuid4()
+            'X-Request-Id'       => $this->guidv4()
         ]);
         $status = $result->getStatusCode();
 

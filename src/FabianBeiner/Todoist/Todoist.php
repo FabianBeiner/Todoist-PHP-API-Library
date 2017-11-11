@@ -8,14 +8,12 @@
  * @author  Fabian Beiner (fb@fabianbeiner.de)
  * @link    https://fabianbeiner.de
  * @license MIT License
- * @version 0.3.0 (2017-11-11)
+ * @version 0.3.1 (2017-11-11)
  */
 
 namespace FabianBeiner\Todoist;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
-use Ramsey\Uuid\Uuid;
 
 class Todoist
 {
@@ -68,5 +66,25 @@ class Todoist
                                        'base_uri' => $this->restApiUrl,
                                        'timeout'  => 5
                                    ]);
+    }
+
+    /**
+     * Generate a GUID v4 string.
+     *
+     * @author Pavel Volyntsev <pavel.volyntsev@gmail.com>
+     * @see    http://php.net/manual/en/function.com-create-guid.php#117893
+     * @return string GUID v4 string.
+     */
+    private function guidv4()
+    {
+        if (function_exists('com_create_guid') === true) {
+            return trim(com_create_guid(), '{}');
+        }
+
+        $data    = openssl_random_pseudo_bytes(16);
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 }

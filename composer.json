@@ -13,8 +13,7 @@
   "license": "MIT",
   "require": {
     "guzzlehttp/guzzle": "~6.3.0",
-    "php": ">=5.5",
-    "ramsey/uuid": "^3.7"
+    "php": ">=5.5"
   },
   "authors": [
     {

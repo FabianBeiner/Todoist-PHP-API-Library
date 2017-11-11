@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.3.1 - 2017-11-11
+### Changed
+- Removed ramsey/uuid.
+
 ## 0.3.0 - 2017-11-11
 ### Added
 - Implemented all the Labels endpoints.
