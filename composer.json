@@ -1,27 +1,30 @@
 {
   "name": "fabian-beiner/todoist-php-sdk",
   "type": "library",
-  "description": "Todoist SDK for PHP - An unofficial Todoist PHP API library",
+  "description": "Todoist SDK for PHP — An unofficial Todoist API library",
   "keywords": [
-    "Todoist",
     "API",
     "Client",
-    "SDK"
+    "Library",
+    "SDK",
+    "Todoist"
   ],
   "homepage": "https://github.com/FabianBeiner/Todoist-PHP-SDK",
   "license": "MIT",
   "require": {
-    "guzzlehttp/guzzle": "~5.1",
-    "php": ">=5.5.0"
+    "guzzlehttp/guzzle": "~6.3.0",
+    "php": ">=5.5"
   },
   "authors": [
     {
       "name": "Fabian Beiner",
       "email": "fb@fabianbeiner.de",
-      "homepage": "https://fabianbeiner.de/"
+      "homepage": "https://fabianbeiner.de"
     }
   ],
   "autoload": {
-    "psr-0": {"FabianBeiner\\Todoist\\": "src/"}
+    "psr-0": {
+      "FabianBeiner\\Todoist\\": "src/"
+    }
   }
 }
