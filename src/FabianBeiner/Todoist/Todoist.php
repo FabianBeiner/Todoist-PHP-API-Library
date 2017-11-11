@@ -1,295 +1,203 @@
 <?php
 /**
- * Todoist SDK for PHP – An unofficial Todoist PHP API library
+ * Todoist SDK for PHP — An unofficial Todoist API library
  *
- * An open source PHP SDK that allows you to access the Todoist API from your
+ * An open source PHP SDK which allows you to access the Todoist API from your
  * PHP application.
  *
  * @author  Fabian Beiner (fb@fabianbeiner.de)
  * @link    https://fabianbeiner.de
  * @license MIT License
- * @version 0.1.0 (2014-12-21)
+ * @version 0.2.0 (2017-11-11)
  */
 
 namespace FabianBeiner\Todoist;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception;
+use GuzzleHttp\RequestOptions;
+use Ramsey\Uuid\Uuid;
 
-class Todoist {
+class Todoist
+{
     /**
-     * The URL of the Todoist API.
-     *
-     * @var string
+     * @var string The current URL of the Todoist REST API.
      */
-    protected static $sApiUrl = 'https://todoist.com/API/';
+    protected $restApiUrl = 'https://beta.todoist.com/API/v8/';
 
     /**
-     * The token to access the Todoist API.
-     *
-     * @var null|string
+     * @var string The current URL of the Todoist Sync API.
      */
-    private $sToken = null;
+    protected $syncApiUrl = 'https://todoist.com/api/v7/sync';
 
     /**
-     * The email of the user.
-     *
-     * @var null|string
+     * @var string|null The API token to access the Todoist API, or null if unset.
      */
-    private $sEmail = null;
+    private $apiToken = null;
 
     /**
-     * The password of the user.
-     *
-     * @var null|string
+     * @var \GuzzleHttp\Client|null Guzzle client, or null if unset.
      */
-    private $sPassword = null;
+    private $client = null;
 
     /**
-     * All the valid languages (except 'en') Todoist supports.
-     * (See http://todoist.com/API/help/#users, under /API/register)
-     *
-     * @var array
+     * @var string|null Default URL query.
      */
-    protected static $aValidLanguages = [
-        'de',
-        'fr',
-        'ja',
-        'pl',
-        'pt_BR',
-        'zh_CN',
-        'es',
-        'hi',
-        'ko',
-        'pt',
-        'ru',
-        'zh_TW'
-    ];
+    private $tokenQuery = null;
 
     /**
-     * The constructor.
+     * Todoist constructor.
      *
-     * @param $sEmail
-     * @param $sPassword
+     * @param string $apiToken The API token to access the Todoist API.
      *
      * @throws \Exception
      */
-    public function __construct($sEmail, $sPassword) {
-        $this->sEmail    = $sEmail;
-        $this->sPassword = $sPassword;
-
-        /**
-         * Call the API to get a valid token.
-         */
-        $oCall = $this->loginUser();
-        if (isset($oCall['api_token']) OR isset($oCall['token'])) {
-            $this->sToken = $oCall['api_token'] ? : $oCall['token'];
+    public function __construct($apiToken)
+    {
+        // Check the API token.
+        if ( ! mb_strlen($apiToken, 'utf8')) {
+            throw new \Exception('The provided API token is invalid.');
         }
+        $this->apiToken = trim($apiToken);
+
+        // Create a default query for the token.
+        $this->tokenQuery = http_build_query([
+                                                 'token' => $this->apiToken
+                                             ], null, '&', PHP_QUERY_RFC3986);
+
+        // Create the Guzzle client.
+        $this->client = new Client([
+                                       'base_uri' => $this->restApiUrl,
+                                       'timeout'  => 10
+                                   ]);
     }
 
     /**
-     * Logins a user and returns a JSON object with all the user details.
+     * Get all projects.
      *
-     * @return json
-     * @throws \Exception
+     * @return array|bool Array with all projects (can be empty), or false on failure.
      */
-    public function loginUser() {
-        try {
-            $oCall = self::callApi('login', [
-                'email'    => $this->sEmail,
-                'password' => $this->sPassword
-            ]);
-        } catch (\Exception $oException) {
-            throw new \Exception('The API call failed: “' . $oException->getMessage() . '”');
+    public function getAllProjects()
+    {
+        $result = $this->client->get('projects?' . $this->tokenQuery);
+        $status = $result->getStatusCode();
+
+        if ($status === 204) {
+            return [];
+        }
+        if ($status === 200) {
+            return json_decode($result->getBody()->getContents());
         }
 
-        if ($oCall->status !== 200) {
-            throw new \Exception('The returned HTTP status code indicates an error');
-        }
-        elseif ($oCall->content === 'LOGIN_ERROR') {
-            throw new \Exception('The provided login credentials aren’t valid');
-        }
-
-        return $oCall->content;
+        return false;
     }
 
     /**
-     * See loginUser();
-     */
-    public function getUserDetails() {
-        return $this->loginUser();
-    }
-
-    /**
-     * Check, if the internally set login token is valid.
+     * Create a new project.
      *
-     * @return bool
-     * @throws \Exception
+     * @param string $name Name of the project.
+     *
+     * @return array|bool Array with values of the new project, or false on failure.
      */
-    public function testToken() {
-        if ($this->sToken === null) {
+    public function createProject($name)
+    {
+        if ( ! mb_strlen($name, 'utf8')) {
             return false;
         }
 
-        try {
-            $oCall = self::callApi('ping', ['token' => $this->sToken]);
-        } catch (\Exception $oException) {
-            throw new \Exception('The API call failed: “' . $oException->getMessage() . '”');
-        }
-
-        if ($oCall->status !== 200 OR $oCall->content !== 'ok') {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Returns all the different time zones Todoist supports.
-     *
-     * @return bool|json
-     * @throws \Exception
-     */
-    public static function getTimezones() {
-        try {
-            $oCall = self::callApi('getTimezones');
-        } catch (\Exception $oException) {
-            throw new \Exception('The API call failed: “' . $oException->getMessage() . '”');
-        }
-
-        if ($oCall->status !== 200) {
-            return false;
-        }
-
-        return $oCall->content;
-    }
-
-    /**
-     * Register a user.
-     *
-     * @param $aOptions
-     *        Required keys: email, full_name, password
-     *        Optional keys: lang, timezone
-     *
-     * @return bool|string|json
-     * @throws \Exception
-     */
-    public static function registerUser($aOptions) {
-        $aDefault = [
-            'email'     => null,
-            'full_name' => null,
-            'password'  => null,
-            'lang'      => null,
-            'timezone'  => null
-        ];
-        $aOptions = array_merge($aDefault, $aOptions);
-
-        /**
-         * Check if the provided options actually make sense…
-         */
-        if ($aOptions['email'] === null OR !filter_var($aOptions['email'], FILTER_VALIDATE_EMAIL)) {
-            return '“email” is invalid.';
-        }
-        elseif ($aOptions['full_name'] === null) {
-            return '“full_name” is invalid.';
-        }
-        elseif ($aOptions['password'] === null OR (strlen($aOptions['password']) < 5)) {
-            return '“password” is invalid.';
-        }
-        elseif ($aOptions['lang'] === null OR !in_array($aOptions['lang'], self::$aValidLanguages)) {
-            $aOptions['lang'] = 'en';
-        }
-        $aOptions = array_filter($aOptions);
-
-        try {
-            $oCall = self::callApi('register', $aOptions);
-        } catch (\Exception $oException) {
-            throw new \Exception('The API call failed: “' . $oException->getMessage() . '”');
-        }
-
-        if ($oCall->status !== 200) {
-            return false;
-        }
-
-        /**
-         * Most cases here should never happen, because I checked the values before…
-         */
-        switch ($oCall->content) {
-            case 'ALREADY_REGISTRED':
-                return 'This email is already registered.';
-            case 'TOO_SHORT_PASSWORD':
-                return 'The selected password is too short (min. 5 chars).';
-            case 'INVALID_EMAIL':
-                return 'The provided email is invalid.';
-            case 'INVALID_TIMEZONE':
-                return 'The provided time zone is invalid.';
-            case 'INVALID_FULL_NAME':
-                return 'The provided name is invalid.';
-            case 'UNKNOWN_ERROR':
-                return 'An unknown error occurred.';
-            default:
-                return $oCall->content;
-        }
-    }
-
-    /**
-     * Delete a user.
-     *
-     * @param        $sToken
-     * @param        $sPassword
-     * @param int    $bDeleteImmediately
-     * @param string $sReason
-     *
-     * @return bool
-     * @throws \Exception
-     */
-    public static function deleteUser($sToken, $sPassword, $bDeleteImmediately = 0, $sReason = 'Deleted via Todoist SDK for PHP') {
-        $aOptions = [
-            'token'             => $sToken,
-            'current_password'  => $sPassword,
-            'in_background'     => ($bDeleteImmediately ? 0 : 1),
-            'reason_for_delete' => $sReason
-        ];
-        try {
-            $oCall = self::callApi('deleteUser', $aOptions);
-        } catch (\Exception $oException) {
-            throw new \Exception('The API call failed: “' . $oException->getMessage() . '”');
-        }
-
-        if ($oCall->status !== 200 OR $oCall->content !== 'ok') {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Calls the API.
-     *
-     * @param       $sResource
-     * @param array $aBody
-     *
-     * @return object
-     */
-    private static function callApi($sResource, $aBody = []) {
-        $oClient   = new Client(['base_url' => self::$sApiUrl]);
-        $oResponse = $oClient->post($sResource, [
-            'body' => $aBody
+        $result = $this->client->post('projects?' . $this->tokenQuery, [
+            RequestOptions::JSON => ['name' => trim($name)],
+            'X-Request-Id'       => Uuid::uuid4()
         ]);
+        $status = $result->getStatusCode();
 
-        /**
-         * Which type of content did we receive?
-         */
-        if (explode(';', $oResponse->getHeader('Content-Type'))[0] === 'application/json') {
-            $sContent = $oResponse->json();
-        }
-        else {
-            $sContent = (string)$oResponse->getBody();
+        if ($status === 200) {
+            return json_decode($result->getBody()->getContents());
         }
 
-        return (object)[
-            'status'  => $oResponse->getStatusCode(),
-            'content' => $sContent
-        ];
+        return false;
+    }
+
+    /**
+     * Get a project.
+     *
+     * @param int $id ID of the project.
+     *
+     * @return array|bool Array with values of the project, or false on failure.
+     */
+    public function getProject($id)
+    {
+        if ( ! ctype_digit($id)) {
+            return false;
+        }
+
+        $result = $this->client->get('projects/' . $id . '?' . $this->tokenQuery);
+        $status = $result->getStatusCode();
+
+        if ($status === 200) {
+            return json_decode($result->getBody()->getContents());
+        }
+
+        return false;
+    }
+
+    /**
+     * Alias for updateProject.
+     *
+     * @param int    $id   ID of the project.
+     * @param string $name New name of the project.
+     */
+    public function renameProject($id, $name)
+    {
+        $this->updateProject($id, $name);
+    }
+
+    /**
+     * Update (actually rename…) a project.
+     *
+     * @param int    $id   ID of the project.
+     * @param string $name New name of the project.
+     *
+     * @return bool True on success, false on failure.
+     */
+    public function updateProject($id, $name)
+    {
+        if ( ! ctype_digit($id) || ! mb_strlen($name, 'utf8')) {
+            return false;
+        }
+
+        $result = $this->client->post('projects/' . $id . '?' . $this->tokenQuery, [
+            RequestOptions::JSON => ['name' => trim($name)],
+            'X-Request-Id'       => Uuid::uuid4()
+        ]);
+        $status = $result->getStatusCode();
+
+        if ($status === 200 || $status === 204) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Delete a project.
+     *
+     * @param int $id ID of the project.
+     *
+     * @return bool True on success, false on failure.
+     */
+    public function deleteProject($id)
+    {
+        if ( ! ctype_digit($id)) {
+            return false;
+        }
+
+        $result = $this->client->delete('projects/' . $id . '?' . $this->tokenQuery);
+        $status = $result->getStatusCode();
+
+        if ($status === 200 || $status === 204) {
+            return true;
+        }
+
+        return false;
     }
 }
