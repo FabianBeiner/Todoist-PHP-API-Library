@@ -8,7 +8,7 @@
  * @author  Fabian Beiner (fb@fabianbeiner.de)
  * @link    https://fabianbeiner.de
  * @license MIT License
- * @version 0.2.0 (2017-11-11)
+ * @version 0.3.0 (2017-11-11)
  */
 
 namespace FabianBeiner\Todoist;
