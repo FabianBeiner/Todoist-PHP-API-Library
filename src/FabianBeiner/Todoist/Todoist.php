@@ -120,17 +120,17 @@ class Todoist
     /**
      * Get a project.
      *
-     * @param int $id ID of the project.
+     * @param int $projectId ID of the project.
      *
      * @return array|bool Array with values of the project, or false on failure.
      */
-    public function getProject($id)
+    public function getProject($projectId)
     {
-        if ( ! ctype_digit($id)) {
+        if ( ! ctype_digit($projectId)) {
             return false;
         }
 
-        $result = $this->client->get('projects/' . $id . '?' . $this->tokenQuery);
+        $result = $this->client->get('projects/' . $projectId . '?' . $this->tokenQuery);
         $status = $result->getStatusCode();
 
         if ($status === 200) {
@@ -143,29 +143,29 @@ class Todoist
     /**
      * Alias for updateProject.
      *
-     * @param int    $id   ID of the project.
-     * @param string $name New name of the project.
+     * @param int    $projectId ID of the project.
+     * @param string $name      New name of the project.
      */
-    public function renameProject($id, $name)
+    public function renameProject($projectId, $name)
     {
-        $this->updateProject($id, $name);
+        $this->updateProject($projectId, $name);
     }
 
     /**
      * Update (actually rename…) a project.
      *
-     * @param int    $id   ID of the project.
-     * @param string $name New name of the project.
+     * @param int    $projectId ID of the project.
+     * @param string $name      New name of the project.
      *
      * @return bool True on success, false on failure.
      */
-    public function updateProject($id, $name)
+    public function updateProject($projectId, $name)
     {
-        if ( ! ctype_digit($id) || ! mb_strlen($name, 'utf8')) {
+        if ( ! ctype_digit($projectId) || ! mb_strlen($name, 'utf8')) {
             return false;
         }
 
-        $result = $this->client->post('projects/' . $id . '?' . $this->tokenQuery, [
+        $result = $this->client->post('projects/' . $projectId . '?' . $this->tokenQuery, [
             RequestOptions::JSON => ['name' => trim($name)],
             'X-Request-Id'       => Uuid::uuid4()
         ]);
@@ -181,17 +181,17 @@ class Todoist
     /**
      * Delete a project.
      *
-     * @param int $id ID of the project.
+     * @param int $projectId ID of the project.
      *
      * @return bool True on success, false on failure.
      */
-    public function deleteProject($id)
+    public function deleteProject($projectId)
     {
-        if ( ! ctype_digit($id)) {
+        if ( ! ctype_digit($projectId)) {
             return false;
         }
 
-        $result = $this->client->delete('projects/' . $id . '?' . $this->tokenQuery);
+        $result = $this->client->delete('projects/' . $projectId . '?' . $this->tokenQuery);
         $status = $result->getStatusCode();
 
         if ($status === 200 || $status === 204) {
