@@ -7,9 +7,7 @@
 
 namespace FabianBeiner\Todoist;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
-use Ramsey\Uuid\Uuid;
 
 trait TodoistProjects
 {
