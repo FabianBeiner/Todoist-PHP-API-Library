@@ -1,36 +1,24 @@
 <?php
 /**
- * @author  Fabian Beiner (fb@fabianbeiner.de)
- * @link    https://fabianbeiner.de
- * @license MIT License
+ * Todoist PHP API Library
+ * An unofficial PHP client library for accessing the official Todoist REST API.
+ *
+ * @author  Fabian Beiner <fb@fabianbeiner.de>
+ * @license MIT
+ * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
 namespace FabianBeiner\Todoist;
 
 use GuzzleHttp\RequestOptions;
 
-trait TodoistComments
+/**
+ * Trait TodoistCommentsTrait.
+ *
+ * @package FabianBeiner\Todoist
+ */
+trait TodoistCommentsTrait
 {
-    /**
-     * @var string The current URL of the Todoist REST API.
-     */
-    protected $restApiUrl = 'https://beta.todoist.com/API/v8/';
-
-    /**
-     * @var string|null The API token to access the Todoist API, or null if unset.
-     */
-    private $apiToken = null;
-
-    /**
-     * @var \GuzzleHttp\Client|null Guzzle client, or null if unset.
-     */
-    private $client = null;
-
-    /**
-     * @var string|null Default URL query.
-     */
-    private $tokenQuery = null;
-
     /**
      * Alias for getAllComments('task', $taskId).
      *
@@ -54,7 +42,8 @@ trait TodoistComments
     public function getAllComments($type, $typeId)
     {
         $type = mb_strtolower($type, 'UTF-8');
-        if (($type !== 'project' && $type !== 'task') || ! ctype_digit($typeId)) {
+        if (($type !== 'project' && $type !== 'task') || ( ! filter_var($typeId,
+                                                                        FILTER_VALIDATE_INT) || $typeId <= 0)) {
             return false;
         }
 
@@ -63,8 +52,8 @@ trait TodoistComments
         $localQuery           = http_build_query($query, null, '&', PHP_QUERY_RFC3986);
 
         $result = $this->client->get('comments?' . $localQuery);
-        $status = $result->getStatusCode();
 
+        $status = $result->getStatusCode();
         if ($status === 204) {
             return [];
         }
@@ -112,7 +101,9 @@ trait TodoistComments
     public function createComment($type, $typeId, $comment)
     {
         $type = mb_strtolower($type, 'UTF-8');
-        if (($type !== 'project' && $type !== 'task') || ! ctype_digit($typeId) || ! mb_strlen($comment, 'utf8')) {
+        if (($type !== 'project' && $type !== 'task') || ( ! filter_var($typeId,
+                                                                        FILTER_VALIDATE_INT) || $typeId <= 0) || ! mb_strlen($comment,
+                                                                                                                             'utf8')) {
             return false;
         }
 
@@ -120,11 +111,10 @@ trait TodoistComments
             RequestOptions::JSON => [
                 $type . '_id' => (int)$typeId,
                 'content'     => trim($comment)
-            ],
-            'X-Request-Id'       => $this->guidv4()
+            ]
         ]);
-        $status = $result->getStatusCode();
 
+        $status = $result->getStatusCode();
         if ($status === 200) {
             return json_decode($result->getBody()->getContents());
         }
@@ -154,13 +144,13 @@ trait TodoistComments
      */
     public function getComment($commentId)
     {
-        if ( ! ctype_digit($commentId)) {
+        if ( ! filter_var($commentId, FILTER_VALIDATE_INT) || $commentId <= 0) {
             return false;
         }
 
         $result = $this->client->get('comments/' . $commentId . '?' . $this->tokenQuery);
-        $status = $result->getStatusCode();
 
+        $status = $result->getStatusCode();
         if ($status === 200) {
             return json_decode($result->getBody()->getContents());
         }
@@ -178,17 +168,16 @@ trait TodoistComments
      */
     public function updateComment($commentId, $content)
     {
-        if ( ! ctype_digit($commentId) || ! mb_strlen($content, 'utf8')) {
+        if (( ! filter_var($commentId, FILTER_VALIDATE_INT) || $commentId <= 0) || ! mb_strlen($content, 'utf8')) {
             return false;
         }
 
         $result = $this->client->post('comments/' . $commentId . '?' . $this->tokenQuery, [
-            RequestOptions::JSON => ['content' => trim($content)],
-            'X-Request-Id'       => $this->guidv4()
+            RequestOptions::JSON => ['content' => trim($content)]
         ]);
-        $status = $result->getStatusCode();
 
-        if ($status === 200 || $status === 204) {
+        $status = $result->getStatusCode();
+        if ($status === 204) {
             return true;
         }
 
@@ -204,13 +193,13 @@ trait TodoistComments
      */
     public function deleteComment($commentId)
     {
-        if ( ! ctype_digit($commentId)) {
+        if ( ! filter_var($commentId, FILTER_VALIDATE_INT) || $commentId <= 0) {
             return false;
         }
 
         $result = $this->client->delete('comments/' . $commentId . '?' . $this->tokenQuery);
-        $status = $result->getStatusCode();
 
+        $status = $result->getStatusCode();
         if ($status === 200 || $status === 204) {
             return true;
         }

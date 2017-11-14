@@ -1,26 +1,29 @@
 <?php
 /**
- * Todoist SDK for PHP — An unofficial Todoist API library
+ * Todoist PHP API Library
+ * An unofficial PHP client library for accessing the official Todoist REST API.
  *
- * An open source PHP SDK which allows you to access the Todoist API from your
- * PHP application.
- *
- * @author  Fabian Beiner (fb@fabianbeiner.de)
- * @link    https://fabianbeiner.de
- * @license MIT License
- * @version 0.4.0 (2017-11-14)
+ * @author  Fabian Beiner <fb@fabianbeiner.de>
+ * @license MIT
+ * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
+ * @version 0.4.0 <2017-11-14>
  */
 
 namespace FabianBeiner\Todoist;
 
 use GuzzleHttp\Client;
 
+/**
+ * Class Todoist.
+ *
+ * @package FabianBeiner\Todoist
+ */
 class Todoist
 {
-    // Traits.
-    use TodoistProjects;
-    use TodoistLabels;
-    use TodoistComments;
+    /**
+     * Use Traits.
+     */
+    use TodoistCommentsTrait, TodoistLabelsTrait, TodoistProjectsTrait;
 
     /**
      * @var string The current URL of the Todoist REST API.
@@ -51,9 +54,9 @@ class Todoist
      */
     public function __construct($apiToken)
     {
-        // Check the API token.
-        if ( ! mb_strlen($apiToken, 'utf8')) {
-            throw new \Exception('The provided API token is invalid.');
+        // Check and set the API token.
+        if (mb_strlen($apiToken, 'utf8') !== 40) {
+            throw new \Exception('❌ The provided API token is invalid!');
         }
         $this->apiToken = trim($apiToken);
 
@@ -62,21 +65,24 @@ class Todoist
                                                  'token' => $this->apiToken
                                              ], null, '&', PHP_QUERY_RFC3986);
 
-        // Create the Guzzle client.
+        // Create a Guzzle client.
         $this->client = new Client([
-                                       'base_uri' => $this->restApiUrl,
-                                       'timeout'  => 5
+                                       'base_uri'    => $this->restApiUrl,
+                                       'headers'     => ['X-Request-Id' => $this->generateV4GUID()],
+                                       'http_errors' => false,
+                                       'timeout'     => 5
                                    ]);
     }
 
     /**
-     * Generate a GUID v4 string.
+     * Generate a v4 GUID string.
      *
      * @author Pavel Volyntsev <pavel.volyntsev@gmail.com>
      * @see    http://php.net/manual/en/function.com-create-guid.php#117893
-     * @return string GUID v4 string.
+     *
+     * @return string A v4 GUID.
      */
-    private function guidv4()
+    private function generateV4GUID()
     {
         if (function_exists('com_create_guid') === true) {
             return trim(com_create_guid(), '{}');

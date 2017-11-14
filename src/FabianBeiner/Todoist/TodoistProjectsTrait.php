@@ -1,36 +1,24 @@
 <?php
 /**
- * @author  Fabian Beiner (fb@fabianbeiner.de)
- * @link    https://fabianbeiner.de
- * @license MIT License
+ * Todoist PHP API Library
+ * An unofficial PHP client library for accessing the official Todoist REST API.
+ *
+ * @author  Fabian Beiner <fb@fabianbeiner.de>
+ * @license MIT
+ * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
 namespace FabianBeiner\Todoist;
 
 use GuzzleHttp\RequestOptions;
 
-trait TodoistProjects
+/**
+ * Trait TodoistProjectsTrait.
+ *
+ * @package FabianBeiner\Todoist
+ */
+trait TodoistProjectsTrait
 {
-    /**
-     * @var string The current URL of the Todoist REST API.
-     */
-    protected $restApiUrl = 'https://beta.todoist.com/API/v8/';
-
-    /**
-     * @var string|null The API token to access the Todoist API, or null if unset.
-     */
-    private $apiToken = null;
-
-    /**
-     * @var \GuzzleHttp\Client|null Guzzle client, or null if unset.
-     */
-    private $client = null;
-
-    /**
-     * @var string|null Default URL query.
-     */
-    private $tokenQuery = null;
-
     /**
      * Get all projects.
      *
@@ -39,8 +27,8 @@ trait TodoistProjects
     public function getAllProjects()
     {
         $result = $this->client->get('projects?' . $this->tokenQuery);
-        $status = $result->getStatusCode();
 
+        $status = $result->getStatusCode();
         if ($status === 204) {
             return [];
         }
@@ -65,11 +53,10 @@ trait TodoistProjects
         }
 
         $result = $this->client->post('projects?' . $this->tokenQuery, [
-            RequestOptions::JSON => ['name' => trim($name)],
-            'X-Request-Id'       => $this->guidv4()
+            RequestOptions::JSON => ['name' => trim($name)]
         ]);
-        $status = $result->getStatusCode();
 
+        $status = $result->getStatusCode();
         if ($status === 200) {
             return json_decode($result->getBody()->getContents());
         }
@@ -86,13 +73,13 @@ trait TodoistProjects
      */
     public function getProject($projectId)
     {
-        if ( ! ctype_digit($projectId)) {
+        if ( ! filter_var($projectId, FILTER_VALIDATE_INT) || $projectId <= 0) {
             return false;
         }
 
         $result = $this->client->get('projects/' . $projectId . '?' . $this->tokenQuery);
-        $status = $result->getStatusCode();
 
+        $status = $result->getStatusCode();
         if ($status === 200) {
             return json_decode($result->getBody()->getContents());
         }
@@ -101,14 +88,16 @@ trait TodoistProjects
     }
 
     /**
-     * Alias for updateProject.
+     * Alias for updateProject().
      *
      * @param int    $projectId ID of the project.
      * @param string $name      New name of the project.
+     *
+     * @return bool True on success, false on failure.
      */
     public function renameProject($projectId, $name)
     {
-        $this->updateProject($projectId, $name);
+        return $this->updateProject($projectId, $name);
     }
 
     /**
@@ -121,17 +110,16 @@ trait TodoistProjects
      */
     public function updateProject($projectId, $name)
     {
-        if ( ! ctype_digit($projectId) || ! mb_strlen($name, 'utf8')) {
+        if ( ! filter_var($projectId, FILTER_VALIDATE_INT) || $projectId <= 0 || ! mb_strlen($name, 'utf8')) {
             return false;
         }
 
         $result = $this->client->post('projects/' . $projectId . '?' . $this->tokenQuery, [
-            RequestOptions::JSON => ['name' => trim($name)],
-            'X-Request-Id'       => $this->guidv4()
+            RequestOptions::JSON => ['name' => trim($name)]
         ]);
-        $status = $result->getStatusCode();
 
-        if ($status === 200 || $status === 204) {
+        $status = $result->getStatusCode();
+        if ($status === 204) {
             return true;
         }
 
@@ -147,13 +135,13 @@ trait TodoistProjects
      */
     public function deleteProject($projectId)
     {
-        if ( ! ctype_digit($projectId)) {
+        if ( ! filter_var($projectId, FILTER_VALIDATE_INT) || $projectId <= 0) {
             return false;
         }
 
         $result = $this->client->delete('projects/' . $projectId . '?' . $this->tokenQuery);
-        $status = $result->getStatusCode();
 
+        $status = $result->getStatusCode();
         if ($status === 200 || $status === 204) {
             return true;
         }

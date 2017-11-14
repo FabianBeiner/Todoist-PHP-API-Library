@@ -1,36 +1,24 @@
 <?php
 /**
- * @author  Fabian Beiner (fb@fabianbeiner.de)
- * @link    https://fabianbeiner.de
- * @license MIT License
+ * Todoist PHP API Library
+ * An unofficial PHP client library for accessing the official Todoist REST API.
+ *
+ * @author  Fabian Beiner <fb@fabianbeiner.de>
+ * @license MIT
+ * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
 namespace FabianBeiner\Todoist;
 
 use GuzzleHttp\RequestOptions;
 
-trait TodoistLabels
+/**
+ * Trait TodoistLabelsTrait.
+ *
+ * @package FabianBeiner\Todoist
+ */
+trait TodoistLabelsTrait
 {
-    /**
-     * @var string The current URL of the Todoist REST API.
-     */
-    protected $restApiUrl = 'https://beta.todoist.com/API/v8/';
-
-    /**
-     * @var string|null The API token to access the Todoist API, or null if unset.
-     */
-    private $apiToken = null;
-
-    /**
-     * @var \GuzzleHttp\Client|null Guzzle client, or null if unset.
-     */
-    private $client = null;
-
-    /**
-     * @var string|null Default URL query.
-     */
-    private $tokenQuery = null;
-
     /**
      * Get all labels.
      *
@@ -39,8 +27,8 @@ trait TodoistLabels
     public function getAllLabels()
     {
         $result = $this->client->get('labels?' . $this->tokenQuery);
-        $status = $result->getStatusCode();
 
+        $status = $result->getStatusCode();
         if ($status === 204) {
             return [];
         }
@@ -65,11 +53,10 @@ trait TodoistLabels
         }
 
         $result = $this->client->post('labels?' . $this->tokenQuery, [
-            RequestOptions::JSON => ['name' => trim($name)],
-            'X-Request-Id'       => $this->guidv4()
+            RequestOptions::JSON => ['name' => trim($name)]
         ]);
-        $status = $result->getStatusCode();
 
+        $status = $result->getStatusCode();
         if ($status === 200) {
             return json_decode($result->getBody()->getContents());
         }
@@ -86,13 +73,13 @@ trait TodoistLabels
      */
     public function getLabel($labelId)
     {
-        if ( ! ctype_digit($labelId)) {
+        if ( ! filter_var($labelId, FILTER_VALIDATE_INT) || $labelId <= 0) {
             return false;
         }
 
         $result = $this->client->get('labels/' . $labelId . '?' . $this->tokenQuery);
-        $status = $result->getStatusCode();
 
+        $status = $result->getStatusCode();
         if ($status === 200) {
             return json_decode($result->getBody()->getContents());
         }
@@ -101,14 +88,16 @@ trait TodoistLabels
     }
 
     /**
-     * Alias for updateLabel.
+     * Alias for updateLabel().
      *
      * @param int    $labelId ID of the label.
      * @param string $name    New name of the label.
+     *
+     * @return bool True on success, false on failure.
      */
     public function renameLabel($labelId, $name)
     {
-        $this->updateLabel($labelId, $name);
+        return $this->updateLabel($labelId, $name);
     }
 
     /**
@@ -121,17 +110,16 @@ trait TodoistLabels
      */
     public function updateLabel($labelId, $name)
     {
-        if ( ! ctype_digit($labelId) || ! mb_strlen($name, 'utf8')) {
+        if ( ! filter_var($labelId, FILTER_VALIDATE_INT) || $labelId <= 0 || ! mb_strlen($name, 'utf8')) {
             return false;
         }
 
         $result = $this->client->post('labels/' . $labelId . '?' . $this->tokenQuery, [
-            RequestOptions::JSON => ['name' => trim($name)],
-            'X-Request-Id'       => $this->guidv4()
+            RequestOptions::JSON => ['name' => trim($name)]
         ]);
-        $status = $result->getStatusCode();
 
-        if ($status === 200 || $status === 204) {
+        $status = $result->getStatusCode();
+        if ($status === 204) {
             return true;
         }
 
@@ -147,13 +135,13 @@ trait TodoistLabels
      */
     public function deleteLabel($labelId)
     {
-        if ( ! ctype_digit($labelId)) {
+        if ( ! filter_var($labelId, FILTER_VALIDATE_INT) || $labelId <= 0) {
             return false;
         }
 
         $result = $this->client->delete('labels/' . $labelId . '?' . $this->tokenQuery);
-        $status = $result->getStatusCode();
 
+        $status = $result->getStatusCode();
         if ($status === 200 || $status === 204) {
             return true;
         }
