@@ -8,7 +8,7 @@
  * @author  Fabian Beiner (fb@fabianbeiner.de)
  * @link    https://fabianbeiner.de
  * @license MIT License
- * @version 0.3.1 (2017-11-11)
+ * @version 0.4.0 (2017-11-14)
  */
 
 namespace FabianBeiner\Todoist;
@@ -20,6 +20,7 @@ class Todoist
     // Traits.
     use TodoistProjects;
     use TodoistLabels;
+    use TodoistComments;
 
     /**
      * @var string The current URL of the Todoist REST API.
