@@ -52,9 +52,10 @@ trait TodoistProjectsTrait
             return false;
         }
 
-        $result = $this->client->post('projects?' . $this->tokenQuery, [
-            RequestOptions::JSON => ['name' => trim($name)]
-        ]);
+        $result = $this->client->post('projects?' . $this->tokenQuery,
+                                      [
+                                          RequestOptions::JSON => ['name' => trim($name)]
+                                      ]);
 
         $status = $result->getStatusCode();
         if ($status === 200) {
@@ -114,9 +115,10 @@ trait TodoistProjectsTrait
             return false;
         }
 
-        $result = $this->client->post('projects/' . $projectId . '?' . $this->tokenQuery, [
-            RequestOptions::JSON => ['name' => trim($name)]
-        ]);
+        $result = $this->client->post('projects/' . $projectId . '?' . $this->tokenQuery,
+                                      [
+                                          RequestOptions::JSON => ['name' => trim($name)]
+                                      ]);
 
         $status = $result->getStatusCode();
         if ($status === 204) {

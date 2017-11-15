@@ -63,7 +63,10 @@ class Todoist
         // Create a default query for the token.
         $this->tokenQuery = http_build_query([
                                                  'token' => $this->apiToken
-                                             ], null, '&', PHP_QUERY_RFC3986);
+                                             ],
+                                             null,
+                                             '&',
+                                             PHP_QUERY_RFC3986);
 
         // Create a Guzzle client.
         $this->client = new Client([

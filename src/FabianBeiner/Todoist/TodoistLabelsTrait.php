@@ -52,9 +52,10 @@ trait TodoistLabelsTrait
             return false;
         }
 
-        $result = $this->client->post('labels?' . $this->tokenQuery, [
-            RequestOptions::JSON => ['name' => trim($name)]
-        ]);
+        $result = $this->client->post('labels?' . $this->tokenQuery,
+                                      [
+                                          RequestOptions::JSON => ['name' => trim($name)]
+                                      ]);
 
         $status = $result->getStatusCode();
         if ($status === 200) {
@@ -114,9 +115,10 @@ trait TodoistLabelsTrait
             return false;
         }
 
-        $result = $this->client->post('labels/' . $labelId . '?' . $this->tokenQuery, [
-            RequestOptions::JSON => ['name' => trim($name)]
-        ]);
+        $result = $this->client->post('labels/' . $labelId . '?' . $this->tokenQuery,
+                                      [
+                                          RequestOptions::JSON => ['name' => trim($name)]
+                                      ]);
 
         $status = $result->getStatusCode();
         if ($status === 204) {

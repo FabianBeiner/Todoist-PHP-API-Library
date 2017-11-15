@@ -101,18 +101,21 @@ trait TodoistCommentsTrait
     public function createComment($type, $typeId, $comment)
     {
         $type = mb_strtolower($type, 'UTF-8');
-        if (($type !== 'project' && $type !== 'task') || ( ! filter_var($typeId,
-                                                                        FILTER_VALIDATE_INT) || $typeId <= 0) || ! mb_strlen($comment,
-                                                                                                                             'utf8')) {
+        if (($type !== 'project' && $type !== 'task') ||
+            ( ! filter_var($typeId,
+                           FILTER_VALIDATE_INT) || $typeId <= 0) ||
+            ! mb_strlen($comment,
+                        'utf8')) {
             return false;
         }
 
-        $result = $this->client->post('comments?' . $this->tokenQuery, [
-            RequestOptions::JSON => [
-                $type . '_id' => (int)$typeId,
-                'content'     => trim($comment)
-            ]
-        ]);
+        $result = $this->client->post('comments?' . $this->tokenQuery,
+                                      [
+                                          RequestOptions::JSON => [
+                                              $type . '_id' => (int)$typeId,
+                                              'content'     => trim($comment)
+                                          ]
+                                      ]);
 
         $status = $result->getStatusCode();
         if ($status === 200) {
@@ -172,9 +175,10 @@ trait TodoistCommentsTrait
             return false;
         }
 
-        $result = $this->client->post('comments/' . $commentId . '?' . $this->tokenQuery, [
-            RequestOptions::JSON => ['content' => trim($content)]
-        ]);
+        $result = $this->client->post('comments/' . $commentId . '?' . $this->tokenQuery,
+                                      [
+                                          RequestOptions::JSON => ['content' => trim($content)]
+                                      ]);
 
         $status = $result->getStatusCode();
         if ($status === 204) {
