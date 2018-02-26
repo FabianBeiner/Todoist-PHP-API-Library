@@ -23,7 +23,7 @@ class Todoist
     /**
      * Use Traits.
      */
-    use TodoistCommentsTrait, TodoistLabelsTrait, TodoistProjectsTrait;
+    use TodoistCommentsTrait, TodoistLabelsTrait, TodoistProjectsTrait, TodoistTasksTrait;
 
     /**
      * @var string The current URL of the Todoist REST API.
@@ -33,17 +33,17 @@ class Todoist
     /**
      * @var string|null The API token to access the Todoist API, or null if unset.
      */
-    private $apiToken = null;
+    private $apiToken;
 
     /**
      * @var \GuzzleHttp\Client|null Guzzle client, or null if unset.
      */
-    private $client = null;
+    private $client;
 
     /**
      * @var string|null Default URL query.
      */
-    private $tokenQuery = null;
+    private $tokenQuery;
 
     /**
      * Todoist constructor.
@@ -61,20 +61,15 @@ class Todoist
         $this->apiToken = trim($apiToken);
 
         // Create a default query for the token.
-        $this->tokenQuery = http_build_query([
-                                                 'token' => $this->apiToken
-                                             ],
-                                             null,
-                                             '&',
-                                             PHP_QUERY_RFC3986);
+        $this->tokenQuery = http_build_query(['token' => $this->apiToken], null, '&', PHP_QUERY_RFC3986);
 
         // Create a Guzzle client.
         $this->client = new Client([
-                                       'base_uri'    => $this->restApiUrl,
-                                       'headers'     => ['X-Request-Id' => $this->generateV4GUID()],
-                                       'http_errors' => false,
-                                       'timeout'     => 5
-                                   ]);
+            'base_uri' => $this->restApiUrl,
+            'headers' => ['X-Request-Id' => $this->generateV4GUID()],
+            'http_errors' => false,
+            'timeout' => 5,
+        ]);
     }
 
     /**
@@ -91,7 +86,7 @@ class Todoist
             return trim(com_create_guid(), '{}');
         }
 
-        $data    = openssl_random_pseudo_bytes(16);
+        $data = openssl_random_pseudo_bytes(16);
         $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
         $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
 

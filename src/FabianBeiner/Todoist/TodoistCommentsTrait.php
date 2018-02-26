@@ -34,22 +34,22 @@ trait TodoistCommentsTrait
     /**
      * Get all comments.
      *
-     * @param string $type   Can be "project" or "task".
-     * @param int    $typeId ID of the project/task.
+     * @param string $type Can be "project" or "task".
+     * @param int $typeId ID of the project/task.
      *
      * @return array|bool Array with all comments (can be empty), or false on failure.
      */
     public function getAllComments($type, $typeId)
     {
         $type = mb_strtolower($type, 'UTF-8');
-        if (($type !== 'project' && $type !== 'task') || ( ! filter_var($typeId,
-                                                                        FILTER_VALIDATE_INT) || $typeId <= 0)) {
+        if (($type !== 'project' && $type !== 'task') || (!filter_var($typeId,
+                    FILTER_VALIDATE_INT) || $typeId <= 0)) {
             return false;
         }
 
         parse_str($this->tokenQuery, $query);
         $query[$type . '_id'] = $typeId;
-        $localQuery           = http_build_query($query, null, '&', PHP_QUERY_RFC3986);
+        $localQuery = http_build_query($query, null, '&', PHP_QUERY_RFC3986);
 
         $result = $this->client->get('comments?' . $localQuery);
 
@@ -79,7 +79,7 @@ trait TodoistCommentsTrait
     /**
      * Alias for createComment('task', $projectId, $comment).
      *
-     * @param int    $taskId  ID of the task.
+     * @param int $taskId ID of the task.
      * @param string $comment Comment to be added.
      *
      * @return array|bool Array with values of the new comment, or false on failure.
@@ -92,8 +92,8 @@ trait TodoistCommentsTrait
     /**
      * Create a new comment.
      *
-     * @param string $type    Can be "project" or "task".
-     * @param int    $typeId  ID of the project/task.
+     * @param string $type Can be "project" or "task".
+     * @param int $typeId ID of the project/task.
      * @param string $comment Comment to be added.
      *
      * @return array|bool Array with values of the new comment, or false on failure.
@@ -102,20 +102,20 @@ trait TodoistCommentsTrait
     {
         $type = mb_strtolower($type, 'UTF-8');
         if (($type !== 'project' && $type !== 'task') ||
-            ( ! filter_var($typeId,
-                           FILTER_VALIDATE_INT) || $typeId <= 0) ||
-            ! mb_strlen($comment,
-                        'utf8')) {
+            (!filter_var($typeId,
+                    FILTER_VALIDATE_INT) || $typeId <= 0) ||
+            !mb_strlen($comment,
+                'utf8')) {
             return false;
         }
 
         $result = $this->client->post('comments?' . $this->tokenQuery,
-                                      [
-                                          RequestOptions::JSON => [
-                                              $type . '_id' => (int)$typeId,
-                                              'content'     => trim($comment)
-                                          ]
-                                      ]);
+            [
+                RequestOptions::JSON => [
+                    $type . '_id' => (int)$typeId,
+                    'content' => trim($comment),
+                ],
+            ]);
 
         $status = $result->getStatusCode();
         if ($status === 200) {
@@ -128,8 +128,8 @@ trait TodoistCommentsTrait
     /**
      * Alias for createComment('project', $projectId, $comment).
      *
-     * @param int    $projectId ID of the project.
-     * @param string $comment   Comment to be added.
+     * @param int $projectId ID of the project.
+     * @param string $comment Comment to be added.
      *
      * @return array|bool Array with values of the new comment, or false on failure.
      */
@@ -147,7 +147,7 @@ trait TodoistCommentsTrait
      */
     public function getComment($commentId)
     {
-        if ( ! filter_var($commentId, FILTER_VALIDATE_INT) || $commentId <= 0) {
+        if (!filter_var($commentId, FILTER_VALIDATE_INT) || $commentId <= 0) {
             return false;
         }
 
@@ -164,21 +164,21 @@ trait TodoistCommentsTrait
     /**
      * Update a comment.
      *
-     * @param int    $commentId ID of the comment.
-     * @param string $content   New content of the comment.
+     * @param int $commentId ID of the comment.
+     * @param string $content New content of the comment.
      *
      * @return bool True on success, false on failure.
      */
     public function updateComment($commentId, $content)
     {
-        if (( ! filter_var($commentId, FILTER_VALIDATE_INT) || $commentId <= 0) || ! mb_strlen($content, 'utf8')) {
+        if ((!filter_var($commentId, FILTER_VALIDATE_INT) || $commentId <= 0) || !mb_strlen($content, 'utf8')) {
             return false;
         }
 
         $result = $this->client->post('comments/' . $commentId . '?' . $this->tokenQuery,
-                                      [
-                                          RequestOptions::JSON => ['content' => trim($content)]
-                                      ]);
+            [
+                RequestOptions::JSON => ['content' => trim($content)],
+            ]);
 
         $status = $result->getStatusCode();
         if ($status === 204) {
@@ -197,7 +197,7 @@ trait TodoistCommentsTrait
      */
     public function deleteComment($commentId)
     {
-        if ( ! filter_var($commentId, FILTER_VALIDATE_INT) || $commentId <= 0) {
+        if (!filter_var($commentId, FILTER_VALIDATE_INT) || $commentId <= 0) {
             return false;
         }
 

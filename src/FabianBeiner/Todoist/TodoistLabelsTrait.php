@@ -48,14 +48,14 @@ trait TodoistLabelsTrait
      */
     public function createLabel($name)
     {
-        if ( ! mb_strlen($name, 'utf8')) {
+        if (!mb_strlen($name, 'utf8')) {
             return false;
         }
 
         $result = $this->client->post('labels?' . $this->tokenQuery,
-                                      [
-                                          RequestOptions::JSON => ['name' => trim($name)]
-                                      ]);
+            [
+                RequestOptions::JSON => ['name' => trim($name)],
+            ]);
 
         $status = $result->getStatusCode();
         if ($status === 200) {
@@ -74,7 +74,7 @@ trait TodoistLabelsTrait
      */
     public function getLabel($labelId)
     {
-        if ( ! filter_var($labelId, FILTER_VALIDATE_INT) || $labelId <= 0) {
+        if (!filter_var($labelId, FILTER_VALIDATE_INT) || $labelId <= 0) {
             return false;
         }
 
@@ -91,8 +91,8 @@ trait TodoistLabelsTrait
     /**
      * Alias for updateLabel().
      *
-     * @param int    $labelId ID of the label.
-     * @param string $name    New name of the label.
+     * @param int $labelId ID of the label.
+     * @param string $name New name of the label.
      *
      * @return bool True on success, false on failure.
      */
@@ -104,21 +104,21 @@ trait TodoistLabelsTrait
     /**
      * Update (actually rename…) a label.
      *
-     * @param int    $labelId ID of the label.
-     * @param string $name    New name of the label.
+     * @param int $labelId ID of the label.
+     * @param string $name New name of the label.
      *
      * @return bool True on success, false on failure.
      */
     public function updateLabel($labelId, $name)
     {
-        if ( ! filter_var($labelId, FILTER_VALIDATE_INT) || $labelId <= 0 || ! mb_strlen($name, 'utf8')) {
+        if (!filter_var($labelId, FILTER_VALIDATE_INT) || $labelId <= 0 || !mb_strlen($name, 'utf8')) {
             return false;
         }
 
         $result = $this->client->post('labels/' . $labelId . '?' . $this->tokenQuery,
-                                      [
-                                          RequestOptions::JSON => ['name' => trim($name)]
-                                      ]);
+            [
+                RequestOptions::JSON => ['name' => trim($name)],
+            ]);
 
         $status = $result->getStatusCode();
         if ($status === 204) {
@@ -137,7 +137,7 @@ trait TodoistLabelsTrait
      */
     public function deleteLabel($labelId)
     {
-        if ( ! filter_var($labelId, FILTER_VALIDATE_INT) || $labelId <= 0) {
+        if (!filter_var($labelId, FILTER_VALIDATE_INT) || $labelId <= 0) {
             return false;
         }
 
