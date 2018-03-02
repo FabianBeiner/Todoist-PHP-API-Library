@@ -6,7 +6,7 @@
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @license MIT
  * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
- * @version 0.4.0 <2017-11-14>
+ * @version 0.5.0 <2018-03-02>
  */
 
 namespace FabianBeiner\Todoist;
@@ -23,7 +23,7 @@ class Todoist
     /**
      * Use Traits.
      */
-    use TodoistCommentsTrait, TodoistLabelsTrait, TodoistProjectsTrait;
+    use TodoistCommentsTrait, TodoistLabelsTrait, TodoistProjectsTrait, TodoistTasksTrait;
 
     /**
      * @var string The current URL of the Todoist REST API.
@@ -31,19 +31,19 @@ class Todoist
     protected $restApiUrl = 'https://beta.todoist.com/API/v8/';
 
     /**
-     * @var string|null The API token to access the Todoist API, or null if unset.
+     * @var string The API token to access the Todoist API.
      */
-    private $apiToken = null;
+    private $apiToken;
 
     /**
-     * @var \GuzzleHttp\Client|null Guzzle client, or null if unset.
+     * @var \GuzzleHttp\Client Guzzle client.
      */
-    private $client = null;
+    private $client;
 
     /**
-     * @var string|null Default URL query.
+     * @var string Default URL query.
      */
-    private $tokenQuery = null;
+    private $tokenQuery;
 
     /**
      * Todoist constructor.
