@@ -102,8 +102,8 @@ trait TodoistCommentsTrait
     {
         $type = mb_strtolower($type, 'UTF-8');
         if (($type !== 'project' && $type !== 'task') ||
-            ( ! filter_var($typeId,
-                           FILTER_VALIDATE_INT) || $typeId <= 0) ||
+            ($typeId <= 0 || ! filter_var($typeId,
+                                          FILTER_VALIDATE_INT)) ||
             ! mb_strlen($comment,
                         'utf8')) {
             return false;
@@ -147,7 +147,7 @@ trait TodoistCommentsTrait
      */
     public function getComment($commentId)
     {
-        if ( ! filter_var($commentId, FILTER_VALIDATE_INT) || $commentId <= 0) {
+        if ($commentId <= 0 || ! filter_var($commentId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
@@ -171,7 +171,7 @@ trait TodoistCommentsTrait
      */
     public function updateComment($commentId, $content)
     {
-        if (( ! filter_var($commentId, FILTER_VALIDATE_INT) || $commentId <= 0) || ! mb_strlen($content, 'utf8')) {
+        if ($commentId <= 0 || ! mb_strlen($content, 'utf8') || ! filter_var($commentId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
@@ -181,11 +181,8 @@ trait TodoistCommentsTrait
                                       ]);
 
         $status = $result->getStatusCode();
-        if ($status === 204) {
-            return true;
-        }
 
-        return false;
+        return ($status === 200 || $status === 204);
     }
 
     /**
@@ -197,17 +194,14 @@ trait TodoistCommentsTrait
      */
     public function deleteComment($commentId)
     {
-        if ( ! filter_var($commentId, FILTER_VALIDATE_INT) || $commentId <= 0) {
+        if ($commentId <= 0 || ! filter_var($commentId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
         $result = $this->client->delete('comments/' . $commentId . '?' . $this->tokenQuery);
 
         $status = $result->getStatusCode();
-        if ($status === 200 || $status === 204) {
-            return true;
-        }
 
-        return false;
+        return ($status === 200 || $status === 204);
     }
 }

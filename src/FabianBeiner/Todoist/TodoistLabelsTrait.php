@@ -74,7 +74,7 @@ trait TodoistLabelsTrait
      */
     public function getLabel($labelId)
     {
-        if ( ! filter_var($labelId, FILTER_VALIDATE_INT) || $labelId <= 0) {
+        if ($labelId <= 0 || ! filter_var($labelId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
@@ -111,7 +111,7 @@ trait TodoistLabelsTrait
      */
     public function updateLabel($labelId, $name)
     {
-        if ( ! filter_var($labelId, FILTER_VALIDATE_INT) || $labelId <= 0 || ! mb_strlen($name, 'utf8')) {
+        if ($labelId <= 0 || ! mb_strlen($name, 'utf8') || ! filter_var($labelId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
@@ -121,11 +121,8 @@ trait TodoistLabelsTrait
                                       ]);
 
         $status = $result->getStatusCode();
-        if ($status === 204) {
-            return true;
-        }
 
-        return false;
+        return ($status === 200 || $status === 204);
     }
 
     /**
@@ -137,17 +134,14 @@ trait TodoistLabelsTrait
      */
     public function deleteLabel($labelId)
     {
-        if ( ! filter_var($labelId, FILTER_VALIDATE_INT) || $labelId <= 0) {
+        if ($labelId <= 0 || ! filter_var($labelId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
         $result = $this->client->delete('labels/' . $labelId . '?' . $this->tokenQuery);
 
         $status = $result->getStatusCode();
-        if ($status === 200 || $status === 204) {
-            return true;
-        }
 
-        return false;
+        return ($status === 200 || $status === 204);
     }
 }

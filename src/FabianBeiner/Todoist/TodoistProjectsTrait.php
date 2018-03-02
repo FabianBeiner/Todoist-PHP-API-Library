@@ -74,7 +74,7 @@ trait TodoistProjectsTrait
      */
     public function getProject($projectId)
     {
-        if ( ! filter_var($projectId, FILTER_VALIDATE_INT) || $projectId <= 0) {
+        if ($projectId <= 0 || ! filter_var($projectId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
@@ -111,7 +111,7 @@ trait TodoistProjectsTrait
      */
     public function updateProject($projectId, $name)
     {
-        if ( ! filter_var($projectId, FILTER_VALIDATE_INT) || $projectId <= 0 || ! mb_strlen($name, 'utf8')) {
+        if ($projectId <= 0 || ! mb_strlen($name, 'utf8') || ! filter_var($projectId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
@@ -121,11 +121,8 @@ trait TodoistProjectsTrait
                                       ]);
 
         $status = $result->getStatusCode();
-        if ($status === 204) {
-            return true;
-        }
 
-        return false;
+        return ($status === 200 || $status === 204);
     }
 
     /**
@@ -137,17 +134,14 @@ trait TodoistProjectsTrait
      */
     public function deleteProject($projectId)
     {
-        if ( ! filter_var($projectId, FILTER_VALIDATE_INT) || $projectId <= 0) {
+        if ($projectId <= 0 || ! filter_var($projectId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
         $result = $this->client->delete('projects/' . $projectId . '?' . $this->tokenQuery);
 
         $status = $result->getStatusCode();
-        if ($status === 200 || $status === 204) {
-            return true;
-        }
 
-        return false;
+        return ($status === 200 || $status === 204);
     }
 }
