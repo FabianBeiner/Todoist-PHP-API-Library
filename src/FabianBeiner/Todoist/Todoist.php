@@ -4,9 +4,9 @@
  * An unofficial PHP client library for accessing the official Todoist REST API.
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
- * @license MIT
+ * @license https://opensource.org/licenses/MIT MIT
+ * @version 0.6.0 <2018-03-06>
  * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
- * @version 0.5.0 <2018-03-02>
  */
 
 namespace FabianBeiner\Todoist;
@@ -41,11 +41,6 @@ class Todoist
     private $client;
 
     /**
-     * @var string Default URL query.
-     */
-    private $tokenQuery;
-
-    /**
      * Todoist constructor.
      *
      * @param string $apiToken The API token to access the Todoist API.
@@ -60,21 +55,28 @@ class Todoist
         }
         $this->apiToken = trim($apiToken);
 
-        // Create a default query for the token.
-        $this->tokenQuery = http_build_query([
-                                                 'token' => $this->apiToken
-                                             ],
-                                             null,
-                                             '&',
-                                             PHP_QUERY_RFC3986);
-
         // Create a Guzzle client.
         $this->client = new Client([
                                        'base_uri'    => $this->restApiUrl,
-                                       'headers'     => ['X-Request-Id' => $this->generateV4GUID()],
+                                       'headers'     => $this->createHeaders(),
                                        'http_errors' => false,
                                        'timeout'     => 5
                                    ]);
+    }
+
+    /**
+     * Helper function (introduced by @balazscsaba2006), to easily define
+     * Guzzle (cURL) headers.
+     *
+     * @return array Guzzle headers.
+     */
+    protected function createHeaders(): array
+    {
+        return [
+            'Authorization'   => sprintf('Bearer %s', $this->apiToken),
+            'X-Request-Id'    => $this->generateV4GUID(),
+            'Accept-Encoding' => 'gzip'
+        ];
     }
 
     /**
@@ -85,7 +87,7 @@ class Todoist
      *
      * @return string A v4 GUID.
      */
-    private function generateV4GUID()
+    private function generateV4GUID(): string
     {
         if (function_exists('com_create_guid') === true) {
             return trim(com_create_guid(), '{}');
