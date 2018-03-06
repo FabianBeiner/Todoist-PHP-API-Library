@@ -109,7 +109,7 @@ trait TodoistCommentsTrait
             return false;
         }
 
-        $result = $this->client->post('comments?' . $this->tokenQuery,
+        $result = $this->client->post('comments',
             [
                 RequestOptions::JSON => [
                     $type . '_id' => (int)$typeId,
@@ -151,7 +151,7 @@ trait TodoistCommentsTrait
             return false;
         }
 
-        $result = $this->client->get('comments/' . $commentId . '?' . $this->tokenQuery);
+        $result = $this->client->get('comments/' . $commentId);
 
         $status = $result->getStatusCode();
         if ($status === 200) {
@@ -175,7 +175,7 @@ trait TodoistCommentsTrait
             return false;
         }
 
-        $result = $this->client->post('comments/' . $commentId . '?' . $this->tokenQuery,
+        $result = $this->client->post('comments/' . $commentId,
             [
                 RequestOptions::JSON => ['content' => trim($content)],
             ]);
@@ -201,7 +201,7 @@ trait TodoistCommentsTrait
             return false;
         }
 
-        $result = $this->client->delete('comments/' . $commentId . '?' . $this->tokenQuery);
+        $result = $this->client->delete('comments/' . $commentId);
 
         $status = $result->getStatusCode();
         if ($status === 200 || $status === 204) {

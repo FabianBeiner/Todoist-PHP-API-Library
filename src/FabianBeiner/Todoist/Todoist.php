@@ -56,7 +56,7 @@ class Todoist
     {
         // Check and set the API token.
         if (mb_strlen($apiToken, 'utf8') !== 40) {
-            throw new \Exception('❌ The provided API token is invalid!');
+            throw new \Exception('The provided API token is invalid!');
         }
         $this->apiToken = trim($apiToken);
 
@@ -66,10 +66,33 @@ class Todoist
         // Create a Guzzle client.
         $this->client = new Client([
             'base_uri' => $this->restApiUrl,
-            'headers' => ['X-Request-Id' => $this->generateV4GUID()],
+            'headers' => $this->createHeaders(),
             'http_errors' => false,
             'timeout' => 5,
         ]);
+    }
+
+    /**
+     * Ensures to regenerate GUID
+     *
+     * @return Todoist
+     */
+    public function reset(): Todoist
+    {
+        $this->client = new self($this->apiToken);
+
+        return $this->client;
+    }
+
+    /**
+     * @return array
+     */
+    protected function createHeaders(): array
+    {
+        return [
+            'Authorization' => sprintf('Bearer %s', $this->apiToken),
+            'X-Request-Id' => $this->generateV4GUID(),
+        ];
     }
 
     /**

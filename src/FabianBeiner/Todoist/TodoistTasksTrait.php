@@ -56,7 +56,7 @@ trait TodoistTasksTrait
         if ($options) {
             unset($options['content']);
         }
-        $result = $this->client->post('tasks?' . $this->tokenQuery, [
+        $result = $this->client->post('tasks', [
             RequestOptions::JSON => array_merge(['content' => trim($content)], $options),
         ]);
 
@@ -81,7 +81,7 @@ trait TodoistTasksTrait
             return false;
         }
 
-        $result = $this->client->get('tasks/' . $taskId . '?' . $this->tokenQuery);
+        $result = $this->client->get('tasks/' . $taskId);
 
         $status = $result->getStatusCode();
         if ($status === 200) {
@@ -109,7 +109,7 @@ trait TodoistTasksTrait
         if ($options) {
             unset($options['content']);
         }
-        $result = $this->client->post('tasks/' . $taskId . '?' . $this->tokenQuery, [
+        $result = $this->client->post('tasks/' . $taskId, [
             RequestOptions::JSON => array_merge(['content' => trim($content)], $options),
         ]);
 
@@ -134,7 +134,7 @@ trait TodoistTasksTrait
             return false;
         }
 
-        $result = $this->client->get('tasks/' . $taskId . '/close' . '?' . $this->tokenQuery);
+        $result = $this->client->get('tasks/' . $taskId . '/close');
         $status = $result->getStatusCode();
 
         return ($status === 200 || $status === 204);
@@ -153,7 +153,7 @@ trait TodoistTasksTrait
             return false;
         }
 
-        $result = $this->client->get('tasks/' . $taskId . '/reopen' . '?' . $this->tokenQuery);
+        $result = $this->client->get('tasks/' . $taskId . '/reopen');
         $status = $result->getStatusCode();
 
         return ($status === 200 || $status === 204);
@@ -172,7 +172,7 @@ trait TodoistTasksTrait
             return false;
         }
 
-        $result = $this->client->delete('tasks/' . $taskId . '?' . $this->tokenQuery);
+        $result = $this->client->delete('tasks/' . $taskId);
         $status = $result->getStatusCode();
 
         return ($status === 200 || $status === 204);
