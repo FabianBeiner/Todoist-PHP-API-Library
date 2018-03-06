@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.6.0 - 2018-03-06
+### Changed
+- Improved the code quality overall.
+- Added a helper function from @balazscsaba2006.
+- Enabled GZIP.
+- Requires PHP 7.x.
+- Some more smaller improvements.
+
 ## 0.5.0 - 2018-03-02
 ### Changed
 - Improved the code of old Traits.
