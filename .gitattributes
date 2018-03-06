@@ -1,6 +1,6 @@
 # Define Git attributes (https://git-scm.com/docs/gitattributes)
 
-# As per default as well as a fallback, we let Git handle line endings
+# As per default, as well as a fallback, we let Git handle line endings
 # automatically for files detected as text.
 * text=auto
 
@@ -8,12 +8,31 @@
 .editorconfig      export-ignore
 .gitattributes     export-ignore
 .gitignore         export-ignore
-CHANGELOG.md       export-ignore
 CODE_OF_CONDUCT.md export-ignore
+CODE_OF_CONDUCT    export-ignore
 ISSUE_TEMPLATE.md  export-ignore
+ISSUE_TEMPLATE     export-ignore
 
-# The following settings are based on the work by Alexander Karatarakis. See
+# The following settings are based on the November 30th, 2017 release of
 # https://github.com/alexkaratarakis/gitattributes/blob/master/Web.gitattributes
+# by Alexander Karatarakis.
+
+# Archives
+*.7z  binary
+*.gz  binary
+*.jar binary
+*.rar binary
+*.tar binary
+*.zip binary
+
+# Audio
+*.kar  binary
+*.m4a  binary
+*.mid  binary
+*.midi binary
+*.mp3  binary
+*.ogg  binary
+*.ra   binary
 
 # Code
 *.bat      text eol=crlf
@@ -45,42 +64,6 @@ ISSUE_TEMPLATE.md  export-ignore
 *.xhtml    text
 *.xml      text
 
-# Documentation
-*.markdown   text
-*.md         text
-AUTHORS      text
-CHANGELOG    text
-CONTRIBUTING text
-COPYRIGHT    text
-INSTALL      text
-LICENSE      text
-README       text
-TODO         text
-
-# Templates
-*.dot        text
-*.ejs        text
-*.haml       text
-*.handlebars text
-*.hbs        text
-*.hbt        text
-*.jade       text
-*.latte      text
-*.mustache   text
-*.njk        text
-*.phtml      text
-*.tmpl       text
-*.tpl        text
-*.twig       text
-
-# Linters
-.csslintrc    text
-.eslintrc     text
-.jscsrc       text
-.jshintignore text
-.jshintrc     text
-.stylelintrc  text
-
 # Configs
 *.bowerrc       text
 *.cnf           text
@@ -95,11 +78,47 @@ TODO         text
 .editorconfig   text
 .gitattributes  text
 .gitconfig      text
-.gitignore      text
 .htaccess       text
 browserslist    text
-Makefile        text
 makefile        text
+Makefile        text
+
+# Documentation
+*.markdown   text
+*.mdown      text
+*.md         text
+*.mdtext     text
+*.mdtxt      text
+*.mdwn       text
+*.mkdn       text
+*.mkd        text
+*.txt        text
+*COPYRIGHT*  text
+*README*     text
+AUTHORS      text
+CHANGELOG    text
+CHANGES      text
+CONTRIBUTING text
+COPYING      text
+copyright    text
+INSTALL      text
+LICENSE      text
+license      text
+NEWS         text
+readme       text
+TODO         text
+
+# Executables
+*.exe binary
+*.msi binary
+*.pyc binary
+
+# Fonts
+*.eot   binary
+*.otf   binary
+*.ttf   binary
+*.woff2 binary
+*.woff  binary
 
 # Images
 *.ai   binary
@@ -124,14 +143,35 @@ makefile        text
 *.wbmp binary
 *.webp binary
 
-# Audio
-*.kar  binary
-*.m4a  binary
-*.mid  binary
-*.midi binary
-*.mp3  binary
-*.ogg  binary
-*.ra   binary
+# Linters
+.csslintrc    text
+.eslintrc     text
+.htmlhintrc   text
+.jscsrc       text
+.jshintignore text
+.jshintrc     text
+.stylelintrc  text
+
+# Misc
+*.lock text
+*.log  text
+*.url  text
+
+# Templates
+*.dot        text
+*.ejs        text
+*.haml       text
+*.handlebars text
+*.hbs        text
+*.hbt        text
+*.jade       text
+*.latte      text
+*.mustache   text
+*.njk        text
+*.phtml      text
+*.tmpl       text
+*.tpl        text
+*.twig       text
 
 # Video
 *.3gp  binary
@@ -147,30 +187,7 @@ makefile        text
 *.mp4  binary
 *.mpeg binary
 *.mpg  binary
+*.ogv  binary
 *.swc  binary
 *.swf  binary
 *.webm binary
-
-# Archives
-*.7z  binary
-*.gz  binary
-*.rar binary
-*.tar binary
-*.zip binary
-
-# Fonts
-*.eot   binary
-*.otf   binary
-*.ttf   binary
-*.woff2 binary
-*.woff  binary
-
-# Executables
-*.exe binary
-*.msi binary
-*.pyc binary
-
-# Misc
-*.lock text
-*.log  text
-*.url  text
