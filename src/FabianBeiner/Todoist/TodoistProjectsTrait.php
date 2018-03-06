@@ -4,7 +4,7 @@
  * An unofficial PHP client library for accessing the official Todoist REST API.
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
- * @license MIT
+ * @license https://opensource.org/licenses/MIT MIT
  * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
@@ -26,7 +26,7 @@ trait TodoistProjectsTrait
      */
     public function getAllProjects()
     {
-        $result = $this->client->get('projects?' . $this->tokenQuery);
+        $result = $this->client->get('projects');
 
         $status = $result->getStatusCode();
         if ($status === 204) {
@@ -46,13 +46,13 @@ trait TodoistProjectsTrait
      *
      * @return array|bool Array with values of the new project, or false on failure.
      */
-    public function createProject($name)
+    public function createProject(string $name)
     {
         if ( ! mb_strlen($name, 'utf8')) {
             return false;
         }
 
-        $result = $this->client->post('projects?' . $this->tokenQuery,
+        $result = $this->client->post('projects',
                                       [
                                           RequestOptions::JSON => ['name' => trim($name)]
                                       ]);
@@ -72,13 +72,13 @@ trait TodoistProjectsTrait
      *
      * @return array|bool Array with values of the project, or false on failure.
      */
-    public function getProject($projectId)
+    public function getProject(int $projectId)
     {
-        if ($projectId <= 0 || ! filter_var($projectId, FILTER_VALIDATE_INT)) {
+        if ( ! $projectId || ! filter_var($projectId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
-        $result = $this->client->get('projects/' . $projectId . '?' . $this->tokenQuery);
+        $result = $this->client->get('projects/' . $projectId);
 
         $status = $result->getStatusCode();
         if ($status === 200) {
@@ -96,7 +96,7 @@ trait TodoistProjectsTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function renameProject($projectId, $name)
+    public function renameProject(int $projectId, string $name)
     {
         return $this->updateProject($projectId, $name);
     }
@@ -109,13 +109,13 @@ trait TodoistProjectsTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function updateProject($projectId, $name)
+    public function updateProject(int $projectId, string $name)
     {
-        if ($projectId <= 0 || ! mb_strlen($name, 'utf8') || ! filter_var($projectId, FILTER_VALIDATE_INT)) {
+        if ( ! $projectId || ! mb_strlen($name, 'utf8') || ! filter_var($projectId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
-        $result = $this->client->post('projects/' . $projectId . '?' . $this->tokenQuery,
+        $result = $this->client->post('projects/' . $projectId,
                                       [
                                           RequestOptions::JSON => ['name' => trim($name)]
                                       ]);
@@ -132,13 +132,13 @@ trait TodoistProjectsTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function deleteProject($projectId)
+    public function deleteProject(int $projectId)
     {
-        if ($projectId <= 0 || ! filter_var($projectId, FILTER_VALIDATE_INT)) {
+        if ( ! $projectId || ! filter_var($projectId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
-        $result = $this->client->delete('projects/' . $projectId . '?' . $this->tokenQuery);
+        $result = $this->client->delete('projects/' . $projectId);
 
         $status = $result->getStatusCode();
 
