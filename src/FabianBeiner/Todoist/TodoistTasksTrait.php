@@ -26,7 +26,7 @@ trait TodoistTasksTrait
      */
     public function getAllTasks()
     {
-        $result = $this->client->get('tasks?' . $this->tokenQuery);
+        $result = $this->client->get('tasks');
 
         $status = $result->getStatusCode();
         if ($status === 204) {
@@ -49,7 +49,7 @@ trait TodoistTasksTrait
      */
     public function createTask($content, array $options = [])
     {
-        if (!mb_strlen($content, 'utf8')) {
+        if ('' === $content) {
             return false;
         }
 
@@ -60,8 +60,7 @@ trait TodoistTasksTrait
             RequestOptions::JSON => array_merge(['content' => trim($content)], $options),
         ]);
 
-        $status = $result->getStatusCode();
-        if ($status === 200) {
+        if ($result->getStatusCode() === 200) {
             return json_decode($result->getBody()->getContents());
         }
 
@@ -83,8 +82,7 @@ trait TodoistTasksTrait
 
         $result = $this->client->get('tasks/' . $taskId);
 
-        $status = $result->getStatusCode();
-        if ($status === 200) {
+        if ($result->getStatusCode() === 200) {
             return json_decode($result->getBody()->getContents());
         }
 
@@ -102,7 +100,7 @@ trait TodoistTasksTrait
      */
     public function updateTask($taskId, $content, array $options = [])
     {
-        if (!mb_strlen($content, 'utf8')) {
+        if ('' === $content) {
             return false;
         }
 
@@ -113,8 +111,7 @@ trait TodoistTasksTrait
             RequestOptions::JSON => array_merge(['content' => trim($content)], $options),
         ]);
 
-        $status = $result->getStatusCode();
-        if ($status === 200) {
+        if ($result->getStatusCode() === 200) {
             return json_decode($result->getBody()->getContents());
         }
 
@@ -128,7 +125,7 @@ trait TodoistTasksTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function closeTask($taskId)
+    public function closeTask($taskId): bool
     {
         if ($taskId <= 0 || !filter_var($taskId, FILTER_VALIDATE_INT)) {
             return false;
@@ -147,7 +144,7 @@ trait TodoistTasksTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function reopenTask($taskId)
+    public function reopenTask($taskId): bool
     {
         if ($taskId <= 0 || !filter_var($taskId, FILTER_VALIDATE_INT)) {
             return false;
@@ -166,7 +163,7 @@ trait TodoistTasksTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function deleteTask($taskId)
+    public function deleteTask($taskId): bool
     {
         if ($taskId <= 0 || !filter_var($taskId, FILTER_VALIDATE_INT)) {
             return false;

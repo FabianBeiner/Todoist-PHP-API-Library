@@ -42,8 +42,8 @@ trait TodoistCommentsTrait
     public function getAllComments($type, $typeId)
     {
         $type = mb_strtolower($type, 'UTF-8');
-        if (($type !== 'project' && $type !== 'task') || (!filter_var($typeId,
-                    FILTER_VALIDATE_INT) || $typeId <= 0)) {
+        if (($type !== 'project' && $type !== 'task')
+            || (!filter_var($typeId, FILTER_VALIDATE_INT) || $typeId <= 0)) {
             return false;
         }
 
@@ -101,24 +101,20 @@ trait TodoistCommentsTrait
     public function createComment($type, $typeId, $comment)
     {
         $type = mb_strtolower($type, 'UTF-8');
-        if (($type !== 'project' && $type !== 'task') ||
-            (!filter_var($typeId,
-                    FILTER_VALIDATE_INT) || $typeId <= 0) ||
-            !mb_strlen($comment,
-                'utf8')) {
+        if (($type !== 'project' && $type !== 'task')
+            || '' === $comment
+            || (!filter_var($typeId, FILTER_VALIDATE_INT) || $typeId <= 0)) {
             return false;
         }
 
-        $result = $this->client->post('comments',
-            [
-                RequestOptions::JSON => [
-                    $type . '_id' => (int)$typeId,
-                    'content' => trim($comment),
-                ],
-            ]);
+        $result = $this->client->post('comments', [
+            RequestOptions::JSON => [
+                $type . '_id' => (int)$typeId,
+                'content' => trim($comment),
+            ],
+        ]);
 
-        $status = $result->getStatusCode();
-        if ($status === 200) {
+        if ($result->getStatusCode() === 200) {
             return json_decode($result->getBody()->getContents());
         }
 
@@ -147,14 +143,13 @@ trait TodoistCommentsTrait
      */
     public function getComment($commentId)
     {
-        if (!filter_var($commentId, FILTER_VALIDATE_INT) || $commentId <= 0) {
+        if ($commentId <= 0 || !filter_var($commentId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
         $result = $this->client->get('comments/' . $commentId);
 
-        $status = $result->getStatusCode();
-        if ($status === 200) {
+        if ($result->getStatusCode() === 200) {
             return json_decode($result->getBody()->getContents());
         }
 
@@ -169,23 +164,17 @@ trait TodoistCommentsTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function updateComment($commentId, $content)
+    public function updateComment($commentId, $content): bool
     {
-        if ((!filter_var($commentId, FILTER_VALIDATE_INT) || $commentId <= 0) || !mb_strlen($content, 'utf8')) {
+        if ($commentId <= 0 || '' === $content || !filter_var($commentId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
-        $result = $this->client->post('comments/' . $commentId,
-            [
-                RequestOptions::JSON => ['content' => trim($content)],
-            ]);
+        $result = $this->client->post('comments/' . $commentId, [
+            RequestOptions::JSON => ['content' => trim($content)],
+        ]);
 
-        $status = $result->getStatusCode();
-        if ($status === 204) {
-            return true;
-        }
-
-        return false;
+        return ($result->getStatusCode() === 204);
     }
 
     /**
@@ -195,19 +184,15 @@ trait TodoistCommentsTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function deleteComment($commentId)
+    public function deleteComment($commentId): bool
     {
-        if (!filter_var($commentId, FILTER_VALIDATE_INT) || $commentId <= 0) {
+        if ($commentId <= 0 || !filter_var($commentId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
         $result = $this->client->delete('comments/' . $commentId);
-
         $status = $result->getStatusCode();
-        if ($status === 200 || $status === 204) {
-            return true;
-        }
 
-        return false;
+        return ($status === 200 || $status === 204);
     }
 }

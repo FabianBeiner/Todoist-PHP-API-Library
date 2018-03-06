@@ -26,7 +26,7 @@ trait TodoistProjectsTrait
      */
     public function getAllProjects()
     {
-        $result = $this->client->get('projects?' . $this->tokenQuery);
+        $result = $this->client->get('projects');
 
         $status = $result->getStatusCode();
         if ($status === 204) {
@@ -48,17 +48,15 @@ trait TodoistProjectsTrait
      */
     public function createProject($name)
     {
-        if (!mb_strlen($name, 'utf8')) {
+        if ('' === $name) {
             return false;
         }
 
-        $result = $this->client->post('projects?' . $this->tokenQuery,
-            [
-                RequestOptions::JSON => ['name' => trim($name)],
-            ]);
+        $result = $this->client->post('projects', [
+            RequestOptions::JSON => ['name' => trim($name)],
+        ]);
 
-        $status = $result->getStatusCode();
-        if ($status === 200) {
+        if ($result->getStatusCode() === 200) {
             return json_decode($result->getBody()->getContents());
         }
 
@@ -80,8 +78,7 @@ trait TodoistProjectsTrait
 
         $result = $this->client->get('projects/' . $projectId . '?' . $this->tokenQuery);
 
-        $status = $result->getStatusCode();
-        if ($status === 200) {
+        if ($result->getStatusCode() === 200) {
             return json_decode($result->getBody()->getContents());
         }
 
@@ -91,41 +88,35 @@ trait TodoistProjectsTrait
     /**
      * Alias for updateProject().
      *
-     * @param int $projectId ID of the project.
-     * @param string $name New name of the project.
+     * @param int    $projectId ID of the project.
+     * @param string $name      New name of the project.
      *
      * @return bool True on success, false on failure.
      */
-    public function renameProject($projectId, $name)
+    public function renameProject($projectId, $name): bool
     {
         return $this->updateProject($projectId, $name);
     }
 
     /**
-     * Update (actually rename…) a project.
+     * Update (actually rename...) a project.
      *
-     * @param int $projectId ID of the project.
-     * @param string $name New name of the project.
+     * @param int    $projectId ID of the project.
+     * @param string $name      New name of the project.
      *
      * @return bool True on success, false on failure.
      */
-    public function updateProject($projectId, $name)
+    public function updateProject($projectId, $name): bool
     {
-        if (!filter_var($projectId, FILTER_VALIDATE_INT) || $projectId <= 0 || !mb_strlen($name, 'utf8')) {
+        if ($projectId <= 0 || '' === $name || !filter_var($projectId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
-        $result = $this->client->post('projects/' . $projectId . '?' . $this->tokenQuery,
-            [
-                RequestOptions::JSON => ['name' => trim($name)],
-            ]);
+        $result = $this->client->post('projects/' . $projectId, [
+            RequestOptions::JSON => ['name' => trim($name)],
+        ]);
 
-        $status = $result->getStatusCode();
-        if ($status === 204) {
-            return true;
-        }
-
-        return false;
+        return ($result->getStatusCode() === 204);
     }
 
     /**
@@ -135,19 +126,16 @@ trait TodoistProjectsTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function deleteProject($projectId)
+    public function deleteProject($projectId): bool
     {
-        if (!filter_var($projectId, FILTER_VALIDATE_INT) || $projectId <= 0) {
+        if ($projectId <= 0 || !filter_var($projectId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
-        $result = $this->client->delete('projects/' . $projectId . '?' . $this->tokenQuery);
+        $result = $this->client->delete('projects/' . $projectId);
 
         $status = $result->getStatusCode();
-        if ($status === 200 || $status === 204) {
-            return true;
-        }
 
-        return false;
+        return ($status === 200 || $status === 204);
     }
 }
