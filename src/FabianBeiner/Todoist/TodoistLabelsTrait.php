@@ -4,7 +4,7 @@
  * An unofficial PHP client library for accessing the official Todoist REST API.
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
- * @license MIT
+ * @license https://opensource.org/licenses/MIT MIT
  * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
@@ -26,7 +26,7 @@ trait TodoistLabelsTrait
      */
     public function getAllLabels()
     {
-        $result = $this->client->get('labels?' . $this->tokenQuery);
+        $result = $this->client->get('labels');
 
         $status = $result->getStatusCode();
         if ($status === 204) {
@@ -46,13 +46,13 @@ trait TodoistLabelsTrait
      *
      * @return array|bool Array with values of the new label, or false on failure.
      */
-    public function createLabel($name)
+    public function createLabel(string $name)
     {
         if ( ! mb_strlen($name, 'utf8')) {
             return false;
         }
 
-        $result = $this->client->post('labels?' . $this->tokenQuery,
+        $result = $this->client->post('labels',
                                       [
                                           RequestOptions::JSON => ['name' => trim($name)]
                                       ]);
@@ -72,13 +72,13 @@ trait TodoistLabelsTrait
      *
      * @return array|bool Array with values of the label, or false on failure.
      */
-    public function getLabel($labelId)
+    public function getLabel(int $labelId)
     {
-        if ($labelId <= 0 || ! filter_var($labelId, FILTER_VALIDATE_INT)) {
+        if ( ! $labelId || ! filter_var($labelId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
-        $result = $this->client->get('labels/' . $labelId . '?' . $this->tokenQuery);
+        $result = $this->client->get('labels/' . $labelId);
 
         $status = $result->getStatusCode();
         if ($status === 200) {
@@ -96,7 +96,7 @@ trait TodoistLabelsTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function renameLabel($labelId, $name)
+    public function renameLabel(int $labelId, string $name)
     {
         return $this->updateLabel($labelId, $name);
     }
@@ -109,13 +109,13 @@ trait TodoistLabelsTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function updateLabel($labelId, $name)
+    public function updateLabel(int $labelId, string $name)
     {
-        if ($labelId <= 0 || ! mb_strlen($name, 'utf8') || ! filter_var($labelId, FILTER_VALIDATE_INT)) {
+        if ( ! $labelId || ! mb_strlen($name, 'utf8') || ! filter_var($labelId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
-        $result = $this->client->post('labels/' . $labelId . '?' . $this->tokenQuery,
+        $result = $this->client->post('labels/' . $labelId,
                                       [
                                           RequestOptions::JSON => ['name' => trim($name)]
                                       ]);
@@ -132,13 +132,13 @@ trait TodoistLabelsTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function deleteLabel($labelId)
+    public function deleteLabel(int $labelId)
     {
-        if ($labelId <= 0 || ! filter_var($labelId, FILTER_VALIDATE_INT)) {
+        if ( ! $labelId || ! filter_var($labelId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
-        $result = $this->client->delete('labels/' . $labelId . '?' . $this->tokenQuery);
+        $result = $this->client->delete('labels/' . $labelId);
 
         $status = $result->getStatusCode();
 
