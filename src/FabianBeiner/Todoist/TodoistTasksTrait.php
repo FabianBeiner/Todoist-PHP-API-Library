@@ -3,8 +3,8 @@
  * Todoist PHP API Library
  * An unofficial PHP client library for accessing the official Todoist REST API.
  *
- * @author  Balazs Csaba <balazscsaba2006@gmail.com>
- * @license MIT
+ * @author  Fabian Beiner <fb@fabianbeiner.de>
+ * @license https://opensource.org/licenses/MIT MIT
  * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
@@ -26,7 +26,7 @@ trait TodoistTasksTrait
      */
     public function getAllTasks()
     {
-        $result = $this->client->get('tasks?' . $this->tokenQuery);
+        $result = $this->client->get('tasks');
 
         $status = $result->getStatusCode();
         if ($status === 204) {
@@ -47,7 +47,7 @@ trait TodoistTasksTrait
      *
      * @return array|bool Array with values of the new task, or false on failure.
      */
-    public function createTask($content, array $options = [])
+    public function createTask(string $content, array $options = [])
     {
         if ( ! mb_strlen($content, 'utf8')) {
             return false;
@@ -56,9 +56,10 @@ trait TodoistTasksTrait
         if ($options) {
             unset($options['content']);
         }
-        $result = $this->client->post('tasks?' . $this->tokenQuery,
+        $result = $this->client->post('tasks',
                                       [
-                                          RequestOptions::JSON => array_merge(['content' => trim($content)], $options),
+                                          RequestOptions::JSON => array_merge(['content' => trim($content)],
+                                                                              $options),
                                       ]);
 
         $status = $result->getStatusCode();
@@ -76,13 +77,13 @@ trait TodoistTasksTrait
      *
      * @return array|bool Array with values of the task, or false on failure.
      */
-    public function getTask($taskId)
+    public function getTask(int $taskId)
     {
-        if ($taskId <= 0 || ! filter_var($taskId, FILTER_VALIDATE_INT)) {
+        if ( ! $taskId || ! filter_var($taskId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
-        $result = $this->client->get('tasks/' . $taskId . '?' . $this->tokenQuery);
+        $result = $this->client->get('tasks/' . $taskId);
 
         $status = $result->getStatusCode();
         if ($status === 200) {
@@ -101,7 +102,7 @@ trait TodoistTasksTrait
      *
      * @return array|bool Array with values of the new task, or false on failure.
      */
-    public function updateTask($taskId, $content, array $options = [])
+    public function updateTask(int $taskId, string $content, array $options = [])
     {
         if ( ! mb_strlen($content, 'utf8')) {
             return false;
@@ -110,9 +111,10 @@ trait TodoistTasksTrait
         if ($options) {
             unset($options['content']);
         }
-        $result = $this->client->post('tasks/' . $taskId . '?' . $this->tokenQuery,
+        $result = $this->client->post('tasks/' . $taskId,
                                       [
-                                          RequestOptions::JSON => array_merge(['content' => trim($content)], $options),
+                                          RequestOptions::JSON => array_merge(['content' => trim($content)],
+                                                                              $options),
                                       ]);
 
         $status = $result->getStatusCode();
@@ -130,13 +132,13 @@ trait TodoistTasksTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function closeTask($taskId)
+    public function closeTask(int $taskId)
     {
-        if ($taskId <= 0 || ! filter_var($taskId, FILTER_VALIDATE_INT)) {
+        if ( ! $taskId || ! filter_var($taskId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
-        $result = $this->client->get('tasks/' . $taskId . '/close' . '?' . $this->tokenQuery);
+        $result = $this->client->get('tasks/' . $taskId . '/close');
         $status = $result->getStatusCode();
 
         return ($status === 200 || $status === 204);
@@ -149,13 +151,13 @@ trait TodoistTasksTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function reopenTask($taskId)
+    public function reopenTask(int $taskId)
     {
-        if ($taskId <= 0 || ! filter_var($taskId, FILTER_VALIDATE_INT)) {
+        if ( ! $taskId || ! filter_var($taskId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
-        $result = $this->client->get('tasks/' . $taskId . '/reopen' . '?' . $this->tokenQuery);
+        $result = $this->client->get('tasks/' . $taskId . '/reopen');
         $status = $result->getStatusCode();
 
         return ($status === 200 || $status === 204);
@@ -168,13 +170,13 @@ trait TodoistTasksTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function deleteTask($taskId)
+    public function deleteTask(int $taskId)
     {
-        if ($taskId <= 0 || ! filter_var($taskId, FILTER_VALIDATE_INT)) {
+        if ( ! $taskId || ! filter_var($taskId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
-        $result = $this->client->delete('tasks/' . $taskId . '?' . $this->tokenQuery);
+        $result = $this->client->delete('tasks/' . $taskId);
         $status = $result->getStatusCode();
 
         return ($status === 200 || $status === 204);
