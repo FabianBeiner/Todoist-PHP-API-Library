@@ -17,11 +17,11 @@ use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\RequestOptions;
 
 /**
- * Class Todoist.
+ * Class TodoistClient.
  *
  * @package FabianBeiner\Todoist
  */
-class Todoist extends GuzzleClient
+class TodoistClient extends GuzzleClient
 {
     /**
      * Use Traits.
@@ -79,6 +79,34 @@ class Todoist extends GuzzleClient
     }
 
     /**
+     * Prepare Guzzle request data.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function prepareRequestData(array $data = []): array
+    {
+        array_walk_recursive($data, 'trim');
+
+        return [RequestOptions::JSON => $data];
+    }
+
+    /**
+     * Validates an ID to be a positive integer
+     *
+     * @param mixed $id
+     *
+     * @return bool
+     */
+    protected function validateId($id): bool
+    {
+        $filterOptions = ['options' => ['min_range' => 0]];
+
+        return (bool) filter_var($id, FILTER_VALIDATE_INT, $filterOptions);
+    }
+
+    /**
      * Merge configurations.
      *
      * @param array $first
@@ -103,34 +131,6 @@ class Todoist extends GuzzleClient
         }
 
         return $merged;
-    }
-
-    /**
-     * Prepare Guzzle request data.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    private function prepareRequestData(array $data = []): array
-    {
-        array_walk_recursive($data, 'trim');
-
-        return [RequestOptions::JSON => $data];
-    }
-
-    /**
-     * Validates an ID to be a positive integer
-     *
-     * @param mixed $id
-     *
-     * @return bool
-     */
-    private function validateId($id): bool
-    {
-        $filterOptions = ['options' => ['min_range' => 0]];
-
-        return (bool) filter_var($id, FILTER_VALIDATE_INT, $filterOptions);
     }
 
     /**
