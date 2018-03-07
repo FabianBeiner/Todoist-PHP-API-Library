@@ -4,13 +4,12 @@
  * An unofficial PHP client library for accessing the official Todoist REST API.
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
- * @license MIT
+ * @author  Balazs Csaba <balazscsaba2006@gmail.com>
+ * @license https://opensource.org/licenses/MIT MIT
  * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
 namespace FabianBeiner\Todoist;
-
-use GuzzleHttp\RequestOptions;
 
 /**
  * Trait TodoistProjectsTrait.
@@ -26,13 +25,13 @@ trait TodoistProjectsTrait
      */
     public function getAllProjects()
     {
-        $result = $this->client->get('projects');
+        $result = $this->get('projects');
 
         $status = $result->getStatusCode();
-        if ($status === 204) {
+        if (204 === $status) {
             return [];
         }
-        if ($status === 200) {
+        if (200 === $status) {
             return json_decode($result->getBody()->getContents());
         }
 
@@ -46,17 +45,16 @@ trait TodoistProjectsTrait
      *
      * @return array|bool Array with values of the new project, or false on failure.
      */
-    public function createProject($name)
+    public function createProject(string $name)
     {
         if ('' === $name) {
             return false;
         }
 
-        $result = $this->client->post('projects', [
-            RequestOptions::JSON => ['name' => trim($name)],
-        ]);
+        $data = $this->prepareRequestData(['name' => $name]);
+        $result = $this->post('projects', $data);
 
-        if ($result->getStatusCode() === 200) {
+        if (200 === $result->getStatusCode()) {
             return json_decode($result->getBody()->getContents());
         }
 
@@ -70,15 +68,15 @@ trait TodoistProjectsTrait
      *
      * @return array|bool Array with values of the project, or false on failure.
      */
-    public function getProject($projectId)
+    public function getProject(int $projectId)
     {
-        if (!filter_var($projectId, FILTER_VALIDATE_INT) || $projectId <= 0) {
+        if (!$this->validateId($projectId)) {
             return false;
         }
 
-        $result = $this->client->get('projects/' . $projectId . '?' . $this->tokenQuery);
+        $result = $this->get('projects/' . $projectId);
 
-        if ($result->getStatusCode() === 200) {
+        if (200 === $result->getStatusCode()) {
             return json_decode($result->getBody()->getContents());
         }
 
@@ -93,7 +91,7 @@ trait TodoistProjectsTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function renameProject($projectId, $name): bool
+    public function renameProject(int $projectId, string $name): bool
     {
         return $this->updateProject($projectId, $name);
     }
@@ -106,17 +104,16 @@ trait TodoistProjectsTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function updateProject($projectId, $name): bool
+    public function updateProject(int $projectId, string $name): bool
     {
-        if ($projectId <= 0 || '' === $name || !filter_var($projectId, FILTER_VALIDATE_INT)) {
+        if ('' === $name || !$this->validateId($projectId)) {
             return false;
         }
 
-        $result = $this->client->post('projects/' . $projectId, [
-            RequestOptions::JSON => ['name' => trim($name)],
-        ]);
+        $data = $this->prepareRequestData(['name' => $name]);
+        $result = $this->post('projects/' . $projectId, $data);
 
-        return ($result->getStatusCode() === 204);
+        return 204 === $result->getStatusCode();
     }
 
     /**
@@ -126,16 +123,14 @@ trait TodoistProjectsTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function deleteProject($projectId): bool
+    public function deleteProject(int $projectId): bool
     {
-        if ($projectId <= 0 || !filter_var($projectId, FILTER_VALIDATE_INT)) {
+        if ($projectId <= 0 || !$projectId || !filter_var($projectId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
-        $result = $this->client->delete('projects/' . $projectId);
+        $result = $this->delete('projects/' . $projectId);
 
-        $status = $result->getStatusCode();
-
-        return ($status === 200 || $status === 204);
+        return 204 === $result->getStatusCode();
     }
 }

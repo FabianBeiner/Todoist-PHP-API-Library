@@ -4,13 +4,12 @@
  * An unofficial PHP client library for accessing the official Todoist REST API.
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
- * @license MIT
+ * @author  Balazs Csaba <balazscsaba2006@gmail.com>
+ * @license https://opensource.org/licenses/MIT MIT
  * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
 namespace FabianBeiner\Todoist;
-
-use GuzzleHttp\RequestOptions;
 
 /**
  * Trait TodoistCommentsTrait.
@@ -19,6 +18,18 @@ use GuzzleHttp\RequestOptions;
  */
 trait TodoistCommentsTrait
 {
+    /**
+     * Alias for getAllComments('project', $projectId).
+     *
+     * @param int $projectId ID of the project.
+     *
+     * @return array|bool Array with all comments (can be empty), or false on failure.
+     */
+    public function getAllCommentsByProject(int $projectId)
+    {
+        return $this->getAllComments('project', $projectId);
+    }
+
     /**
      * Alias for getAllComments('task', $taskId).
      *
@@ -34,24 +45,21 @@ trait TodoistCommentsTrait
     /**
      * Get all comments.
      *
-     * @param string $type Can be "project" or "task".
-     * @param int $typeId ID of the project/task.
+     * @param string $type   Can be "project" or "task".
+     * @param int    $typeId ID of the project/task.
      *
      * @return array|bool Array with all comments (can be empty), or false on failure.
      */
-    public function getAllComments($type, $typeId)
+    public function getAllComments(string $type, int $typeId)
     {
-        $type = mb_strtolower($type, 'UTF-8');
-        if (($type !== 'project' && $type !== 'task')
-            || (!filter_var($typeId, FILTER_VALIDATE_INT) || $typeId <= 0)) {
+        $type = strtolower($type);
+
+        if (($type !== 'project' && $type !== 'task') || !$this->validateId($typeId)) {
             return false;
         }
 
-        parse_str($this->tokenQuery, $query);
-        $query[$type . '_id'] = $typeId;
-        $localQuery = http_build_query($query, null, '&', PHP_QUERY_RFC3986);
-
-        $result = $this->client->get('comments?' . $localQuery);
+        $query = http_build_query([$type . '_id' => $typeId], null, '&', PHP_QUERY_RFC3986);
+        $result = $this->get('comments?' . $query);
 
         $status = $result->getStatusCode();
         if ($status === 204) {
@@ -65,26 +73,28 @@ trait TodoistCommentsTrait
     }
 
     /**
-     * Alias for getAllComments('project', $projectId).
+     * Alias for createComment('project', $projectId, $comment).
      *
-     * @param int $projectId ID of the project.
+     * @param int    $projectId ID of the project.
+     * @param string $comment   Comment to be added.
      *
-     * @return array|bool Array with all comments (can be empty), or false on failure.
+     * @return array|bool Array with values of the new comment, or false on failure.
      */
-    public function getAllCommentsByProject($projectId)
+    public function createCommentForProject(int $projectId, string $comment)
     {
-        return $this->getAllComments('project', $projectId);
+        return $this->createComment('project', $projectId, $comment);
     }
 
     /**
      * Alias for createComment('task', $projectId, $comment).
      *
-     * @param int $taskId ID of the task.
+     * @param int    $taskId  ID of the task.
      * @param string $comment Comment to be added.
      *
-     * @return array|bool Array with values of the new comment, or false on failure.
+     * @return array|bool Array with values of the new comment, or false on
+     *                    failure.
      */
-    public function createCommentForTask($taskId, $comment)
+    public function createCommentForTask(int $taskId, string $comment)
     {
         return $this->createComment('task', $taskId, $comment);
     }
@@ -92,46 +102,31 @@ trait TodoistCommentsTrait
     /**
      * Create a new comment.
      *
-     * @param string $type Can be "project" or "task".
-     * @param int $typeId ID of the project/task.
+     * @param string $type    Can be "project" or "task".
+     * @param int    $typeId  ID of the project/task.
      * @param string $comment Comment to be added.
      *
      * @return array|bool Array with values of the new comment, or false on failure.
      */
-    public function createComment($type, $typeId, $comment)
+    public function createComment(string $type, int $typeId, string $comment)
     {
-        $type = mb_strtolower($type, 'UTF-8');
-        if (($type !== 'project' && $type !== 'task')
-            || '' === $comment
-            || (!filter_var($typeId, FILTER_VALIDATE_INT) || $typeId <= 0)) {
+        $type = strtolower($type);
+
+        if (($type !== 'project' && $type !== 'task') || '' === $comment || !$this->validateId($typeId)) {
             return false;
         }
 
-        $result = $this->client->post('comments', [
-            RequestOptions::JSON => [
-                $type . '_id' => (int)$typeId,
-                'content' => trim($comment),
-            ],
+        $data = $this->prepareRequestData([
+            $type . '_id' => $typeId,
+            'content' => $comment,
         ]);
+        $result = $this->post('comments', $data);
 
-        if ($result->getStatusCode() === 200) {
+        if (200 === $result->getStatusCode()) {
             return json_decode($result->getBody()->getContents());
         }
 
         return false;
-    }
-
-    /**
-     * Alias for createComment('project', $projectId, $comment).
-     *
-     * @param int $projectId ID of the project.
-     * @param string $comment Comment to be added.
-     *
-     * @return array|bool Array with values of the new comment, or false on failure.
-     */
-    public function createCommentForProject($projectId, $comment)
-    {
-        return $this->createComment('project', $projectId, $comment);
     }
 
     /**
@@ -141,15 +136,15 @@ trait TodoistCommentsTrait
      *
      * @return array|bool Array with values of the comment, or false on failure.
      */
-    public function getComment($commentId)
+    public function getComment(int $commentId)
     {
-        if ($commentId <= 0 || !filter_var($commentId, FILTER_VALIDATE_INT)) {
+        if (!$this->validateId($commentId)) {
             return false;
         }
 
-        $result = $this->client->get('comments/' . $commentId);
+        $result = $this->get('comments/' . $commentId);
 
-        if ($result->getStatusCode() === 200) {
+        if (200 === $result->getStatusCode()) {
             return json_decode($result->getBody()->getContents());
         }
 
@@ -159,22 +154,21 @@ trait TodoistCommentsTrait
     /**
      * Update a comment.
      *
-     * @param int $commentId ID of the comment.
-     * @param string $content New content of the comment.
+     * @param int    $commentId ID of the comment.
+     * @param string $content   New content of the comment.
      *
      * @return bool True on success, false on failure.
      */
-    public function updateComment($commentId, $content): bool
+    public function updateComment(int $commentId, string $content): bool
     {
-        if ($commentId <= 0 || '' === $content || !filter_var($commentId, FILTER_VALIDATE_INT)) {
+        if ('' === $content || !$this->validateId($commentId)) {
             return false;
         }
 
-        $result = $this->client->post('comments/' . $commentId, [
-            RequestOptions::JSON => ['content' => trim($content)],
-        ]);
+        $data = $this->prepareRequestData(['content' => $content]);
+        $result = $this->post('comments/' . $commentId, $data);
 
-        return ($result->getStatusCode() === 204);
+        return 204 === $result->getStatusCode();
     }
 
     /**
@@ -184,15 +178,14 @@ trait TodoistCommentsTrait
      *
      * @return bool True on success, false on failure.
      */
-    public function deleteComment($commentId): bool
+    public function deleteComment(int $commentId): bool
     {
-        if ($commentId <= 0 || !filter_var($commentId, FILTER_VALIDATE_INT)) {
+        if (!$this->validateId($commentId)) {
             return false;
         }
 
-        $result = $this->client->delete('comments/' . $commentId);
-        $status = $result->getStatusCode();
+        $result = $this->delete('comments/' . $commentId);
 
-        return ($status === 200 || $status === 204);
+        return 204 === $result->getStatusCode();
     }
 }

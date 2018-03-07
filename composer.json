@@ -18,7 +18,7 @@
   "license": "MIT",
   "require": {
     "guzzlehttp/guzzle": "~6.3",
-    "php": ">=5.5"
+    "php": ">=7.0"
   },
   "authors": [
     {

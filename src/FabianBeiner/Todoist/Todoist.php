@@ -4,21 +4,24 @@
  * An unofficial PHP client library for accessing the official Todoist REST API.
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
- * @license MIT
+ * @author  Balazs Csaba <balazscsaba2006@gmail.com>
+ * @license https://opensource.org/licenses/MIT MIT
+ * @version 0.6.0 <2018-03-07>
  * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
- * @version 0.4.0 <2017-11-14>
  */
 
 namespace FabianBeiner\Todoist;
 
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\RequestOptions;
 
 /**
  * Class Todoist.
  *
  * @package FabianBeiner\Todoist
  */
-class Todoist
+class Todoist extends GuzzleClient
 {
     /**
      * Use Traits.
@@ -31,68 +34,103 @@ class Todoist
     protected $restApiUrl = 'https://beta.todoist.com/API/v8/';
 
     /**
-     * @var string|null The API token to access the Todoist API, or null if unset.
-     */
-    private $apiToken;
-
-    /**
-     * @var \GuzzleHttp\Client|null Guzzle client, or null if unset.
-     */
-    private $client;
-
-    /**
-     * @var string|null Default URL query.
-     */
-    private $tokenQuery;
-
-    /**
      * Todoist constructor.
      *
      * @param string $apiToken The API token to access the Todoist API.
+     * @param array  $config   Configuration to be passed to Guzzle client
      *
-     * @throws \Exception
+     * @throws \FabianBeiner\Todoist\TodoistException
      */
-    public function __construct($apiToken)
+    public function __construct(string $apiToken, array $config = [])
     {
-        // Check and set the API token.
-        if (mb_strlen($apiToken, 'utf8') !== 40) {
-            throw new \Exception('The provided API token is invalid!');
+        $apiToken = trim($apiToken);
+        if (\strlen($apiToken) !== 40) {
+            throw new TodoistException('The provided API token is invalid!');
         }
-        $this->apiToken = trim($apiToken);
 
-        // Create a default query for the token.
-        $this->tokenQuery = http_build_query(['token' => $this->apiToken], null, '&', PHP_QUERY_RFC3986);
-
-        // Create a Guzzle client.
-        $this->client = new Client([
-            'base_uri' => $this->restApiUrl,
-            'headers' => $this->createHeaders(),
+        $defaults = [
+            'headers' => ['Accept-Encoding' => 'gzip'],
             'http_errors' => false,
             'timeout' => 5,
-        ]);
+        ];
+        $config = $this->mergeConfigurations($defaults, $config);
+
+        $config['base_uri'] = $this->restApiUrl;
+        $config['headers']['Authorization'] = sprintf('Bearer %s', $apiToken);
+
+        parent::__construct($config);
     }
 
     /**
-     * Ensures to regenerate GUID
+     * Wrapper on Guzzle's requestAsync method
      *
-     * @return Todoist
+     * @param string $method
+     * @param string $uri
+     * @param array  $options
+     *
+     * @return PromiseInterface
      */
-    public function reset(): Todoist
+    public function requestAsync($method, $uri = '', array $options = []): PromiseInterface
     {
-        $this->client = new self($this->apiToken);
+        // ensure X-Request-Id header is regenerated for every call
+        $options['headers']['X-Request-Id'] = $this->generateV4GUID();
 
-        return $this->client;
+        return parent::requestAsync($method, $uri, $options);
     }
 
     /**
+     * Merge configurations.
+     *
+     * @param array $first
+     * @param array $second
+     *
      * @return array
      */
-    protected function createHeaders(): array
+    private function mergeConfigurations(array $first, array $second): array
     {
-        return [
-            'Authorization' => sprintf('Bearer %s', $this->apiToken),
-            'X-Request-Id' => $this->generateV4GUID(),
-        ];
+        $merged = $first;
+
+        foreach ($second as $key => $value) {
+            if (!array_key_exists($key, $first) && !is_numeric($key)) {
+                $merged[$key] = $second[$key];
+                continue;
+            }
+
+            $merged[$key] = $value;
+            if (\is_array($value) || \is_array($first[$key])) {
+                $merged[$key] = $this->mergeConfigurations($first[$key], $value);
+            }
+        }
+
+        return $merged;
+    }
+
+    /**
+     * Prepare Guzzle request data.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    private function prepareRequestData(array $data = []): array
+    {
+        array_walk_recursive($data, 'trim');
+
+        return [RequestOptions::JSON => $data];
+    }
+
+    /**
+     * Validates an ID to be a positive integer
+     *
+     * @param mixed $id
+     *
+     * @return bool
+     */
+    private function validateId($id): bool
+    {
+        $filterOptions = ['options' => ['min_range' => 0]];
+
+        return (bool) filter_var($id, FILTER_VALIDATE_INT, $filterOptions);
     }
 
     /**
