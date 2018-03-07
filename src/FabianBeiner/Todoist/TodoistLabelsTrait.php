@@ -131,8 +131,6 @@ trait TodoistLabelsTrait
         $data = $this->prepareRequestData(['name' => $name]);
         $result = $this->post('labels/' . $labelId, $data);
 
-        $status = $result->getStatusCode();
-
         return 204 === $result->getStatusCode();
     }
 
