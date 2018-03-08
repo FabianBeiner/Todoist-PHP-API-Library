@@ -6,3 +6,4 @@ composer.phar
 Desktop.ini
 Thumbs.db
 vendor/
+phpunit.xml
