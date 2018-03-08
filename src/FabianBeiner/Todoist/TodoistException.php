@@ -5,16 +5,16 @@
  *
  * @author  Balazs Csaba <balazscsaba2006@gmail.com>
  * @license https://opensource.org/licenses/MIT MIT
+ *
  * @version 0.6.0 <2018-03-07>
- * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
+ *
+ * @see    https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
 namespace FabianBeiner\Todoist;
 
 /**
  * Class TodoistException.
- *
- * @package FabianBeiner\Todoist
  */
 class TodoistException extends \LogicException
 {

@@ -6,15 +6,14 @@
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @author  Balazs Csaba <balazscsaba2006@gmail.com>
  * @license https://opensource.org/licenses/MIT MIT
- * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
+ *
+ * @see    https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
 namespace FabianBeiner\Todoist;
 
 /**
  * Trait TodoistTasksTrait.
- *
- * @package FabianBeiner\Todoist
  */
 trait TodoistTasksTrait
 {
@@ -28,7 +27,7 @@ trait TodoistTasksTrait
     abstract protected function prepareRequestData(array $data = []): array;
 
     /**
-     * Validates an ID to be a positive integer
+     * Validates an ID to be a positive integer.
      *
      * @param mixed $id
      *
@@ -95,7 +94,7 @@ trait TodoistTasksTrait
             return false;
         }
 
-        $result = $this->get('tasks/' . $taskId);
+        $result = $this->get('tasks/'.$taskId);
 
         $status = $result->getStatusCode();
         if (200 === $status) {
@@ -122,7 +121,7 @@ trait TodoistTasksTrait
 
         unset($options['content']);
         $data = $this->prepareRequestData(array_merge(['content' => $content], $options));
-        $result = $this->post('tasks/' . $taskId, $data);
+        $result = $this->post('tasks/'.$taskId, $data);
 
         return 204 === $result->getStatusCode();
     }
@@ -140,7 +139,7 @@ trait TodoistTasksTrait
             return false;
         }
 
-        $result = $this->get('tasks/' . $taskId . '/close');
+        $result = $this->get('tasks/'.$taskId.'/close');
 
         return 204 === $result->getStatusCode();
     }
@@ -158,7 +157,7 @@ trait TodoistTasksTrait
             return false;
         }
 
-        $result = $this->get('tasks/' . $taskId . '/reopen');
+        $result = $this->get('tasks/'.$taskId.'/reopen');
 
         return 204 === $result->getStatusCode();
     }
@@ -176,7 +175,7 @@ trait TodoistTasksTrait
             return false;
         }
 
-        $result = $this->delete('tasks/' . $taskId);
+        $result = $this->delete('tasks/'.$taskId);
 
         return 204 === $result->getStatusCode();
     }

@@ -6,15 +6,14 @@
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @author  Balazs Csaba <balazscsaba2006@gmail.com>
  * @license https://opensource.org/licenses/MIT MIT
- * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
+ *
+ * @see    https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
 namespace FabianBeiner\Todoist;
 
 /**
  * Trait TodoistCommentsTrait.
- *
- * @package FabianBeiner\Todoist
  */
 trait TodoistCommentsTrait
 {
@@ -28,7 +27,7 @@ trait TodoistCommentsTrait
     abstract protected function prepareRequestData(array $data = []): array;
 
     /**
-     * Validates an ID to be a positive integer
+     * Validates an ID to be a positive integer.
      *
      * @param mixed $id
      *
@@ -72,18 +71,18 @@ trait TodoistCommentsTrait
     {
         $type = strtolower($type);
 
-        if (($type !== 'project' && $type !== 'task') || !$this->validateId($typeId)) {
+        if (('project' !== $type && 'task' !== $type) || !$this->validateId($typeId)) {
             return false;
         }
 
-        $query = http_build_query([$type . '_id' => $typeId], null, '&', PHP_QUERY_RFC3986);
-        $result = $this->get('comments?' . $query);
+        $query = http_build_query([$type.'_id' => $typeId], null, '&', PHP_QUERY_RFC3986);
+        $result = $this->get('comments?'.$query);
 
         $status = $result->getStatusCode();
-        if ($status === 204) {
+        if (204 === $status) {
             return [];
         }
-        if ($status === 200) {
+        if (200 === $status) {
             return json_decode($result->getBody()->getContents());
         }
 
@@ -130,12 +129,12 @@ trait TodoistCommentsTrait
     {
         $type = strtolower($type);
 
-        if (($type !== 'project' && $type !== 'task') || '' === $comment || !$this->validateId($typeId)) {
+        if (('project' !== $type && 'task' !== $type) || '' === $comment || !$this->validateId($typeId)) {
             return false;
         }
 
         $data = $this->prepareRequestData([
-            $type . '_id' => $typeId,
+            $type.'_id' => $typeId,
             'content' => $comment,
         ]);
         $result = $this->post('comments', $data);
@@ -160,7 +159,7 @@ trait TodoistCommentsTrait
             return false;
         }
 
-        $result = $this->get('comments/' . $commentId);
+        $result = $this->get('comments/'.$commentId);
 
         if (200 === $result->getStatusCode()) {
             return json_decode($result->getBody()->getContents());
@@ -184,7 +183,7 @@ trait TodoistCommentsTrait
         }
 
         $data = $this->prepareRequestData(['content' => $content]);
-        $result = $this->post('comments/' . $commentId, $data);
+        $result = $this->post('comments/'.$commentId, $data);
 
         return 204 === $result->getStatusCode();
     }
@@ -202,7 +201,7 @@ trait TodoistCommentsTrait
             return false;
         }
 
-        $result = $this->delete('comments/' . $commentId);
+        $result = $this->delete('comments/'.$commentId);
 
         return 204 === $result->getStatusCode();
     }

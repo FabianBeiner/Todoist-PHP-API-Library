@@ -6,8 +6,7 @@ use FabianBeiner\Todoist\TodoistException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class TodoistExceptionTest
- * @package FabianBeiner\Todoist
+ * Class TodoistExceptionTest.
  */
 class TodoistExceptionTest extends TestCase
 {

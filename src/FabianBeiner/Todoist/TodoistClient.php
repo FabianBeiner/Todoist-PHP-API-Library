@@ -6,8 +6,10 @@
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @author  Balazs Csaba <balazscsaba2006@gmail.com>
  * @license https://opensource.org/licenses/MIT MIT
+ *
  * @version 0.6.0 <2018-03-07>
- * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
+ *
+ * @see    https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
 namespace FabianBeiner\Todoist;
@@ -18,12 +20,10 @@ use GuzzleHttp\RequestOptions;
 
 /**
  * Class TodoistClient.
- *
- * @package FabianBeiner\Todoist
  */
 class TodoistClient extends GuzzleClient
 {
-    /**
+    /*
      * Use Traits.
      */
     use TodoistCommentsTrait, TodoistLabelsTrait, TodoistProjectsTrait, TodoistTasksTrait;
@@ -44,7 +44,7 @@ class TodoistClient extends GuzzleClient
     public function __construct(string $apiToken, array $config = [])
     {
         $apiToken = trim($apiToken);
-        if (\strlen($apiToken) !== 40) {
+        if (40 !== \strlen($apiToken)) {
             throw new TodoistException('The provided API token is invalid!');
         }
 
@@ -62,7 +62,7 @@ class TodoistClient extends GuzzleClient
     }
 
     /**
-     * Wrapper on Guzzle's requestAsync method
+     * Wrapper on Guzzle's requestAsync method.
      *
      * @param string $method
      * @param string $uri
@@ -93,7 +93,7 @@ class TodoistClient extends GuzzleClient
     }
 
     /**
-     * Validates an ID to be a positive integer
+     * Validates an ID to be a positive integer.
      *
      * @param mixed $id
      *
@@ -137,13 +137,14 @@ class TodoistClient extends GuzzleClient
      * Generate a v4 GUID string.
      *
      * @author Pavel Volyntsev <pavel.volyntsev@gmail.com>
+     *
      * @see    http://php.net/manual/en/function.com-create-guid.php#117893
      *
      * @return string A v4 GUID.
      */
     private function generateV4GUID(): string
     {
-        if (\function_exists('com_create_guid') === true) {
+        if (true === \function_exists('com_create_guid')) {
             return trim(com_create_guid(), '{}');
         }
 

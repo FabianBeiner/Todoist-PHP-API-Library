@@ -6,15 +6,14 @@
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @author  Balazs Csaba <balazscsaba2006@gmail.com>
  * @license https://opensource.org/licenses/MIT MIT
- * @link    https://github.com/FabianBeiner/Todoist-PHP-API-Library
+ *
+ * @see    https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
 namespace FabianBeiner\Todoist;
 
 /**
  * Trait TodoistProjectsTrait.
- *
- * @package FabianBeiner\Todoist
  */
 trait TodoistProjectsTrait
 {
@@ -28,7 +27,7 @@ trait TodoistProjectsTrait
     abstract protected function prepareRequestData(array $data = []): array;
 
     /**
-     * Validates an ID to be a positive integer
+     * Validates an ID to be a positive integer.
      *
      * @param mixed $id
      *
@@ -92,7 +91,7 @@ trait TodoistProjectsTrait
             return false;
         }
 
-        $result = $this->get('projects/' . $projectId);
+        $result = $this->get('projects/'.$projectId);
 
         if (200 === $result->getStatusCode()) {
             return json_decode($result->getBody()->getContents());
@@ -129,7 +128,7 @@ trait TodoistProjectsTrait
         }
 
         $data = $this->prepareRequestData(['name' => $name]);
-        $result = $this->post('projects/' . $projectId, $data);
+        $result = $this->post('projects/'.$projectId, $data);
 
         return 204 === $result->getStatusCode();
     }
@@ -147,7 +146,7 @@ trait TodoistProjectsTrait
             return false;
         }
 
-        $result = $this->delete('projects/' . $projectId);
+        $result = $this->delete('projects/'.$projectId);
 
         return 204 === $result->getStatusCode();
     }

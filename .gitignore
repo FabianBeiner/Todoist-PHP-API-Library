@@ -7,3 +7,4 @@ Desktop.ini
 Thumbs.db
 vendor/
 phpunit.xml
+.php_cs.cache
