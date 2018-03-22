@@ -7,7 +7,7 @@
  * @author  Balazs Csaba <balazscsaba2006@gmail.com>
  * @license https://opensource.org/licenses/MIT MIT
  *
- * @see    https://github.com/FabianBeiner/Todoist-PHP-API-Library
+ * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
 namespace FabianBeiner\Todoist;
@@ -70,7 +70,7 @@ trait TodoistTasksTrait
         }
 
         unset($options['content']);
-        $data = $this->prepareRequestData(array_merge(['content' => $content], $options));
+        $data   = $this->prepareRequestData(array_merge(['content' => $content], $options));
         $result = $this->post('tasks', $data);
 
         $status = $result->getStatusCode();
@@ -90,11 +90,11 @@ trait TodoistTasksTrait
      */
     public function getTask(int $taskId)
     {
-        if (!$this->validateId($taskId)) {
+        if ( ! $this->validateId($taskId)) {
             return false;
         }
 
-        $result = $this->get('tasks/'.$taskId);
+        $result = $this->get('tasks/' . $taskId);
 
         $status = $result->getStatusCode();
         if (200 === $status) {
@@ -120,8 +120,8 @@ trait TodoistTasksTrait
         }
 
         unset($options['content']);
-        $data = $this->prepareRequestData(array_merge(['content' => $content], $options));
-        $result = $this->post('tasks/'.$taskId, $data);
+        $data   = $this->prepareRequestData(array_merge(['content' => $content], $options));
+        $result = $this->post('tasks/' . $taskId, $data);
 
         return 204 === $result->getStatusCode();
     }
@@ -135,11 +135,11 @@ trait TodoistTasksTrait
      */
     public function closeTask(int $taskId): bool
     {
-        if (!$this->validateId($taskId)) {
+        if ( ! $this->validateId($taskId)) {
             return false;
         }
 
-        $result = $this->get('tasks/'.$taskId.'/close');
+        $result = $this->get('tasks/' . $taskId . '/close');
 
         return 204 === $result->getStatusCode();
     }
@@ -153,11 +153,11 @@ trait TodoistTasksTrait
      */
     public function reopenTask(int $taskId): bool
     {
-        if (!$this->validateId($taskId)) {
+        if ( ! $this->validateId($taskId)) {
             return false;
         }
 
-        $result = $this->get('tasks/'.$taskId.'/reopen');
+        $result = $this->get('tasks/' . $taskId . '/reopen');
 
         return 204 === $result->getStatusCode();
     }
@@ -171,11 +171,11 @@ trait TodoistTasksTrait
      */
     public function deleteTask(int $taskId): bool
     {
-        if (!$this->validateId($taskId)) {
+        if ( ! $this->validateId($taskId)) {
             return false;
         }
 
-        $result = $this->delete('tasks/'.$taskId);
+        $result = $this->delete('tasks/' . $taskId);
 
         return 204 === $result->getStatusCode();
     }

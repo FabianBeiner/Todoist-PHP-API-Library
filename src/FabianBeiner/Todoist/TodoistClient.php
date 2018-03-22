@@ -7,9 +7,9 @@
  * @author  Balazs Csaba <balazscsaba2006@gmail.com>
  * @license https://opensource.org/licenses/MIT MIT
  *
- * @version 0.6.0 <2018-03-07>
+ * @version 0.7.0 <2018-03-22>
  *
- * @see    https://github.com/FabianBeiner/Todoist-PHP-API-Library
+ * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
 namespace FabianBeiner\Todoist;
@@ -49,13 +49,13 @@ class TodoistClient extends GuzzleClient
         }
 
         $defaults = [
-            'headers' => ['Accept-Encoding' => 'gzip'],
+            'headers'     => ['Accept-Encoding' => 'gzip'],
             'http_errors' => false,
-            'timeout' => 5,
+            'timeout'     => 5,
         ];
-        $config = $this->mergeConfigurations($defaults, $config);
+        $config   = $this->mergeConfigurations($defaults, $config);
 
-        $config['base_uri'] = $this->restApiUrl;
+        $config['base_uri']                 = $this->restApiUrl;
         $config['headers']['Authorization'] = sprintf('Bearer %s', $apiToken);
 
         parent::__construct($config);
@@ -103,7 +103,7 @@ class TodoistClient extends GuzzleClient
     {
         $filterOptions = ['options' => ['min_range' => 0]];
 
-        return (bool) filter_var($id, FILTER_VALIDATE_INT, $filterOptions);
+        return (bool)filter_var($id, FILTER_VALIDATE_INT, $filterOptions);
     }
 
     /**
@@ -119,7 +119,7 @@ class TodoistClient extends GuzzleClient
         $merged = $first;
 
         foreach ($second as $key => $value) {
-            if (!array_key_exists($key, $first) && !is_numeric($key)) {
+            if ( ! array_key_exists($key, $first) && ! is_numeric($key)) {
                 $merged[$key] = $second[$key];
                 continue;
             }
@@ -148,7 +148,7 @@ class TodoistClient extends GuzzleClient
             return trim(com_create_guid(), '{}');
         }
 
-        $data = openssl_random_pseudo_bytes(16);
+        $data    = openssl_random_pseudo_bytes(16);
         $data[6] = \chr(\ord($data[6]) & 0x0f | 0x40);
         $data[8] = \chr(\ord($data[8]) & 0x3f | 0x80);
 

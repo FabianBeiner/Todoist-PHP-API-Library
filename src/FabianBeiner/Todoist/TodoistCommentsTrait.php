@@ -7,7 +7,7 @@
  * @author  Balazs Csaba <balazscsaba2006@gmail.com>
  * @license https://opensource.org/licenses/MIT MIT
  *
- * @see    https://github.com/FabianBeiner/Todoist-PHP-API-Library
+ * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
 namespace FabianBeiner\Todoist;
@@ -71,12 +71,12 @@ trait TodoistCommentsTrait
     {
         $type = strtolower($type);
 
-        if (('project' !== $type && 'task' !== $type) || !$this->validateId($typeId)) {
+        if (('project' !== $type && 'task' !== $type) || ! $this->validateId($typeId)) {
             return false;
         }
 
-        $query = http_build_query([$type.'_id' => $typeId], null, '&', PHP_QUERY_RFC3986);
-        $result = $this->get('comments?'.$query);
+        $query  = http_build_query([$type . '_id' => $typeId], null, '&', PHP_QUERY_RFC3986);
+        $result = $this->get('comments?' . $query);
 
         $status = $result->getStatusCode();
         if (204 === $status) {
@@ -129,14 +129,14 @@ trait TodoistCommentsTrait
     {
         $type = strtolower($type);
 
-        if (('project' !== $type && 'task' !== $type) || '' === $comment || !$this->validateId($typeId)) {
+        if (('project' !== $type && 'task' !== $type) || '' === $comment || ! $this->validateId($typeId)) {
             return false;
         }
 
-        $data = $this->prepareRequestData([
-            $type.'_id' => $typeId,
-            'content' => $comment,
-        ]);
+        $data   = $this->prepareRequestData([
+                                                $type . '_id' => $typeId,
+                                                'content'     => $comment,
+                                            ]);
         $result = $this->post('comments', $data);
 
         if (200 === $result->getStatusCode()) {
@@ -155,11 +155,11 @@ trait TodoistCommentsTrait
      */
     public function getComment(int $commentId)
     {
-        if (!$this->validateId($commentId)) {
+        if ( ! $this->validateId($commentId)) {
             return false;
         }
 
-        $result = $this->get('comments/'.$commentId);
+        $result = $this->get('comments/' . $commentId);
 
         if (200 === $result->getStatusCode()) {
             return json_decode($result->getBody()->getContents());
@@ -178,12 +178,12 @@ trait TodoistCommentsTrait
      */
     public function updateComment(int $commentId, string $content): bool
     {
-        if ('' === $content || !$this->validateId($commentId)) {
+        if ('' === $content || ! $this->validateId($commentId)) {
             return false;
         }
 
-        $data = $this->prepareRequestData(['content' => $content]);
-        $result = $this->post('comments/'.$commentId, $data);
+        $data   = $this->prepareRequestData(['content' => $content]);
+        $result = $this->post('comments/' . $commentId, $data);
 
         return 204 === $result->getStatusCode();
     }
@@ -197,11 +197,11 @@ trait TodoistCommentsTrait
      */
     public function deleteComment(int $commentId): bool
     {
-        if (!$this->validateId($commentId)) {
+        if ( ! $this->validateId($commentId)) {
             return false;
         }
 
-        $result = $this->delete('comments/'.$commentId);
+        $result = $this->delete('comments/' . $commentId);
 
         return 204 === $result->getStatusCode();
     }

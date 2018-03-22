@@ -7,7 +7,7 @@
  * @author  Balazs Csaba <balazscsaba2006@gmail.com>
  * @license https://opensource.org/licenses/MIT MIT
  *
- * @see    https://github.com/FabianBeiner/Todoist-PHP-API-Library
+ * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
 namespace FabianBeiner\Todoist;
@@ -68,7 +68,7 @@ trait TodoistLabelsTrait
             return false;
         }
 
-        $data = $this->prepareRequestData(['name' => $name]);
+        $data   = $this->prepareRequestData(['name' => $name]);
         $result = $this->post('labels', $data);
 
         if (200 === $result->getStatusCode()) {
@@ -87,11 +87,11 @@ trait TodoistLabelsTrait
      */
     public function getLabel(int $labelId)
     {
-        if (!$this->validateId($labelId)) {
+        if ( ! $this->validateId($labelId)) {
             return false;
         }
 
-        $result = $this->get('labels/'.$labelId);
+        $result = $this->get('labels/' . $labelId);
 
         if (200 === $result->getStatusCode()) {
             return json_decode($result->getBody()->getContents());
@@ -123,12 +123,12 @@ trait TodoistLabelsTrait
      */
     public function updateLabel(int $labelId, string $name): bool
     {
-        if ('' === $name || !$this->validateId($labelId)) {
+        if ('' === $name || ! $this->validateId($labelId)) {
             return false;
         }
 
-        $data = $this->prepareRequestData(['name' => $name]);
-        $result = $this->post('labels/'.$labelId, $data);
+        $data   = $this->prepareRequestData(['name' => $name]);
+        $result = $this->post('labels/' . $labelId, $data);
 
         return 204 === $result->getStatusCode();
     }
@@ -142,11 +142,11 @@ trait TodoistLabelsTrait
      */
     public function deleteLabel(int $labelId): bool
     {
-        if (!$this->validateId($labelId)) {
+        if ( ! $this->validateId($labelId)) {
             return false;
         }
 
-        $result = $this->delete('labels/'.$labelId);
+        $result = $this->delete('labels/' . $labelId);
 
         return 204 === $result->getStatusCode();
     }

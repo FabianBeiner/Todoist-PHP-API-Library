@@ -7,7 +7,7 @@
  * @author  Balazs Csaba <balazscsaba2006@gmail.com>
  * @license https://opensource.org/licenses/MIT MIT
  *
- * @see    https://github.com/FabianBeiner/Todoist-PHP-API-Library
+ * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
 namespace FabianBeiner\Todoist;
@@ -68,7 +68,7 @@ trait TodoistProjectsTrait
             return false;
         }
 
-        $data = $this->prepareRequestData(['name' => $name]);
+        $data   = $this->prepareRequestData(['name' => $name]);
         $result = $this->post('projects', $data);
 
         if (200 === $result->getStatusCode()) {
@@ -87,11 +87,11 @@ trait TodoistProjectsTrait
      */
     public function getProject(int $projectId)
     {
-        if (!$this->validateId($projectId)) {
+        if ( ! $this->validateId($projectId)) {
             return false;
         }
 
-        $result = $this->get('projects/'.$projectId);
+        $result = $this->get('projects/' . $projectId);
 
         if (200 === $result->getStatusCode()) {
             return json_decode($result->getBody()->getContents());
@@ -123,12 +123,12 @@ trait TodoistProjectsTrait
      */
     public function updateProject(int $projectId, string $name): bool
     {
-        if ('' === $name || !$this->validateId($projectId)) {
+        if ('' === $name || ! $this->validateId($projectId)) {
             return false;
         }
 
-        $data = $this->prepareRequestData(['name' => $name]);
-        $result = $this->post('projects/'.$projectId, $data);
+        $data   = $this->prepareRequestData(['name' => $name]);
+        $result = $this->post('projects/' . $projectId, $data);
 
         return 204 === $result->getStatusCode();
     }
@@ -142,11 +142,11 @@ trait TodoistProjectsTrait
      */
     public function deleteProject(int $projectId): bool
     {
-        if ($projectId <= 0 || !$projectId || !filter_var($projectId, FILTER_VALIDATE_INT)) {
+        if ($projectId <= 0 || ! $projectId || ! filter_var($projectId, FILTER_VALIDATE_INT)) {
             return false;
         }
 
-        $result = $this->delete('projects/'.$projectId);
+        $result = $this->delete('projects/' . $projectId);
 
         return 204 === $result->getStatusCode();
     }
