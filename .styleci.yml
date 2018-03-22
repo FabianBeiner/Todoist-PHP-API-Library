@@ -1,6 +1,15 @@
-preset: symfony
+preset: recommended
+
+enabled:
+  - align_equals
+  - concat_with_spaces
+  - not_operator_with_space
+
+disabled:
+  - concat_without_spaces
+  - unalign_equals
 
 finder:
-    path:
-        - "src"
-        - "tests"
+  path:
+    - "src"
+    - "tests"
