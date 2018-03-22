@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.7.0 - 2018-03-22
+### Changed
+- Merged latest version from @balazscsaba2006.
+- Updated some coding style settings.
+
 ## 0.6.0 - 2018-03-06
 ### Changed
 - Improved the code quality overall.
