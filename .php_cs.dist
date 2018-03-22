@@ -6,7 +6,7 @@ $rules = [
     'blank_line_after_opening_tag'                => true,
     'blank_line_before_return'                    => true,
     'braces'                                      => true,
-    'cast_spaces'                                 => ['space' => 'none'],
+    'cast_spaces'                                 => ['space' => 'single'],
     'class_definition'                            => true,
     'concat_space'                                => ['spacing' => 'one'],
     'declare_equal_normalize'                     => true,
