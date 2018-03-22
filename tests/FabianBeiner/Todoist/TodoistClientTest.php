@@ -120,9 +120,9 @@ class TodoistClientTest extends TestCase
             [
                 [
                     'base_uri' => 'https://google.com',
-                    'headers' => [
+                    'headers'  => [
                         'X-CUSTOM-HEADER' => 'test',
-                        'Authorization' => 'Basic someuser',
+                        'Authorization'   => 'Basic someuser',
                     ],
                 ],
             ],

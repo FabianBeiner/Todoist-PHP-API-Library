@@ -103,7 +103,7 @@ class TodoistClient extends GuzzleClient
     {
         $filterOptions = ['options' => ['min_range' => 0]];
 
-        return (bool)filter_var($id, FILTER_VALIDATE_INT, $filterOptions);
+        return (bool) filter_var($id, FILTER_VALIDATE_INT, $filterOptions);
     }
 
     /**
