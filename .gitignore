@@ -2,9 +2,9 @@
 .DS_Store
 .idea/
 .LSOverride
+.php_cs.cache
 composer.phar
 Desktop.ini
-Thumbs.db
-vendor/
 phpunit.xml
-.php_cs.cache
+Thumbs.db
+vendor
