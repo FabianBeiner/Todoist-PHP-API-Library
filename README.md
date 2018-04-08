@@ -33,7 +33,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 ## Usage
 ```php
-$Todoist = new FabianBeiner\Todoist\Todoist('YOUR_API_TOKEN');
+$Todoist = new FabianBeiner\Todoist\TodoistClient('YOUR_API_TOKEN');
 ```
 
 ## Methods & Examples
