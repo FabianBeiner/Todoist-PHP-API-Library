@@ -60,7 +60,7 @@ trait TodoistLabelsTrait
      *
      * @param string $name Name of the label.
      *
-     * @return array|bool Array with values of the new label, or false on failure.
+     * @return object|bool Object with values of the new label, or false on failure.
      */
     public function createLabel(string $name)
     {
@@ -83,7 +83,7 @@ trait TodoistLabelsTrait
      *
      * @param int $labelId ID of the label.
      *
-     * @return array|bool Array with values of the label, or false on failure.
+     * @return object|bool Object with values of the label, or false on failure.
      */
     public function getLabel(int $labelId)
     {

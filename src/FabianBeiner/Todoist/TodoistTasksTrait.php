@@ -61,7 +61,7 @@ trait TodoistTasksTrait
      * @param string $content Content of the task.
      * @param array  $options Possibility to add non-required parameters.
      *
-     * @return array|bool Array with values of the new task, or false on failure.
+     * @return object|bool Object with values of the new task, or false on failure.
      */
     public function createTask(string $content, array $options = [])
     {

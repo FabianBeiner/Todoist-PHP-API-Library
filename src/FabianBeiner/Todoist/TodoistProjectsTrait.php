@@ -60,7 +60,7 @@ trait TodoistProjectsTrait
      *
      * @param string $name Name of the project.
      *
-     * @return array|bool Array with values of the new project, or false on failure.
+     * @return object|bool Object with values of the new project, or false on failure.
      */
     public function createProject(string $name)
     {
@@ -83,7 +83,7 @@ trait TodoistProjectsTrait
      *
      * @param int $projectId ID of the project.
      *
-     * @return array|bool Array with values of the project, or false on failure.
+     * @return object|bool Object with values of the project, or false on failure.
      */
     public function getProject(int $projectId)
     {

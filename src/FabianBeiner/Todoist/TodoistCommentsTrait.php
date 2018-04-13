@@ -95,7 +95,7 @@ trait TodoistCommentsTrait
      * @param int    $projectId ID of the project.
      * @param string $comment   Comment to be added.
      *
-     * @return array|bool Array with values of the new comment, or false on failure.
+     * @return object|bool Object with values of the new comment, or false on failure.
      */
     public function createCommentForProject(int $projectId, string $comment)
     {
@@ -108,8 +108,7 @@ trait TodoistCommentsTrait
      * @param int    $taskId  ID of the task.
      * @param string $comment Comment to be added.
      *
-     * @return array|bool Array with values of the new comment, or false on
-     *                    failure.
+     * @return object|bool Object with values values of the new comment, or false on failure.
      */
     public function createCommentForTask(int $taskId, string $comment)
     {
@@ -123,7 +122,7 @@ trait TodoistCommentsTrait
      * @param int    $typeId  ID of the project/task.
      * @param string $comment Comment to be added.
      *
-     * @return array|bool Array with values of the new comment, or false on failure.
+     * @return object|bool Object with values of the new comment, or false on failure.
      */
     public function createComment(string $type, int $typeId, string $comment)
     {
@@ -151,7 +150,7 @@ trait TodoistCommentsTrait
      *
      * @param int $commentId ID of the comment.
      *
-     * @return array|bool Array with values of the comment, or false on failure.
+     * @return object|bool Object with values of the comment, or false on failure.
      */
     public function getComment(int $commentId)
     {
