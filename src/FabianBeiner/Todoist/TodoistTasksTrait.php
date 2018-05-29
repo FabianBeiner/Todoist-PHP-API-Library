@@ -139,7 +139,7 @@ trait TodoistTasksTrait
             return false;
         }
 
-        $result = $this->get('tasks/' . $taskId . '/close');
+        $result = $this->post('tasks/' . $taskId . '/close');
 
         return 204 === $result->getStatusCode();
     }
@@ -157,7 +157,7 @@ trait TodoistTasksTrait
             return false;
         }
 
-        $result = $this->get('tasks/' . $taskId . '/reopen');
+        $result = $this->post('tasks/' . $taskId . '/repoen');
 
         return 204 === $result->getStatusCode();
     }
