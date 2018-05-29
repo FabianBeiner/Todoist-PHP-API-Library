@@ -7,7 +7,7 @@
  * @author  Balazs Csaba <balazscsaba2006@gmail.com>
  * @license https://opensource.org/licenses/MIT MIT
  *
- * @version 0.7.0 <2018-03-22>
+ * @version 0.7.1 <2018-05-29>
  *
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */

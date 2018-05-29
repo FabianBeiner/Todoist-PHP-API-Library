@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.7.1 - 2018-05-29
+### Fixed
+- Updated some calls to use right method.
+
 ## 0.7.0 - 2018-03-22
 ### Changed
 - Merged latest version from @balazscsaba2006.
