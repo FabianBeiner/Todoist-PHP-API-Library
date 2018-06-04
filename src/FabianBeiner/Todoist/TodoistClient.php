@@ -1,13 +1,13 @@
 <?php
 /**
- * Todoist PHP API Library
- * An unofficial PHP client library for accessing the official Todoist REST API.
+ * PHP Client for Todoist
+ * A PHP client library that provides a native interface to the official Todoist REST API (v8).
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @author  Balazs Csaba <balazscsaba2006@gmail.com>
  * @license https://opensource.org/licenses/MIT MIT
  *
- * @version 0.7.1 <2018-05-29>
+ * @version 0.7.2 <2018-06-04>
  *
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
@@ -29,7 +29,7 @@ class TodoistClient extends GuzzleClient
     use TodoistCommentsTrait, TodoistLabelsTrait, TodoistProjectsTrait, TodoistTasksTrait;
 
     /**
-     * @var string The current URL of the Todoist REST API.
+     * @var string The URL of the Todoist REST API.
      */
     protected $restApiUrl = 'https://beta.todoist.com/API/v8/';
 
@@ -37,7 +37,7 @@ class TodoistClient extends GuzzleClient
      * Todoist constructor.
      *
      * @param string $apiToken The API token to access the Todoist API.
-     * @param array  $config   Configuration to be passed to Guzzle client
+     * @param array  $config   Configuration to be passed to Guzzle client.
      *
      * @throws \FabianBeiner\Todoist\TodoistException
      */
@@ -45,47 +45,22 @@ class TodoistClient extends GuzzleClient
     {
         $apiToken = trim($apiToken);
         if (40 !== \strlen($apiToken)) {
-            throw new TodoistException('The provided API token is invalid!');
+            throw new TodoistException('The provided API token is invalid.');
         }
 
         $defaults = [
-            'headers'     => ['Accept-Encoding' => 'gzip'],
+            'headers'     => [
+                'Accept-Encoding' => 'gzip'
+            ],
             'http_errors' => false,
-            'timeout'     => 5,
+            'timeout'     => 5
         ];
-        $config   = $this->mergeConfigurations($defaults, $config);
 
+        $config                             = array_replace_recursive($defaults, $config);
         $config['base_uri']                 = $this->restApiUrl;
         $config['headers']['Authorization'] = sprintf('Bearer %s', $apiToken);
 
         parent::__construct($config);
-    }
-
-    /**
-     * Merge configurations.
-     *
-     * @param array $first
-     * @param array $second
-     *
-     * @return array
-     */
-    private function mergeConfigurations(array $first, array $second): array
-    {
-        $merged = $first;
-
-        foreach ($second as $key => $value) {
-            if ( ! array_key_exists($key, $first) && ! is_numeric($key)) {
-                $merged[$key] = $second[$key];
-                continue;
-            }
-
-            $merged[$key] = $value;
-            if (\is_array($value) || \is_array($first[$key])) {
-                $merged[$key] = $this->mergeConfigurations($first[$key], $value);
-            }
-        }
-
-        return $merged;
     }
 
     /**
@@ -99,7 +74,7 @@ class TodoistClient extends GuzzleClient
      */
     public function requestAsync($method, $uri = '', array $options = []): PromiseInterface
     {
-        // ensure X-Request-Id header is regenerated for every call
+        // Ensure the “X-Request-Id” header gets regenerated for every call.
         $options['headers']['X-Request-Id'] = $this->generateV4GUID();
 
         return parent::requestAsync($method, $uri, $options);

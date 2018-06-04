@@ -8,6 +8,7 @@ enabled:
 disabled:
   - concat_without_spaces
   - unalign_equals
+  - trailing_comma_in_multiline_array
 
 finder:
   path:
