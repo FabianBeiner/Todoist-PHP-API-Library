@@ -1,20 +1,25 @@
 [![GitHub tag](https://img.shields.io/github/tag/FabianBeiner/Todoist-PHP-API-Library.svg)](https://github.com/FabianBeiner/Todoist-PHP-API-Library/tags) * [![GitHub stars](https://img.shields.io/github/stars/FabianBeiner/Todoist-PHP-API-Library.svg)](https://github.com/FabianBeiner/Todoist-PHP-API-Library/stargazers) * [![GitHub issues](https://img.shields.io/github/issues/FabianBeiner/Todoist-PHP-API-Library.svg)](https://github.com/FabianBeiner/Todoist-PHP-API-Library/issues) * [![GitHub license](https://img.shields.io/github/license/FabianBeiner/Todoist-PHP-API-Library.svg)](https://github.com/FabianBeiner/Todoist-PHP-API-Library/blob/master/LICENSE) * [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a8cad853a2b041a896753b4dda5659ad)](https://www.codacy.com/app/FabianBeiner/Todoist-PHP-API-Library?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=FabianBeiner/Todoist-PHP-API-Library&amp;utm_campaign=Badge_Grade) * [![StyleCI Badge](https://styleci.io/repos/28313097/shield)](https://styleci.io/repos/28313097/)
 
-# Todoist PHP API Library
+# PHP Client for Todoist
 
-**This repository contains an _unofficial_ open source PHP client library that provides a native interface to the official [Todoist REST API](https://developer.todoist.com/rest/v8/) (v8).**
+**This repository contains a PHP client library that provides a native interface to the official 
+[Todoist REST API (v8)](https://developer.todoist.com/rest/v8/).**
+
+*The project is not created by, affiliated with, or supported by Doist.*
 
 ## Requirements
-- [PHP](http://php.net/): >= 7.0
-- [guzzlehttp/guzzle](https://packagist.org/packages/guzzlehttp/guzzle): ~6.3
+
+- [PHP](https://secure.php.net/): >= 7.0
+- [guzzlehttp/guzzle](https://packagist.org/packages/guzzlehttp/guzzle): 6.3.x
 
 ## Installation
 
-You can either use [**Composer**](https://getcomposer.org/) or simply [**download the latest release**](https://github.com/FabianBeiner/Todoist-PHP-API-Library/releases) and do your stuff.
+The recommended way is using **[Composer](https://getcomposer.org/)**. You also can **[download the latest release](https://github.com/FabianBeiner/Todoist-PHP-API-Library/releases)** and 
+start from there.
 
 ### Composer
 
-If you don’t have Composer installed, follow the [installation instructions](https://getcomposer.org/doc/00-intro.md).
+If you don’t have Composer installed, follow the [installation instructions](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx).
 
 Once composer is installed, execute the following command in your project root to install this library:
 
@@ -29,9 +34,14 @@ require __DIR__ . '/vendor/autoload.php';
 ```
 
 ## Obtain your personal API token
-[Just click here](https://todoist.com/Users/viewPrefs?page=integrations). Or open the [Todoist web app](https://todoist.com), click on the gear icon ![gear icon](https://user-images.githubusercontent.com/86269/32700618-cc113902-c7c7-11e7-9a8c-263f64510ccb.jpeg), select “Settings”, then “Integrations”. Your API token is listed on the bottom of this page.
+
+[Click here](https://todoist.com/Users/viewPrefs?page=integrations). Your API token is listed at the bottom of this page.
+
+If the link doesn’t work, open the [Todoist web app](https://todoist.com/app), click on the gear icon ![gear icon image](https://user-images.githubusercontent.com/86269/40932241-0257ed7e-682e-11e8-8ad6-06b41dec7155.png)
+, select “Settings,” then “Integrations.”
 
 ## Usage
+
 ```php
 $Todoist = new FabianBeiner\Todoist\TodoistClient('YOUR_API_TOKEN');
 ```
@@ -73,7 +83,7 @@ $Todoist = new FabianBeiner\Todoist\TodoistClient('YOUR_API_TOKEN');
 * [Delete a label](https://github.com/FabianBeiner/Todoist-PHP-API-Library/wiki/Methods:-Labels#delete-a-label)
 
 ## Contributing
-I’d be happy if you contribute to this library. Please try to follow the existing coding style and use proper comments in your commit message. 🙏
+I’d be happy if you contribute to this library. Please try to follow the existing coding style and use proper comments in your commit message. Thanks! 🙇 
 
 ## License
 

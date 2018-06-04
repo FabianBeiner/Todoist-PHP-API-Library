@@ -15,13 +15,15 @@ class TodoistClientTest extends TestCase
 
     public function setUp()
     {
-        $this->apiToken = 'mmZTXgqtBpWRVqIBqviqLcoyvs0PWHKCXtfr53gZ';
+        $this->apiToken = getenv('TODOIST_TOKEN');
 
         parent::setUp();
     }
 
     /**
      * @dataProvider clientOptions
+     *
+     * @param array $options
      */
     public function testConfiguration(array $options = [])
     {
@@ -45,6 +47,9 @@ class TodoistClientTest extends TestCase
     /**
      * @dataProvider clientEmptyOptions
      * @expectedException \FabianBeiner\Todoist\TodoistException
+     *
+     * @param       $authToken
+     * @param array $options
      */
     public function testEmptyConfiguration($authToken, array $options = [])
     {
@@ -56,62 +61,50 @@ class TodoistClientTest extends TestCase
 
     public function testRequestGet()
     {
-        $client = $this->getMockBuilder(Client::class)
-            ->setMethods(['get'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $client = $this->getMockBuilder(Client::class)->setMethods(['get'])->disableOriginalConstructor()->getMock();
 
-        $client
-            ->expects($this->once())
-            ->method('get')
-            ->willReturn(new Response());
+        $client->expects($this->once())->method('get')->willReturn(new Response());
 
         $this->assertInstanceOf(ResponseInterface::class, $client->get('uri'));
     }
 
     public function testGetException()
     {
-        $client = $this->getMockBuilder(Client::class)
-            ->setMethods(['get'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $client = $this->getMockBuilder(Client::class)->setMethods(['get'])->disableOriginalConstructor()->getMock();
 
-        $client
-            ->expects($this->once())
-            ->method('get')
-            ->willThrowException(new TodoistException('some error'));
+        $client->expects($this->once())->method('get')->willThrowException(new TodoistException('some error'));
 
         $this->expectException(TodoistException::class);
         $this->expectExceptionMessage('some error');
         $client->get('uri');
     }
 
-//    /**
-//     * @dataProvider getProxyMethods
-//     */
-//    public function testGetProxies($methodName)
-//    {
-//        $client = $this->getMockBuilder(Client::class)
-//            ->setMethods(['get'])
-//            ->disableOriginalConstructor()
-//            ->getMock();
-//        $client
-//            ->expects($this->once())
-//            ->method('get')
-//            ->willReturn(new Response());
-//
-//        $this->assertInstanceOf(ResponseInterface::class, $client->{$methodName}());
-//    }
-//
-//
-//    public function getProxyMethods()
-//    {
-//        return [
-//            ['getAllProjects'],
-//            ['getAllLabels'],
-//            ['getAllTasks'],
-//        ];
-//    }
+    //    /**
+    //     * @dataProvider getProxyMethods
+    //     */
+    //    public function testGetProxies($methodName)
+    //    {
+    //        $client = $this->getMockBuilder(Client::class)
+    //            ->setMethods(['get'])
+    //            ->disableOriginalConstructor()
+    //            ->getMock();
+    //        $client
+    //            ->expects($this->once())
+    //            ->method('get')
+    //            ->willReturn(new Response());
+    //
+    //        $this->assertInstanceOf(ResponseInterface::class, $client->{$methodName}());
+    //    }
+    //
+    //
+    //    public function getProxyMethods()
+    //    {
+    //        return [
+    //            ['getAllProjects'],
+    //            ['getAllLabels'],
+    //            ['getAllTasks'],
+    //        ];
+    //    }
 
     public function clientOptions()
     {

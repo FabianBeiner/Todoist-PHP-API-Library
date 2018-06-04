@@ -18,24 +18,6 @@ namespace FabianBeiner\Todoist;
 trait TodoistCommentsTrait
 {
     /**
-     * Prepare Guzzle request data.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    abstract protected function prepareRequestData(array $data = []): array;
-
-    /**
-     * Validates an ID to be a positive integer.
-     *
-     * @param mixed $id
-     *
-     * @return bool
-     */
-    abstract protected function validateId($id): bool;
-
-    /**
      * Alias for getAllComments('project', $projectId).
      *
      * @param int $projectId ID of the project.
@@ -45,18 +27,6 @@ trait TodoistCommentsTrait
     public function getAllCommentsByProject(int $projectId)
     {
         return $this->getAllComments('project', $projectId);
-    }
-
-    /**
-     * Alias for getAllComments('task', $taskId).
-     *
-     * @param int $taskId ID of the task.
-     *
-     * @return array|bool Array with all comments (can be empty), or false on failure.
-     */
-    public function getAllCommentsByTask($taskId)
-    {
-        return $this->getAllComments('task', $taskId);
     }
 
     /**
@@ -90,6 +60,18 @@ trait TodoistCommentsTrait
     }
 
     /**
+     * Alias for getAllComments('task', $taskId).
+     *
+     * @param int $taskId ID of the task.
+     *
+     * @return array|bool Array with all comments (can be empty), or false on failure.
+     */
+    public function getAllCommentsByTask($taskId)
+    {
+        return $this->getAllComments('task', $taskId);
+    }
+
+    /**
      * Alias for createComment('project', $projectId, $comment).
      *
      * @param int    $projectId ID of the project.
@@ -100,19 +82,6 @@ trait TodoistCommentsTrait
     public function createCommentForProject(int $projectId, string $comment)
     {
         return $this->createComment('project', $projectId, $comment);
-    }
-
-    /**
-     * Alias for createComment('task', $projectId, $comment).
-     *
-     * @param int    $taskId  ID of the task.
-     * @param string $comment Comment to be added.
-     *
-     * @return object|bool Object with values values of the new comment, or false on failure.
-     */
-    public function createCommentForTask(int $taskId, string $comment)
-    {
-        return $this->createComment('task', $taskId, $comment);
     }
 
     /**
@@ -143,6 +112,19 @@ trait TodoistCommentsTrait
         }
 
         return false;
+    }
+
+    /**
+     * Alias for createComment('task', $projectId, $comment).
+     *
+     * @param int    $taskId  ID of the task.
+     * @param string $comment Comment to be added.
+     *
+     * @return object|bool Object with values values of the new comment, or false on failure.
+     */
+    public function createCommentForTask(int $taskId, string $comment)
+    {
+        return $this->createComment('task', $taskId, $comment);
     }
 
     /**
@@ -204,4 +186,22 @@ trait TodoistCommentsTrait
 
         return 204 === $result->getStatusCode();
     }
+
+    /**
+     * Prepare Guzzle request data.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    abstract protected function prepareRequestData(array $data = []): array;
+
+    /**
+     * Validates an ID to be a positive integer.
+     *
+     * @param mixed $id
+     *
+     * @return bool
+     */
+    abstract protected function validateId($id): bool;
 }

@@ -14,6 +14,6 @@ namespace FabianBeiner\Todoist;
 /**
  * Class TodoistException.
  */
-class TodoistException extends \LogicException
+class TodoistException extends \Exception
 {
 }

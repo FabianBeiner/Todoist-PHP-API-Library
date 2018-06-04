@@ -18,24 +18,6 @@ namespace FabianBeiner\Todoist;
 trait TodoistTasksTrait
 {
     /**
-     * Prepare Guzzle request data.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    abstract protected function prepareRequestData(array $data = []): array;
-
-    /**
-     * Validates an ID to be a positive integer.
-     *
-     * @param mixed $id
-     *
-     * @return bool
-     */
-    abstract protected function validateId($id): bool;
-
-    /**
      * Get all tasks.
      *
      * @return array|bool Array with all tasks (can be empty), or false on failure.
@@ -179,4 +161,22 @@ trait TodoistTasksTrait
 
         return 204 === $result->getStatusCode();
     }
+
+    /**
+     * Prepare Guzzle request data.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    abstract protected function prepareRequestData(array $data = []): array;
+
+    /**
+     * Validates an ID to be a positive integer.
+     *
+     * @param mixed $id
+     *
+     * @return bool
+     */
+    abstract protected function validateId($id): bool;
 }

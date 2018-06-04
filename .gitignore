@@ -1,10 +1,10 @@
 .AppleDouble
 .DS_Store
-.idea/
 .LSOverride
 .php_cs.cache
 composer.phar
 Desktop.ini
+/.idea/
+/vendor/
 phpunit.xml
 Thumbs.db
-vendor

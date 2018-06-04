@@ -62,6 +62,33 @@ class TodoistClient extends GuzzleClient
     }
 
     /**
+     * Merge configurations.
+     *
+     * @param array $first
+     * @param array $second
+     *
+     * @return array
+     */
+    private function mergeConfigurations(array $first, array $second): array
+    {
+        $merged = $first;
+
+        foreach ($second as $key => $value) {
+            if ( ! array_key_exists($key, $first) && ! is_numeric($key)) {
+                $merged[$key] = $second[$key];
+                continue;
+            }
+
+            $merged[$key] = $value;
+            if (\is_array($value) || \is_array($first[$key])) {
+                $merged[$key] = $this->mergeConfigurations($first[$key], $value);
+            }
+        }
+
+        return $merged;
+    }
+
+    /**
      * Wrapper on Guzzle's requestAsync method.
      *
      * @param string $method
@@ -76,6 +103,28 @@ class TodoistClient extends GuzzleClient
         $options['headers']['X-Request-Id'] = $this->generateV4GUID();
 
         return parent::requestAsync($method, $uri, $options);
+    }
+
+    /**
+     * Generate a v4 GUID string.
+     *
+     * @author Pavel Volyntsev <pavel.volyntsev@gmail.com>
+     *
+     * @see    http://php.net/manual/en/function.com-create-guid.php#117893
+     *
+     * @return string A v4 GUID.
+     */
+    private function generateV4GUID(): string
+    {
+        if (true === \function_exists('com_create_guid')) {
+            return trim(com_create_guid(), '{}');
+        }
+
+        $data    = openssl_random_pseudo_bytes(16);
+        $data[6] = \chr(\ord($data[6]) & 0x0f | 0x40);
+        $data[8] = \chr(\ord($data[8]) & 0x3f | 0x80);
+
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
     /**
@@ -104,54 +153,5 @@ class TodoistClient extends GuzzleClient
         $filterOptions = ['options' => ['min_range' => 0]];
 
         return (bool) filter_var($id, FILTER_VALIDATE_INT, $filterOptions);
-    }
-
-    /**
-     * Merge configurations.
-     *
-     * @param array $first
-     * @param array $second
-     *
-     * @return array
-     */
-    private function mergeConfigurations(array $first, array $second): array
-    {
-        $merged = $first;
-
-        foreach ($second as $key => $value) {
-            if ( ! array_key_exists($key, $first) && ! is_numeric($key)) {
-                $merged[$key] = $second[$key];
-                continue;
-            }
-
-            $merged[$key] = $value;
-            if (\is_array($value) || \is_array($first[$key])) {
-                $merged[$key] = $this->mergeConfigurations($first[$key], $value);
-            }
-        }
-
-        return $merged;
-    }
-
-    /**
-     * Generate a v4 GUID string.
-     *
-     * @author Pavel Volyntsev <pavel.volyntsev@gmail.com>
-     *
-     * @see    http://php.net/manual/en/function.com-create-guid.php#117893
-     *
-     * @return string A v4 GUID.
-     */
-    private function generateV4GUID(): string
-    {
-        if (true === \function_exists('com_create_guid')) {
-            return trim(com_create_guid(), '{}');
-        }
-
-        $data    = openssl_random_pseudo_bytes(16);
-        $data[6] = \chr(\ord($data[6]) & 0x0f | 0x40);
-        $data[8] = \chr(\ord($data[8]) & 0x3f | 0x80);
-
-        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 }

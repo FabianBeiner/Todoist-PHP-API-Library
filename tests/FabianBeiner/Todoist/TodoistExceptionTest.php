@@ -14,7 +14,7 @@ class TodoistExceptionTest extends TestCase
     {
         $exception = new TodoistException();
         $this->assertInstanceOf(TodoistException::class, $exception);
-        $this->assertInstanceOf(\LogicException::class, $exception);
+        $this->assertInstanceOf(\Exception::class, $exception);
     }
 
     /**
