@@ -58,9 +58,9 @@ class TodoistClientTest extends TestCase
     }
 
     /**
-     * @return int ID of the created project.
      * @throws \FabianBeiner\Todoist\TodoistException
      *
+     * @return int ID of the created project.
      */
     public function testCreateProject()
     {
