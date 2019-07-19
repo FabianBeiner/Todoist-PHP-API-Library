@@ -70,8 +70,9 @@ class TodoistClient extends GuzzleClient
      * @param string $uri
      * @param array  $options
      *
-     * @return PromiseInterface
      * @throws \Exception
+     *
+     * @return PromiseInterface
      */
     public function requestAsync($method, $uri = '', array $options = []): PromiseInterface
     {
