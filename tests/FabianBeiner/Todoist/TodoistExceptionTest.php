@@ -2,6 +2,7 @@
 
 namespace FabianBeiner\Todoist\Tests;
 
+use Exception;
 use FabianBeiner\Todoist\TodoistException;
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +15,7 @@ class TodoistExceptionTest extends TestCase
     {
         $exception = new TodoistException();
         $this->assertInstanceOf(TodoistException::class, $exception);
-        $this->assertInstanceOf(\Exception::class, $exception);
+        $this->assertInstanceOf(Exception::class, $exception);
     }
 
     /**

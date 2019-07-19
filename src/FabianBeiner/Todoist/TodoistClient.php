@@ -1,13 +1,12 @@
 <?php
 /**
  * PHP Client for Todoist
- * A PHP client library that provides a native interface to the official Todoist REST API (v8).
+ * A PHP client library that provides a native interface to the official Todoist REST API.
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
- * @author  Balazs Csaba <balazscsaba2006@gmail.com>
  * @license https://opensource.org/licenses/MIT MIT
  *
- * @version 0.7.2 <2018-06-04>
+ * @version 0.8.0 <2019-07-19>
  *
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
@@ -17,6 +16,7 @@ namespace FabianBeiner\Todoist;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\RequestOptions;
+use function strlen;
 
 /**
  * Class TodoistClient.
@@ -44,7 +44,7 @@ class TodoistClient extends GuzzleClient
     public function __construct(string $apiToken, array $config = [])
     {
         $apiToken = trim($apiToken);
-        if (40 !== \strlen($apiToken)) {
+        if (40 !== strlen($apiToken)) {
             throw new TodoistException('The provided API token is invalid.');
         }
 
@@ -71,35 +71,14 @@ class TodoistClient extends GuzzleClient
      * @param array  $options
      *
      * @return PromiseInterface
+     * @throws \Exception
      */
     public function requestAsync($method, $uri = '', array $options = []): PromiseInterface
     {
         // Ensure the “X-Request-Id” header gets regenerated for every call.
-        $options['headers']['X-Request-Id'] = $this->generateV4GUID();
+        $options['headers']['X-Request-Id'] = bin2hex(random_bytes(16));
 
         return parent::requestAsync($method, $uri, $options);
-    }
-
-    /**
-     * Generate a v4 GUID string.
-     *
-     * @author Pavel Volyntsev <pavel.volyntsev@gmail.com>
-     *
-     * @see    http://php.net/manual/en/function.com-create-guid.php#117893
-     *
-     * @return string A v4 GUID.
-     */
-    private function generateV4GUID(): string
-    {
-        if (true === \function_exists('com_create_guid')) {
-            return trim(com_create_guid(), '{}');
-        }
-
-        $data    = openssl_random_pseudo_bytes(16);
-        $data[6] = \chr(\ord($data[6]) & 0x0f | 0x40);
-        $data[8] = \chr(\ord($data[8]) & 0x3f | 0x80);
-
-        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
     /**

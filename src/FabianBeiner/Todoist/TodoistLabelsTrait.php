@@ -1,10 +1,9 @@
 <?php
 /**
  * PHP Client for Todoist
- * A PHP client library that provides a native interface to the official Todoist REST API (v8).
+ * A PHP client library that provides a native interface to the official Todoist REST API.
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
- * @author  Balazs Csaba <balazscsaba2006@gmail.com>
  * @license https://opensource.org/licenses/MIT MIT
  *
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
@@ -24,6 +23,7 @@ trait TodoistLabelsTrait
      */
     public function getAllLabels()
     {
+        /** @var object $result Result of the GET request. */
         $result = $this->get('labels');
 
         $status = $result->getStatusCode();
@@ -51,6 +51,7 @@ trait TodoistLabelsTrait
         }
 
         $data   = $this->prepareRequestData(['name' => $name]);
+        /** @var object $result Result of the POST request. */
         $result = $this->post('labels', $data);
 
         if (200 === $result->getStatusCode()) {
@@ -59,6 +60,15 @@ trait TodoistLabelsTrait
 
         return false;
     }
+
+    /**
+     * Prepare Guzzle request data.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    abstract protected function prepareRequestData(array $data = []): array;
 
     /**
      * Get a label.
@@ -73,6 +83,7 @@ trait TodoistLabelsTrait
             return false;
         }
 
+        /** @var object $result Result of the GET request. */
         $result = $this->get('labels/' . $labelId);
 
         if (200 === $result->getStatusCode()) {
@@ -81,6 +92,15 @@ trait TodoistLabelsTrait
 
         return false;
     }
+
+    /**
+     * Validates an ID to be a positive integer.
+     *
+     * @param mixed $id
+     *
+     * @return bool
+     */
+    abstract protected function validateId($id): bool;
 
     /**
      * Alias for updateLabel().
@@ -110,6 +130,7 @@ trait TodoistLabelsTrait
         }
 
         $data   = $this->prepareRequestData(['name' => $name]);
+        /** @var object $result Result of the POST request. */
         $result = $this->post('labels/' . $labelId, $data);
 
         return 204 === $result->getStatusCode();
@@ -128,26 +149,9 @@ trait TodoistLabelsTrait
             return false;
         }
 
+        /** @var object $result Result of the DELETE request. */
         $result = $this->delete('labels/' . $labelId);
 
         return 204 === $result->getStatusCode();
     }
-
-    /**
-     * Prepare Guzzle request data.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    abstract protected function prepareRequestData(array $data = []): array;
-
-    /**
-     * Validates an ID to be a positive integer.
-     *
-     * @param mixed $id
-     *
-     * @return bool
-     */
-    abstract protected function validateId($id): bool;
 }

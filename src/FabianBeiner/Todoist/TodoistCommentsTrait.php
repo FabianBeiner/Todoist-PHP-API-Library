@@ -1,10 +1,9 @@
 <?php
 /**
- * Todoist PHP API Library
- * An unofficial PHP client library for accessing the official Todoist REST API.
+ * PHP Client for Todoist
+ * A PHP client library that provides a native interface to the official Todoist REST API.
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
- * @author  Balazs Csaba <balazscsaba2006@gmail.com>
  * @license https://opensource.org/licenses/MIT MIT
  *
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
@@ -45,7 +44,8 @@ trait TodoistCommentsTrait
             return false;
         }
 
-        $query  = http_build_query([$type . '_id' => $typeId], null, '&', PHP_QUERY_RFC3986);
+        $query = http_build_query([$type . '_id' => $typeId], null, '&', PHP_QUERY_RFC3986);
+        /** @var object $result Result of the GET request. */
         $result = $this->get('comments?' . $query);
 
         $status = $result->getStatusCode();
@@ -58,6 +58,15 @@ trait TodoistCommentsTrait
 
         return false;
     }
+
+    /**
+     * Validates an ID to be a positive integer.
+     *
+     * @param mixed $id
+     *
+     * @return bool
+     */
+    abstract protected function validateId($id): bool;
 
     /**
      * Alias for getAllComments('task', $taskId).
@@ -101,10 +110,11 @@ trait TodoistCommentsTrait
             return false;
         }
 
-        $data   = $this->prepareRequestData([
-                                                $type . '_id' => $typeId,
-                                                'content'     => $comment,
-                                            ]);
+        $data = $this->prepareRequestData([
+                                              $type . '_id' => $typeId,
+                                              'content'     => $comment,
+                                          ]);
+        /** @var object $result Result of the POST request. */
         $result = $this->post('comments', $data);
 
         if (200 === $result->getStatusCode()) {
@@ -113,6 +123,15 @@ trait TodoistCommentsTrait
 
         return false;
     }
+
+    /**
+     * Prepare Guzzle request data.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    abstract protected function prepareRequestData(array $data = []): array;
 
     /**
      * Alias for createComment('task', $projectId, $comment).
@@ -140,6 +159,7 @@ trait TodoistCommentsTrait
             return false;
         }
 
+        /** @var object $result Result of the GET request. */
         $result = $this->get('comments/' . $commentId);
 
         if (200 === $result->getStatusCode()) {
@@ -163,7 +183,8 @@ trait TodoistCommentsTrait
             return false;
         }
 
-        $data   = $this->prepareRequestData(['content' => $content]);
+        $data = $this->prepareRequestData(['content' => $content]);
+        /** @var object $result Result of the POST request. */
         $result = $this->post('comments/' . $commentId, $data);
 
         return 204 === $result->getStatusCode();
@@ -182,26 +203,9 @@ trait TodoistCommentsTrait
             return false;
         }
 
+        /** @var object $result Result of the DELETE request. */
         $result = $this->delete('comments/' . $commentId);
 
         return 204 === $result->getStatusCode();
     }
-
-    /**
-     * Prepare Guzzle request data.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    abstract protected function prepareRequestData(array $data = []): array;
-
-    /**
-     * Validates an ID to be a positive integer.
-     *
-     * @param mixed $id
-     *
-     * @return bool
-     */
-    abstract protected function validateId($id): bool;
 }
