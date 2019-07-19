@@ -3,14 +3,14 @@
 # PHP Client for Todoist
 
 **This repository contains a PHP client library that provides a native interface to the official 
-[Todoist REST API (v8)](https://developer.todoist.com/rest/v8/).**
+[Todoist REST API](https://developer.todoist.com/rest/v1/).**
 
 *The project is not created by, affiliated with, or supported by Doist.*
 
 ## Requirements
 
-- [PHP](https://secure.php.net/): >= 7.0
-- [guzzlehttp/guzzle](https://packagist.org/packages/guzzlehttp/guzzle): 6.3.x
+- [PHP](https://php.net/): >=7.0
+- [guzzlehttp/guzzle](http://docs.guzzlephp.org/en/stable/): ~6.3
 
 ## Installation
 
@@ -19,9 +19,9 @@ start from there.
 
 ### Composer
 
-If you don’t have Composer installed, follow the [installation instructions](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx).
+If you don’t have Composer installed, follow the [installation instructions](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos).
 
-Once composer is installed, execute the following command in your project root to install this library:
+Once Composer is installed, execute the following command in your project root to install this library:
 
 ```sh
 composer require fabian-beiner/todoist-php-api-library
@@ -33,12 +33,11 @@ Finally, remember to include the autoloader to your project:
 require __DIR__ . '/vendor/autoload.php';
 ```
 
-## Obtain your personal API token
+## Obtain your API token
 
-[Click here](https://todoist.com/Users/viewPrefs?page=integrations). Your API token is listed at the bottom of this page.
+[Click here](https://todoist.com/prefs/integrations). Your API token is listed at the bottom of this page.
 
-If the link doesn’t work, open the [Todoist web app](https://todoist.com/app), click on the gear icon ![gear icon image](https://user-images.githubusercontent.com/86269/40932241-0257ed7e-682e-11e8-8ad6-06b41dec7155.png)
-, select “Settings,” then “Integrations.”
+If the link doesn’t work, open the [Todoist web app](https://todoist.com/app), click on the gear icon ![gear icon image](.github/gear-icon.png), select “Settings,” then “Integrations.”
 
 ## Usage
 
