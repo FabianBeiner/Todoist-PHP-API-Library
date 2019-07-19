@@ -1,7 +1,7 @@
 {
   "name": "fabian-beiner/todoist-php-api-library",
   "type": "library",
-  "description": "A PHP client library that provides a native interface to the official Todoist REST API (v8).",
+  "description": "A PHP client library that provides a native interface to the official Todoist REST API.",
   "keywords": [
     "api",
     "api-client",
