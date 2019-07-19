@@ -41,8 +41,8 @@ class TodoistClientTest extends TestCase
         $headers = $config['headers'];
 
         $this->assertInstanceOf(Uri::class, $baseUri);
-        $this->assertEquals('beta.todoist.com', $baseUri->getHost());
-        $this->assertEquals('/API/v8/', $baseUri->getPath());
+        $this->assertEquals('api.todoist.com', $baseUri->getHost());
+        $this->assertEquals('/rest/v1/', $baseUri->getPath());
         $this->assertArrayHasKey('Authorization', $headers);
         $this->assertEquals(sprintf('Bearer %s', $this->apiToken), $headers['Authorization']);
     }

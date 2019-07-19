@@ -31,7 +31,7 @@ class TodoistClient extends GuzzleClient
     /**
      * @var string The URL of the Todoist REST API.
      */
-    protected $restApiUrl = 'https://beta.todoist.com/API/v8/';
+    protected $restApiUrl = 'https://api.todoist.com/rest/v1/';
 
     /**
      * Todoist constructor.
