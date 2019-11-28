@@ -109,10 +109,12 @@ trait TodoistCommentsTrait
             return false;
         }
 
-        $data = $this->prepareRequestData([
-                                              $type . '_id' => $typeId,
-                                              'content'     => $comment,
-                                          ]);
+        $data = $this->prepareRequestData(
+            [
+                $type . '_id' => $typeId,
+                'content'     => $comment,
+            ]
+        );
         /** @var object $result Result of the POST request. */
         $result = $this->post('comments', $data);
 

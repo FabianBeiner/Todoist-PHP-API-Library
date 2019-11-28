@@ -19,7 +19,7 @@ class TodoistExceptionTest extends TestCase
     }
 
     /**
-     * @expectedException \FabianBeiner\Todoist\TodoistException
+     * @expectedException TodoistException
      * @expectedExceptionMessage Some message.
      */
     public function testTodoistExceptionThrowable()

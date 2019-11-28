@@ -11,9 +11,11 @@
 
 namespace FabianBeiner\Todoist;
 
+use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\RequestOptions;
+
 use function strlen;
 
 /**
@@ -24,7 +26,10 @@ class TodoistClient extends GuzzleClient
     /*
      * Use Traits.
      */
-    use TodoistCommentsTrait, TodoistLabelsTrait, TodoistProjectsTrait, TodoistTasksTrait;
+    use TodoistCommentsTrait;
+    use TodoistLabelsTrait;
+    use TodoistProjectsTrait;
+    use TodoistTasksTrait;
 
     /**
      * @var string The URL of the Todoist REST API.
@@ -37,7 +42,7 @@ class TodoistClient extends GuzzleClient
      * @param string $apiToken The API token to access the Todoist API.
      * @param array  $config   Configuration to be passed to Guzzle client.
      *
-     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws TodoistException
      */
     public function __construct(string $apiToken, array $config = [])
     {
@@ -48,10 +53,10 @@ class TodoistClient extends GuzzleClient
 
         $defaults = [
             'headers'     => [
-                'Accept-Encoding' => 'gzip'
+                'Accept-Encoding' => 'gzip',
             ],
             'http_errors' => false,
-            'timeout'     => 5
+            'timeout'     => 5,
         ];
 
         $config                             = array_replace_recursive($defaults, $config);
@@ -68,7 +73,7 @@ class TodoistClient extends GuzzleClient
      * @param string $uri
      * @param array  $options
      *
-     * @throws \Exception
+     * @throws Exception
      * @return PromiseInterface
      */
     public function requestAsync($method, $uri = '', array $options = []): PromiseInterface
