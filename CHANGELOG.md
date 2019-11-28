@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.8.1. - 2019-11-28
+### Fixed
+- There was a typo in the endpoint of the reopen method. 
+### Changed
+- Some coding style changes, updated *.md & Dot files etc.
+- Updated Composer packages.
+
 ## 0.8.0 - 2019-07-19
 - _Changelog missing. Sorry!_
 

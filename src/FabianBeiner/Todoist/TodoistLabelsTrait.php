@@ -50,7 +50,7 @@ trait TodoistLabelsTrait
             return false;
         }
 
-        $data   = $this->prepareRequestData(['name' => $name]);
+        $data = $this->prepareRequestData(['name' => $name]);
         /** @var object $result Result of the POST request. */
         $result = $this->post('labels', $data);
 
@@ -116,7 +116,7 @@ trait TodoistLabelsTrait
     }
 
     /**
-     * Update (actually rename…) a label.
+     * Update (rename) a label.
      *
      * @param int    $labelId ID of the label.
      * @param string $name    New name of the label.
@@ -129,7 +129,7 @@ trait TodoistLabelsTrait
             return false;
         }
 
-        $data   = $this->prepareRequestData(['name' => $name]);
+        $data = $this->prepareRequestData(['name' => $name]);
         /** @var object $result Result of the POST request. */
         $result = $this->post('labels/' . $labelId, $data);
 

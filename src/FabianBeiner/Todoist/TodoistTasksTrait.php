@@ -23,6 +23,7 @@ trait TodoistTasksTrait
      */
     public function getAllTasks()
     {
+        /** @var object $result Result of the GET request. */
         $result = $this->get('tasks');
 
         $status = $result->getStatusCode();
@@ -52,6 +53,7 @@ trait TodoistTasksTrait
 
         unset($options['content']);
         $data   = $this->prepareRequestData(array_merge(['content' => $content], $options));
+        /** @var object $result Result of the POST request. */
         $result = $this->post('tasks', $data);
 
         $status = $result->getStatusCode();
@@ -61,6 +63,15 @@ trait TodoistTasksTrait
 
         return false;
     }
+
+    /**
+     * Prepare Guzzle request data.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    abstract protected function prepareRequestData(array $data = []): array;
 
     /**
      * Get a task.
@@ -75,6 +86,7 @@ trait TodoistTasksTrait
             return false;
         }
 
+        /** @var object $result Result of the GET request. */
         $result = $this->get('tasks/' . $taskId);
 
         $status = $result->getStatusCode();
@@ -84,6 +96,15 @@ trait TodoistTasksTrait
 
         return false;
     }
+
+    /**
+     * Validates an ID to be a positive integer.
+     *
+     * @param mixed $id
+     *
+     * @return bool
+     */
+    abstract protected function validateId($id): bool;
 
     /**
      * Update a task.
@@ -102,6 +123,7 @@ trait TodoistTasksTrait
 
         unset($options['content']);
         $data   = $this->prepareRequestData(array_merge(['content' => $content], $options));
+        /** @var object $result Result of the POST request. */
         $result = $this->post('tasks/' . $taskId, $data);
 
         return 204 === $result->getStatusCode();
@@ -120,6 +142,7 @@ trait TodoistTasksTrait
             return false;
         }
 
+        /** @var object $result Result of the POST request. */
         $result = $this->post('tasks/' . $taskId . '/close');
 
         return 204 === $result->getStatusCode();
@@ -138,7 +161,8 @@ trait TodoistTasksTrait
             return false;
         }
 
-        $result = $this->post('tasks/' . $taskId . '/repoen');
+        /** @var object $result Result of the POST request. */
+        $result = $this->post('tasks/' . $taskId . '/reopen');
 
         return 204 === $result->getStatusCode();
     }
@@ -156,26 +180,9 @@ trait TodoistTasksTrait
             return false;
         }
 
+        /** @var object $result Result of the DELETE request. */
         $result = $this->delete('tasks/' . $taskId);
 
         return 204 === $result->getStatusCode();
     }
-
-    /**
-     * Prepare Guzzle request data.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    abstract protected function prepareRequestData(array $data = []): array;
-
-    /**
-     * Validates an ID to be a positive integer.
-     *
-     * @param mixed $id
-     *
-     * @return bool
-     */
-    abstract protected function validateId($id): bool;
 }

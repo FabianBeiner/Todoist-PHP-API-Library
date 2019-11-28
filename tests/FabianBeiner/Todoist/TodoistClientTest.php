@@ -12,8 +12,6 @@ class TodoistClientTest extends TestCase
 
     private $projectName;
 
-    private $projectId;
-
     /**
      * Set up method.
      */
@@ -59,8 +57,18 @@ class TodoistClientTest extends TestCase
 
     /**
      * @throws \FabianBeiner\Todoist\TodoistException
-     *
+     */
+    public function testGetAllProjects2()
+    {
+        $Todoist     = new TodoistClient($this->apiToken);
+        $allProjects = $Todoist->getAllProjects();
+        $this->assertObjectHasAttribute('id', $allProjects[0]);
+    }
+
+    /**
      * @return int ID of the created project.
+     * @throws \FabianBeiner\Todoist\TodoistException
+     *
      */
     public function testCreateProject()
     {

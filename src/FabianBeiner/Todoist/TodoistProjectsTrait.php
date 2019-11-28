@@ -50,7 +50,7 @@ trait TodoistProjectsTrait
             return false;
         }
 
-        $data   = $this->prepareRequestData(['name' => $name]);
+        $data = $this->prepareRequestData(['name' => $name]);
         /** @var object $result Result of the POST request. */
         $result = $this->post('projects', $data);
 
@@ -129,7 +129,7 @@ trait TodoistProjectsTrait
             return false;
         }
 
-        $data   = $this->prepareRequestData(['name' => $name]);
+        $data = $this->prepareRequestData(['name' => $name]);
         /** @var object $result Result of the POST request. */
         $result = $this->post('projects/' . $projectId, $data);
 
