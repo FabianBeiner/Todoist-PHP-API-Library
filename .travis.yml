@@ -4,6 +4,7 @@ php:
   - 7.1
   - 7.2
   - 7.3
+  - 7.4
 
 sudo: false
 
@@ -19,4 +20,4 @@ script:
   - vendor/bin/phpunit --coverage-clover=coverage.xml
 
 after_success:
-    - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)
