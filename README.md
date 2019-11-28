@@ -9,8 +9,8 @@
 
 ## Requirements
 
-- [PHP](https://php.net/): >=7.0
-- [guzzlehttp/guzzle](http://docs.guzzlephp.org/en/stable/): ~6.3
+- [PHP](https://php.net/): >=7.1
+- [Guzzle](https://github.com/guzzle/guzzle): ~6.4
 
 ## Installation
 
@@ -19,7 +19,7 @@ start from there.
 
 ### Composer
 
-If you don’t have Composer installed, follow the [installation instructions](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos).
+If you don’t have Composer installed, follow the [installation instructions](hhttps://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos).
 
 Once Composer is installed, execute the following command in your project root to install this library:
 
