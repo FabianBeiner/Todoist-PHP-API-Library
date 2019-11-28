@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.8.0 - 2019-07-19
+- _Changelog missing. Sorry!_
+
 ## 0.7.1 - 2018-05-29
 ### Fixed
 - Updated some calls to use right method.
