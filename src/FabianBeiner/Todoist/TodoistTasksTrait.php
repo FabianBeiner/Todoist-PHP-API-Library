@@ -5,7 +5,6 @@
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @license https://opensource.org/licenses/MIT MIT
- *
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
@@ -52,7 +51,7 @@ trait TodoistTasksTrait
         }
 
         unset($options['content']);
-        $data   = $this->prepareRequestData(array_merge(['content' => $content], $options));
+        $data = $this->prepareRequestData(array_merge(['content' => $content], $options));
         /** @var object $result Result of the POST request. */
         $result = $this->post('tasks', $data);
 
@@ -122,7 +121,7 @@ trait TodoistTasksTrait
         }
 
         unset($options['content']);
-        $data   = $this->prepareRequestData(array_merge(['content' => $content], $options));
+        $data = $this->prepareRequestData(array_merge(['content' => $content], $options));
         /** @var object $result Result of the POST request. */
         $result = $this->post('tasks/' . $taskId, $data);
 

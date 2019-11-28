@@ -5,9 +5,7 @@
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @license https://opensource.org/licenses/MIT MIT
- *
  * @version 0.8.1 <2019-11-28>
- *
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
@@ -70,9 +68,8 @@ class TodoistClient extends GuzzleClient
      * @param string $uri
      * @param array  $options
      *
-     * @return PromiseInterface
      * @throws \Exception
-     *
+     * @return PromiseInterface
      */
     public function requestAsync($method, $uri = '', array $options = []): PromiseInterface
     {
