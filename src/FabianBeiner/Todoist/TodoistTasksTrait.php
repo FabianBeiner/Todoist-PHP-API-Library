@@ -12,13 +12,15 @@ namespace FabianBeiner\Todoist;
 
 /**
  * Trait TodoistTasksTrait.
+ *
+ * @package FabianBeiner\Todoist
  */
 trait TodoistTasksTrait
 {
     /**
      * Get all tasks.
      *
-     * @return array|bool Array with all tasks (can be empty), or false on failure.
+     * @return array|bool|mixed Array with all tasks (can be empty), or false on failure.
      */
     public function getAllTasks()
     {
@@ -42,7 +44,7 @@ trait TodoistTasksTrait
      * @param string $content Content of the task.
      * @param array  $options Possibility to add non-required parameters.
      *
-     * @return object|bool Object with values of the new task, or false on failure.
+     * @return bool|mixed Object with values of the new task, or false on failure.
      */
     public function createTask(string $content, array $options = [])
     {
@@ -77,7 +79,7 @@ trait TodoistTasksTrait
      *
      * @param int $taskId ID of the task.
      *
-     * @return array|bool Array with values of the task, or false on failure.
+     * @return bool|mixed Array with values of the task, or false on failure.
      */
     public function getTask(int $taskId)
     {
@@ -99,7 +101,7 @@ trait TodoistTasksTrait
     /**
      * Validates an ID to be a positive integer.
      *
-     * @param mixed $id
+     * @param int $id
      *
      * @return bool
      */

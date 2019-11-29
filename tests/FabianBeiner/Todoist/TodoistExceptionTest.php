@@ -8,6 +8,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class TodoistExceptionTest.
+ *
+ * @package FabianBeiner\Todoist\Tests
  */
 class TodoistExceptionTest extends TestCase
 {
@@ -19,7 +21,7 @@ class TodoistExceptionTest extends TestCase
     }
 
     /**
-     * @expectedException TodoistException
+     * @expectedException \FabianBeiner\Todoist\TodoistException
      * @expectedExceptionMessage Some message.
      */
     public function testTodoistExceptionThrowable()

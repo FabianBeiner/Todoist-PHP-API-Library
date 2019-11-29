@@ -12,13 +12,15 @@ namespace FabianBeiner\Todoist;
 
 /**
  * Trait TodoistProjectsTrait.
+ *
+ * @package FabianBeiner\Todoist
  */
 trait TodoistProjectsTrait
 {
     /**
      * Get all projects.
      *
-     * @return array|bool Array with all projects (can be empty), or false on failure.
+     * @return array|bool|mixed Array with all projects (can be empty), or false on failure.
      */
     public function getAllProjects()
     {
@@ -41,7 +43,7 @@ trait TodoistProjectsTrait
      *
      * @param string $name Name of the project.
      *
-     * @return object|bool Object with values of the new project, or false on failure.
+     * @return bool|mixed Object with values of the new project, or false on failure.
      */
     public function createProject(string $name)
     {
@@ -74,7 +76,7 @@ trait TodoistProjectsTrait
      *
      * @param int $projectId ID of the project.
      *
-     * @return object|bool Object with values of the project, or false on failure.
+     * @return bool|mixed Object with values of the project, or false on failure.
      */
     public function getProject(int $projectId)
     {
@@ -95,7 +97,7 @@ trait TodoistProjectsTrait
     /**
      * Validates an ID to be a positive integer.
      *
-     * @param mixed $id
+     * @param int $id
      *
      * @return bool
      */

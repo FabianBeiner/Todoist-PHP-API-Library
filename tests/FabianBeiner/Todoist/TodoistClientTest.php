@@ -3,10 +3,14 @@
 namespace FabianBeiner\Todoist\Tests;
 
 use FabianBeiner\Todoist\TodoistClient;
-use FabianBeiner\Todoist\TodoistException;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class TodoistClientTest.
+ *
+ * @package FabianBeiner\Todoist\Tests
+ */
 class TodoistClientTest extends TestCase
 {
     private $apiToken;
@@ -29,7 +33,7 @@ class TodoistClientTest extends TestCase
      *
      * @param array $options
      *
-     * @throws TodoistException
+     * @throws \FabianBeiner\Todoist\TodoistException
      */
     public function testConfiguration(array $options = [])
     {
@@ -47,7 +51,7 @@ class TodoistClientTest extends TestCase
     }
 
     /**
-     * @throws TodoistException
+     * @throws \FabianBeiner\Todoist\TodoistException
      */
     public function testGetAllProjects()
     {
@@ -57,8 +61,8 @@ class TodoistClientTest extends TestCase
     }
 
     /**
-     * @throws TodoistException
-     * @return int ID of the created project.
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @return mixed                                  ID of the created project.
      */
     public function testCreateProject()
     {
@@ -75,7 +79,7 @@ class TodoistClientTest extends TestCase
      *
      * @param $id
      *
-     * @throws TodoistException
+     * @throws \FabianBeiner\Todoist\TodoistException
      */
     public function testGetProject($id)
     {
@@ -89,7 +93,7 @@ class TodoistClientTest extends TestCase
      *
      * @param $id
      *
-     * @throws TodoistException
+     * @throws \FabianBeiner\Todoist\TodoistException
      */
     public function testUpdateProject($id)
     {
@@ -103,7 +107,7 @@ class TodoistClientTest extends TestCase
      *
      * @param $id
      *
-     * @throws TodoistException
+     * @throws \FabianBeiner\Todoist\TodoistException
      */
     public function testDeleteProject($id)
     {

@@ -11,15 +11,14 @@
 
 namespace FabianBeiner\Todoist;
 
-use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\RequestOptions;
 
-use function strlen;
-
 /**
  * Class TodoistClient.
+ *
+ * @package FabianBeiner\Todoist
  */
 class TodoistClient extends GuzzleClient
 {
@@ -42,7 +41,7 @@ class TodoistClient extends GuzzleClient
      * @param string $apiToken The API token to access the Todoist API.
      * @param array  $config   Configuration to be passed to Guzzle client.
      *
-     * @throws TodoistException
+     * @throws \FabianBeiner\Todoist\TodoistException
      */
     public function __construct(string $apiToken, array $config = [])
     {
@@ -73,8 +72,8 @@ class TodoistClient extends GuzzleClient
      * @param string $uri
      * @param array  $options
      *
-     * @throws Exception
-     * @return PromiseInterface
+     * @throws \Exception
+     * @return \GuzzleHttp\Promise\PromiseInterface
      */
     public function requestAsync($method, $uri = '', array $options = []): PromiseInterface
     {
@@ -101,7 +100,7 @@ class TodoistClient extends GuzzleClient
     /**
      * Validates an ID to be a positive integer.
      *
-     * @param mixed $id
+     * @param int $id
      *
      * @return bool
      */

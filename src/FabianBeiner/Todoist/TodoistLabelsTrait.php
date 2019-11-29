@@ -12,13 +12,15 @@ namespace FabianBeiner\Todoist;
 
 /**
  * Trait TodoistLabelsTrait.
+ *
+ * @package FabianBeiner\Todoist
  */
 trait TodoistLabelsTrait
 {
     /**
      * Get all labels.
      *
-     * @return array|bool Array with all labels (can be empty), or false on failure.
+     * @return array|bool|mixed Array with all labels (can be empty), or false on failure.
      */
     public function getAllLabels()
     {
@@ -41,7 +43,7 @@ trait TodoistLabelsTrait
      *
      * @param string $name Name of the label.
      *
-     * @return object|bool Object with values of the new label, or false on failure.
+     * @return bool|mixed Object with values of the new label, or false on failure.
      */
     public function createLabel(string $name)
     {
@@ -74,7 +76,7 @@ trait TodoistLabelsTrait
      *
      * @param int $labelId ID of the label.
      *
-     * @return object|bool Object with values of the label, or false on failure.
+     * @return bool|mixed Object with values of the label, or false on failure.
      */
     public function getLabel(int $labelId)
     {
@@ -95,7 +97,7 @@ trait TodoistLabelsTrait
     /**
      * Validates an ID to be a positive integer.
      *
-     * @param mixed $id
+     * @param int $id
      *
      * @return bool
      */

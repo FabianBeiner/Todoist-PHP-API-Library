@@ -14,6 +14,8 @@ use Exception;
 
 /**
  * Class TodoistException.
+ *
+ * @package FabianBeiner\Todoist
  */
 class TodoistException extends Exception
 {

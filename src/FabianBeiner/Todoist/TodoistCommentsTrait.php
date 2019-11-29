@@ -12,6 +12,8 @@ namespace FabianBeiner\Todoist;
 
 /**
  * Trait TodoistCommentsTrait.
+ *
+ * @package FabianBeiner\Todoist
  */
 trait TodoistCommentsTrait
 {
@@ -33,7 +35,7 @@ trait TodoistCommentsTrait
      * @param string $type   Can be "project" or "task".
      * @param int    $typeId ID of the project/task.
      *
-     * @return array|bool Array with all comments (can be empty), or false on failure.
+     * @return array|bool|mixed Array with all comments (can be empty), or false on failure.
      */
     public function getAllComments(string $type, int $typeId)
     {
@@ -61,7 +63,7 @@ trait TodoistCommentsTrait
     /**
      * Validates an ID to be a positive integer.
      *
-     * @param mixed $id
+     * @param int $id
      *
      * @return bool
      */
@@ -72,7 +74,7 @@ trait TodoistCommentsTrait
      *
      * @param int $taskId ID of the task.
      *
-     * @return array|bool Array with all comments (can be empty), or false on failure.
+     * @return array|bool|mixed Array with all comments (can be empty), or false on failure.
      */
     public function getAllCommentsByTask($taskId)
     {
@@ -99,7 +101,7 @@ trait TodoistCommentsTrait
      * @param int    $typeId  ID of the project/task.
      * @param string $comment Comment to be added.
      *
-     * @return object|bool Object with values of the new comment, or false on failure.
+     * @return bool|mixed Object with values of the new comment, or false on failure.
      */
     public function createComment(string $type, int $typeId, string $comment)
     {
@@ -140,7 +142,7 @@ trait TodoistCommentsTrait
      * @param int    $taskId  ID of the task.
      * @param string $comment Comment to be added.
      *
-     * @return object|bool Object with values values of the new comment, or false on failure.
+     * @return bool|mixed Object with values values of the new comment, or false on failure.
      */
     public function createCommentForTask(int $taskId, string $comment)
     {
@@ -152,7 +154,7 @@ trait TodoistCommentsTrait
      *
      * @param int $commentId ID of the comment.
      *
-     * @return object|bool Object with values of the comment, or false on failure.
+     * @return bool|mixed Object with values of the comment, or false on failure.
      */
     public function getComment(int $commentId)
     {

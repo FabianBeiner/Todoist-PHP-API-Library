@@ -14,3 +14,4 @@ disabled:
   - unalign_equals
   - concat_without_spaces
   - phpdoc_separation
+  - phpdoc_no_package
