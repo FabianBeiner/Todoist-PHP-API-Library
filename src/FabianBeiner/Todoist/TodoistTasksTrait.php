@@ -20,12 +20,19 @@ trait TodoistTasksTrait
     /**
      * Get all tasks.
      *
+     * @param int $projectId Project ID to get tasks from.
+     *
      * @return array|bool|mixed Array with all tasks (can be empty), or false on failure.
      */
-    public function getAllTasks()
+    public function getAllTasks(int $projectId = 0)
     {
-        /** @var object $result Result of the GET request. */
-        $result = $this->get('tasks');
+        if ($this->validateId($projectId)) {
+            /** @var object $result Result of the GET request. */
+            $result = $this->get('tasks?project_id=' . $projectId);
+        } else {
+            /** @var object $result Result of the GET request. */
+            $result = $this->get('tasks');
+        }
 
         $status = $result->getStatusCode();
         if (204 === $status) {
@@ -37,6 +44,15 @@ trait TodoistTasksTrait
 
         return false;
     }
+
+    /**
+     * Validates an ID to be a positive integer.
+     *
+     * @param int $id
+     *
+     * @return bool
+     */
+    abstract protected function validateId($id): bool;
 
     /**
      * Create a new task.
@@ -97,15 +113,6 @@ trait TodoistTasksTrait
 
         return false;
     }
-
-    /**
-     * Validates an ID to be a positive integer.
-     *
-     * @param int $id
-     *
-     * @return bool
-     */
-    abstract protected function validateId($id): bool;
 
     /**
      * Update a task.

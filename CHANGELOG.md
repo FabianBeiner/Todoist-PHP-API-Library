@@ -1,7 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 0.8.1. - 2019-11-28
+## 0.8.2 - 2020-01-01
+### Changed
+- `getAllTasks` has now an optional ID for a project.
+- Updated Composer packages.
+
+## 0.8.1 - 2019-11-28
 ### Fixed
 - There was a typo in the endpoint of the reopen method. 
 ### Changed
