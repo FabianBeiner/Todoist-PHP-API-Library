@@ -1,41 +1,55 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FabianBeiner\Todoist\Tests;
 
 use FabianBeiner\Todoist\TodoistClient;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class TodoistClientTest.
+ *
+ * @package FabianBeiner\Todoist\Tests
+ */
 class TodoistClientTest extends TestCase
 {
-    private $apiToken;
+    /**
+     * @var array|false|string API taken from env.
+     */
+    private $apiToken = null;
 
-    private $projectName;
+    /**
+     * @var string Exemplary name for projects, labels, and other.
+     */
+    private $testName = null;
 
-    private $projectId;
+    /**
+     * @var object Todoist Client.
+     */
+    private $Todoist = null;
 
     /**
      * Set up method.
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
      */
-    public function setUp()
+    public function setUp(): void
     {
-        $this->apiToken    = getenv('TODOIST_TOKEN');
-        $this->projectName = uniqid();
+        $this->apiToken = getenv('TODOIST_TOKEN');
+        $this->testName = 'PHPUnit-' . uniqid();
+        $this->Todoist  = new TodoistClient($this->apiToken);
 
         parent::setUp();
     }
 
     /**
      * Test the configuration.
-     *
-     * @param array $options
-     *
-     * @throws \FabianBeiner\Todoist\TodoistException
      */
-    public function testConfiguration(array $options = [])
+    public function testConfiguration()
     {
-        $Todoist = new TodoistClient($this->apiToken, $options);
-        $config  = $Todoist->getConfig();
+        $config = $this->Todoist->getConfig();
 
         $baseUri = $config['base_uri'];
         $headers = $config['headers'];
@@ -47,70 +61,160 @@ class TodoistClientTest extends TestCase
         $this->assertEquals(sprintf('Bearer %s', $this->apiToken), $headers['Authorization']);
     }
 
-    /**
-     * @throws \FabianBeiner\Todoist\TodoistException
-     */
     public function testGetAllProjects()
     {
-        $Todoist     = new TodoistClient($this->apiToken);
-        $allProjects = $Todoist->getAllProjects();
-        $this->assertObjectHasAttribute('id', $allProjects[0]);
+        $allProjects = $this->Todoist->getAllProjects();
+        $this->assertArrayHasKey('id', $allProjects[0]);
     }
 
     /**
-     * @throws \FabianBeiner\Todoist\TodoistException
-     *
      * @return int ID of the created project.
      */
     public function testCreateProject()
     {
-        $Todoist       = new TodoistClient($this->apiToken);
-        $createProject = $Todoist->createProject($this->projectName);
-        $this->assertObjectHasAttribute('name', $createProject);
-        $this->assertEquals($this->projectName, $createProject->name);
+        $createProject = $this->Todoist->createProject($this->testName);
+        $this->assertArrayHasKey('name', $createProject);
+        $this->assertEquals($this->testName, $createProject['name']);
 
-        return $createProject->id;
+        return $createProject['id'];
     }
 
     /**
      * @depends testCreateProject
      *
-     * @param $id
-     *
-     * @throws \FabianBeiner\Todoist\TodoistException
+     * @param $projectId
      */
-    public function testGetProject($id)
+    public function testGetProject($projectId)
     {
-        $Todoist = new TodoistClient($this->apiToken);
-        $project = $Todoist->getProject($id);
-        $this->assertObjectHasAttribute('name', $project);
+        $project = $this->Todoist->getProject($projectId);
+        $this->assertArrayHasKey('name', $project);
     }
 
     /**
      * @depends testCreateProject
      *
-     * @param $id
-     *
-     * @throws \FabianBeiner\Todoist\TodoistException
+     * @param $projectId
      */
-    public function testUpdateProject($id)
+    public function testUpdateProject($projectId)
     {
-        $Todoist = new TodoistClient($this->apiToken);
-        $success = $Todoist->updateProject($id, $this->projectName . '-Renamed');
+        $success = $this->Todoist->updateProject($projectId, $this->testName . '-Renamed');
         $this->assertTrue($success);
     }
 
     /**
      * @depends testCreateProject
      *
-     * @param $id
-     *
-     * @throws \FabianBeiner\Todoist\TodoistException
+     * @param $projectId
      */
-    public function testDeleteProject($id)
+    public function testDeleteProject($projectId)
     {
-        $Todoist = new TodoistClient($this->apiToken);
-        $success = $Todoist->deleteProject($id);
+        $success = $this->Todoist->deleteProject($projectId);
+        $this->assertTrue($success);
+    }
+
+    public function testGetAllLabels()
+    {
+        $allLabels = $this->Todoist->getAllLabels();
+        $this->assertArrayHasKey('id', $allLabels[0]);
+    }
+
+    /**
+     * @return int ID of the created label.
+     */
+    public function testCreateLabel()
+    {
+        $createLabel = $this->Todoist->createLabel($this->testName);
+        $this->assertArrayHasKey('name', $createLabel);
+        $this->assertEquals($this->testName, $createLabel['name']);
+
+        return $createLabel['id'];
+    }
+
+    /**
+     * @depends testCreateLabel
+     *
+     * @param $labelId
+     */
+    public function testGetLabel($labelId)
+    {
+        $label = $this->Todoist->getLabel($labelId);
+        $this->assertArrayHasKey('name', $label);
+    }
+
+    /**
+     * @depends testCreateLabel
+     *
+     * @param $labelId
+     */
+    public function testUpdateLabel($labelId)
+    {
+        $success = $this->Todoist->updateLabel($labelId, $this->testName . '-Renamed');
+        $this->assertTrue($success);
+    }
+
+    /**
+     * @depends testCreateLabel
+     *
+     * @param $labelId
+     */
+    public function testDeleteLabel($labelId)
+    {
+        $success = $this->Todoist->deleteLabel($labelId);
+        $this->assertTrue($success);
+    }
+
+    /**
+     * @depends testCreateSection
+     */
+    public function testGetAllSections()
+    {
+        $allSections = $this->Todoist->getAllSections();
+        $this->assertArrayHasKey('id', $allSections[0]);
+    }
+
+    /**
+     * @return int ID of the created section.
+     */
+    public function testCreateSection()
+    {
+        $allProjects   = $this->Todoist->getAllProjects();
+        $createSection = $this->Todoist->createSection($this->testName, $allProjects[0]['id']);
+        $this->assertArrayHasKey('name', $createSection);
+        $this->assertEquals($this->testName, $createSection['name']);
+
+        return $createSection['id'];
+    }
+
+    /**
+     * @depends testCreateSection
+     *
+     * @param $sectionId
+     */
+    public function testGetSection($sectionId)
+    {
+        $section = $this->Todoist->getSection($sectionId);
+        $this->assertArrayHasKey('name', $section);
+    }
+
+    /**
+     * @depends testCreateSection
+     *
+     * @param $sectionId
+     */
+    public function testUpdateSection($sectionId)
+    {
+        $success = $this->Todoist->updateSection($sectionId, $this->testName . '-Renamed');
+        $this->assertTrue($success);
+    }
+
+    /**
+     * @depends testCreateSection
+     *
+     * @param $sectionId
+     */
+    public function testDeleteSection($sectionId)
+    {
+        $success = $this->Todoist->deleteSection($sectionId);
         $this->assertTrue($success);
     }
 }

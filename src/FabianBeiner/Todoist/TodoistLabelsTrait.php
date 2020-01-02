@@ -5,7 +5,6 @@
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @license https://opensource.org/licenses/MIT MIT
- *
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
@@ -13,69 +12,53 @@ namespace FabianBeiner\Todoist;
 
 /**
  * Trait TodoistLabelsTrait.
+ *
+ * @package FabianBeiner\Todoist
  */
 trait TodoistLabelsTrait
 {
     /**
-     * Get all labels.
+     * Get all the labels.
      *
-     * @return array|bool Array with all labels (can be empty), or false on failure.
+     * @return array|bool An array containing all user labels, or false on failure.
      */
     public function getAllLabels()
     {
         /** @var object $result Result of the GET request. */
         $result = $this->get('labels');
 
-        $status = $result->getStatusCode();
-        if (204 === $status) {
-            return [];
-        }
-        if (200 === $status) {
-            return json_decode($result->getBody()->getContents());
-        }
-
-        return false;
+        return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
     }
 
     /**
      * Create a new label.
      *
-     * @param string $name Name of the label.
+     * @param string $labelName          The name of the label.
+     * @param array  $optionalParameters Optional parameters, see
+     *                                   https://developer.todoist.com/rest/v1/#create-a-new-label.
      *
-     * @return object|bool Object with values of the new label, or false on failure.
+     * @return array|bool An array containing the values of the new label, or false on failure.
      */
-    public function createLabel(string $name)
+    public function createLabel(string $labelName, array $optionalParameters = [])
     {
-        if ('' === $name) {
+        $labelName = filter_var($labelName, FILTER_SANITIZE_STRING);
+        if ( ! strlen($labelName)) {
             return false;
         }
 
-        $data   = $this->prepareRequestData(['name' => $name]);
+        $postData = $this->preparePostData(array_merge(['name' => $labelName], $optionalParameters));
         /** @var object $result Result of the POST request. */
-        $result = $this->post('labels', $data);
+        $result = $this->post('labels', $postData);
 
-        if (200 === $result->getStatusCode()) {
-            return json_decode($result->getBody()->getContents());
-        }
-
-        return false;
+        return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
     }
-
-    /**
-     * Prepare Guzzle request data.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    abstract protected function prepareRequestData(array $data = []): array;
 
     /**
      * Get a label.
      *
-     * @param int $labelId ID of the label.
+     * @param int $labelId The ID of the label.
      *
-     * @return object|bool Object with values of the label, or false on failure.
+     * @return array|bool An array containing the label data related to the given id, or false on failure.
      */
     public function getLabel(int $labelId)
     {
@@ -86,52 +69,27 @@ trait TodoistLabelsTrait
         /** @var object $result Result of the GET request. */
         $result = $this->get('labels/' . $labelId);
 
-        if (200 === $result->getStatusCode()) {
-            return json_decode($result->getBody()->getContents());
-        }
-
-        return false;
+        return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
     }
 
     /**
-     * Validates an ID to be a positive integer.
+     * Update a label.
      *
-     * @param mixed $id
-     *
-     * @return bool
-     */
-    abstract protected function validateId($id): bool;
-
-    /**
-     * Alias for updateLabel().
-     *
-     * @param int    $labelId ID of the label.
-     * @param string $name    New name of the label.
+     * @param int    $labelId      The ID of the label.
+     * @param string $newLabelName The new name of the label.
      *
      * @return bool True on success, false on failure.
      */
-    public function renameLabel(int $labelId, string $name): bool
+    public function updateLabel(int $labelId, string $newLabelName): bool
     {
-        return $this->updateLabel($labelId, $name);
-    }
-
-    /**
-     * Update (actually rename…) a label.
-     *
-     * @param int    $labelId ID of the label.
-     * @param string $name    New name of the label.
-     *
-     * @return bool True on success, false on failure.
-     */
-    public function updateLabel(int $labelId, string $name): bool
-    {
-        if ('' === $name || ! $this->validateId($labelId)) {
+        $newLabelName = filter_var($newLabelName, FILTER_SANITIZE_STRING);
+        if ( ! strlen($newLabelName) || ! $this->validateId($labelId)) {
             return false;
         }
 
-        $data   = $this->prepareRequestData(['name' => $name]);
+        $postData = $this->preparePostData(['name' => $newLabelName]);
         /** @var object $result Result of the POST request. */
-        $result = $this->post('labels/' . $labelId, $data);
+        $result = $this->post('labels/' . $labelId, $postData);
 
         return 204 === $result->getStatusCode();
     }
@@ -139,7 +97,7 @@ trait TodoistLabelsTrait
     /**
      * Delete a label.
      *
-     * @param int $labelId ID of the label.
+     * @param int $labelId The ID of the label.
      *
      * @return bool True on success, false on failure.
      */

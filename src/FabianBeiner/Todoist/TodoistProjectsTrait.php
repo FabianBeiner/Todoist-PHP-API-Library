@@ -5,7 +5,6 @@
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @license https://opensource.org/licenses/MIT MIT
- *
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
@@ -13,69 +12,53 @@ namespace FabianBeiner\Todoist;
 
 /**
  * Trait TodoistProjectsTrait.
+ *
+ * @package FabianBeiner\Todoist
  */
 trait TodoistProjectsTrait
 {
     /**
-     * Get all projects.
+     * Get all the projects.
      *
-     * @return array|bool Array with all projects (can be empty), or false on failure.
+     * @return array|bool An array containing all active user projects, or false on failure.
      */
     public function getAllProjects()
     {
         /** @var object $result Result of the GET request. */
         $result = $this->get('projects');
 
-        $status = $result->getStatusCode();
-        if (204 === $status) {
-            return [];
-        }
-        if (200 === $status) {
-            return json_decode($result->getBody()->getContents());
-        }
-
-        return false;
+        return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
     }
 
     /**
      * Create a new project.
      *
-     * @param string $name Name of the project.
+     * @param string $projectName        The name of the new project.
+     * @param array  $optionalParameters Optional parameters, see
+     *                                   https://developer.todoist.com/rest/v1/#create-a-new-project.
      *
-     * @return object|bool Object with values of the new project, or false on failure.
+     * @return array|bool An array containing the values of the new project, or false on failure.
      */
-    public function createProject(string $name)
+    public function createProject(string $projectName, array $optionalParameters = [])
     {
-        if ('' === $name) {
+        $projectName = filter_var($projectName, FILTER_SANITIZE_STRING);
+        if ( ! strlen($projectName)) {
             return false;
         }
 
-        $data   = $this->prepareRequestData(['name' => $name]);
+        $postData = $this->preparePostData(array_merge(['name' => $projectName], $optionalParameters));
         /** @var object $result Result of the POST request. */
-        $result = $this->post('projects', $data);
+        $result = $this->post('projects', $postData);
 
-        if (200 === $result->getStatusCode()) {
-            return json_decode($result->getBody()->getContents());
-        }
-
-        return false;
+        return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
     }
-
-    /**
-     * Prepare Guzzle request data.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    abstract protected function prepareRequestData(array $data = []): array;
 
     /**
      * Get a project.
      *
-     * @param int $projectId ID of the project.
+     * @param int $projectId The ID of the project.
      *
-     * @return object|bool Object with values of the project, or false on failure.
+     * @return array|bool An array containing the project data related to the given id, or false on failure.
      */
     public function getProject(int $projectId)
     {
@@ -86,52 +69,27 @@ trait TodoistProjectsTrait
         /** @var object $result Result of the GET request. */
         $result = $this->get('projects/' . $projectId);
 
-        if (200 === $result->getStatusCode()) {
-            return json_decode($result->getBody()->getContents());
-        }
-
-        return false;
+        return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
     }
 
     /**
-     * Validates an ID to be a positive integer.
+     * Update a project.
      *
-     * @param mixed $id
-     *
-     * @return bool
-     */
-    abstract protected function validateId($id): bool;
-
-    /**
-     * Alias for updateProject().
-     *
-     * @param int    $projectId ID of the project.
-     * @param string $name      New name of the project.
+     * @param int    $projectId      The ID of the project.
+     * @param string $newProjectName The new name of the project.
      *
      * @return bool True on success, false on failure.
      */
-    public function renameProject(int $projectId, string $name): bool
+    public function updateProject(int $projectId, string $newProjectName): bool
     {
-        return $this->updateProject($projectId, $name);
-    }
-
-    /**
-     * Update (actually rename...) a project.
-     *
-     * @param int    $projectId ID of the project.
-     * @param string $name      New name of the project.
-     *
-     * @return bool True on success, false on failure.
-     */
-    public function updateProject(int $projectId, string $name): bool
-    {
-        if ('' === $name || ! $this->validateId($projectId)) {
+        $newProjectName = filter_var($newProjectName, FILTER_SANITIZE_STRING);
+        if ( ! strlen($newProjectName) || ! $this->validateId($projectId)) {
             return false;
         }
 
-        $data   = $this->prepareRequestData(['name' => $name]);
+        $postData = $this->preparePostData(['name' => $newProjectName]);
         /** @var object $result Result of the POST request. */
-        $result = $this->post('projects/' . $projectId, $data);
+        $result = $this->post('projects/' . $projectId, $postData);
 
         return 204 === $result->getStatusCode();
     }
@@ -139,13 +97,13 @@ trait TodoistProjectsTrait
     /**
      * Delete a project.
      *
-     * @param int $projectId ID of the project.
+     * @param int $projectId The ID of the project.
      *
      * @return bool True on success, false on failure.
      */
     public function deleteProject(int $projectId): bool
     {
-        if ($projectId <= 0 || ! $projectId || ! filter_var($projectId, FILTER_VALIDATE_INT)) {
+        if ( ! $this->validateId($projectId)) {
             return false;
         }
 

@@ -1,5 +1,27 @@
-# Change Log
-All notable changes to this project will be documented in this file.
+# Changelog
+All notable changes to this project get documented in this file. _Unless I forget it. Sorry._
+
+## 1.0.0 - 2020-01-02
+**This version is finally compatible with every available endpoint of the official REST API. Please check out the Wiki for more information on the methods, and many examples.**
+
+### Changed
+- Heavily updated the code. This might have introduced a few breaking changes, but I am currently not sure. 🤷‍
+- Improved almost everything, and added the Section endpoints.
+
+## 0.8.2 - 2020-01-01
+### Changed
+- `getAllTasks` has now an optional ID for a project.
+- Updated Composer packages.
+
+## 0.8.1 - 2019-11-28
+### Fixed
+- There was a typo in the endpoint of the reopen method. 
+### Changed
+- Some coding style changes, updated *.md & Dot files etc.
+- Updated Composer packages.
+
+## 0.8.0 - 2019-07-19
+- _Changelog missing. Sorry!_
 
 ## 0.7.1 - 2018-05-29
 ### Fixed

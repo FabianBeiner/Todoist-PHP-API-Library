@@ -5,108 +5,76 @@
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @license https://opensource.org/licenses/MIT MIT
- *
- * @version 0.8.0 <2019-07-19>
- *
+ * @version 1.0.0 <2020-01-02>
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
 namespace FabianBeiner\Todoist;
 
 use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Promise\PromiseInterface;
-use GuzzleHttp\RequestOptions;
-use function strlen;
 
 /**
  * Class TodoistClient.
+ *
+ * @package FabianBeiner\Todoist
  */
 class TodoistClient extends GuzzleClient
 {
     /*
      * Use Traits.
      */
-    use TodoistCommentsTrait, TodoistLabelsTrait, TodoistProjectsTrait, TodoistTasksTrait;
+    use TodoistCommentsTrait;
+    use TodoistHelpers;
+    use TodoistLabelsTrait;
+    use TodoistProjectsTrait;
+    use TodoistSectionsTrait;
+    use TodoistTasksTrait;
 
     /**
-     * @var string The URL of the Todoist REST API.
+     * @var string URL of the Todoist REST API.
      */
     protected $restApiUrl = 'https://api.todoist.com/rest/v1/';
 
     /**
-     * Todoist constructor.
+     * @var string 2-letter code that specifies the language for due_string parameters.
+     */
+    protected $defaultInputLanguage = 'en';
+
+    /**
+     * @var array All valid languages.
+     */
+    protected $validLanguages = ['en', 'da', 'pl', 'zh', 'ko', 'de', 'pt', 'ja', 'it', 'fr', 'sv', 'ru', 'es', 'nl'];
+
+    /**
+     * TodoistClient constructor.
      *
-     * @param string $apiToken The API token to access the Todoist API.
-     * @param array  $config   Configuration to be passed to Guzzle client.
+     * @param string $apiToken     API token to access the Todoist API.
+     * @param string $languageCode 2-letter code that specifies the language for due_string parameters.
      *
      * @throws \FabianBeiner\Todoist\TodoistException
      */
-    public function __construct(string $apiToken, array $config = [])
+    public function __construct(string $apiToken, string $languageCode = 'en')
     {
         $apiToken = trim($apiToken);
         if (40 !== strlen($apiToken)) {
             throw new TodoistException('The provided API token is invalid.');
         }
 
+        $languageCode = strtolower(trim($languageCode));
+        if (in_array($languageCode, $this->validLanguages)) {
+            $this->defaultInputLanguage = $languageCode;
+        }
+
         $defaults = [
             'headers'     => [
-                'Accept-Encoding' => 'gzip'
+                'Accept-Encoding' => 'gzip',
+                'Authorization'   => sprintf('Bearer %s', $apiToken),
             ],
             'http_errors' => false,
-            'timeout'     => 5
+            'timeout'     => 10,
+            'base_uri'    => $this->restApiUrl,
         ];
 
-        $config                             = array_replace_recursive($defaults, $config);
-        $config['base_uri']                 = $this->restApiUrl;
-        $config['headers']['Authorization'] = sprintf('Bearer %s', $apiToken);
-
-        parent::__construct($config);
-    }
-
-    /**
-     * Wrapper on Guzzle's requestAsync method.
-     *
-     * @param string $method
-     * @param string $uri
-     * @param array  $options
-     *
-     * @throws \Exception
-     *
-     * @return PromiseInterface
-     */
-    public function requestAsync($method, $uri = '', array $options = []): PromiseInterface
-    {
-        // Ensure the “X-Request-Id” header gets regenerated for every call.
-        $options['headers']['X-Request-Id'] = bin2hex(random_bytes(16));
-
-        return parent::requestAsync($method, $uri, $options);
-    }
-
-    /**
-     * Prepare Guzzle request data.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    protected function prepareRequestData(array $data = []): array
-    {
-        array_walk_recursive($data, 'trim');
-
-        return [RequestOptions::JSON => $data];
-    }
-
-    /**
-     * Validates an ID to be a positive integer.
-     *
-     * @param mixed $id
-     *
-     * @return bool
-     */
-    protected function validateId($id): bool
-    {
-        $filterOptions = ['options' => ['min_range' => 0]];
-
-        return (bool) filter_var($id, FILTER_VALIDATE_INT, $filterOptions);
+        parent::__construct($defaults);
     }
 }

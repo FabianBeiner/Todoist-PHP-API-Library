@@ -5,7 +5,6 @@
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @license https://opensource.org/licenses/MIT MIT
- *
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
@@ -13,67 +12,17 @@ namespace FabianBeiner\Todoist;
 
 /**
  * Trait TodoistCommentsTrait.
+ *
+ * @package FabianBeiner\Todoist
  */
 trait TodoistCommentsTrait
 {
     /**
-     * Alias for getAllComments('project', $projectId).
-     *
-     * @param int $projectId ID of the project.
-     *
-     * @return array|bool Array with all comments (can be empty), or false on failure.
-     */
-    public function getAllCommentsByProject(int $projectId)
-    {
-        return $this->getAllComments('project', $projectId);
-    }
-
-    /**
-     * Get all comments.
-     *
-     * @param string $type   Can be "project" or "task".
-     * @param int    $typeId ID of the project/task.
-     *
-     * @return array|bool Array with all comments (can be empty), or false on failure.
-     */
-    public function getAllComments(string $type, int $typeId)
-    {
-        $type = strtolower($type);
-
-        if (('project' !== $type && 'task' !== $type) || ! $this->validateId($typeId)) {
-            return false;
-        }
-
-        $query = http_build_query([$type . '_id' => $typeId], null, '&', PHP_QUERY_RFC3986);
-        /** @var object $result Result of the GET request. */
-        $result = $this->get('comments?' . $query);
-
-        $status = $result->getStatusCode();
-        if (204 === $status) {
-            return [];
-        }
-        if (200 === $status) {
-            return json_decode($result->getBody()->getContents());
-        }
-
-        return false;
-    }
-
-    /**
-     * Validates an ID to be a positive integer.
-     *
-     * @param mixed $id
-     *
-     * @return bool
-     */
-    abstract protected function validateId($id): bool;
-
-    /**
      * Alias for getAllComments('task', $taskId).
      *
-     * @param int $taskId ID of the task.
+     * @param int $taskId The ID of the task.
      *
-     * @return array|bool Array with all comments (can be empty), or false on failure.
+     * @return array|bool An array containing all comments, or false on failure.
      */
     public function getAllCommentsByTask($taskId)
     {
@@ -81,65 +30,46 @@ trait TodoistCommentsTrait
     }
 
     /**
-     * Alias for createComment('project', $projectId, $comment).
+     * Get all the comments.
      *
-     * @param int    $projectId ID of the project.
-     * @param string $comment   Comment to be added.
+     * @param string $commentType Type can be "project" or "task."
+     * @param int    $typeId      The ID of the project/task.
      *
-     * @return object|bool Object with values of the new comment, or false on failure.
+     * @return array|bool An array containing all comments, or false on failure.
      */
-    public function createCommentForProject(int $projectId, string $comment)
+    public function getAllComments(string $commentType, int $typeId)
     {
-        return $this->createComment('project', $projectId, $comment);
-    }
-
-    /**
-     * Create a new comment.
-     *
-     * @param string $type    Can be "project" or "task".
-     * @param int    $typeId  ID of the project/task.
-     * @param string $comment Comment to be added.
-     *
-     * @return object|bool Object with values of the new comment, or false on failure.
-     */
-    public function createComment(string $type, int $typeId, string $comment)
-    {
-        $type = strtolower($type);
-
-        if (('project' !== $type && 'task' !== $type) || '' === $comment || ! $this->validateId($typeId)) {
+        $commentType = strtolower($commentType);
+        if (('project' !== $commentType && 'task' !== $commentType) || ! $this->validateId($typeId)) {
             return false;
         }
 
-        $data = $this->prepareRequestData([
-                                              $type . '_id' => $typeId,
-                                              'content'     => $comment,
-                                          ]);
-        /** @var object $result Result of the POST request. */
-        $result = $this->post('comments', $data);
+        $query = http_build_query([$commentType . '_id' => $typeId], null, '&', PHP_QUERY_RFC3986);
+        /** @var object $result Result of the GET request. */
+        $result = $this->get('comments?' . $query);
 
-        if (200 === $result->getStatusCode()) {
-            return json_decode($result->getBody()->getContents());
-        }
-
-        return false;
+        return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
     }
 
     /**
-     * Prepare Guzzle request data.
+     * Alias for getAllComments('project', $projectId).
      *
-     * @param array $data
+     * @param int $projectId The ID of the project.
      *
-     * @return array
+     * @return array|bool An array containing all comments, or false on failure.
      */
-    abstract protected function prepareRequestData(array $data = []): array;
+    public function getAllCommentsByProject($projectId)
+    {
+        return $this->getAllComments('project', $projectId);
+    }
 
     /**
-     * Alias for createComment('task', $projectId, $comment).
+     * Alias for createComment('task', $taskId, $comment).
      *
-     * @param int    $taskId  ID of the task.
-     * @param string $comment Comment to be added.
+     * @param int    $taskId  The ID of the task.
+     * @param string $comment The comment.
      *
-     * @return object|bool Object with values values of the new comment, or false on failure.
+     * @return array|bool An array containing the values of the new comment, or false on failure.
      */
     public function createCommentForTask(int $taskId, string $comment)
     {
@@ -147,11 +77,52 @@ trait TodoistCommentsTrait
     }
 
     /**
+     * Create a new comment.
+     *
+     * @param string $commentType Type can be "project" or "task."
+     * @param int    $typeId      The ID of the project/task.
+     * @param string $comment     The comment.
+     *
+     * @return array|bool An array containing the values of the new comment, or false on failure.
+     */
+    public function createComment(string $commentType, int $typeId, string $comment)
+    {
+        $commentType = strtolower($commentType);
+        if (('project' !== $commentType && 'task' !== $commentType) || ! $this->validateId($typeId)) {
+            return false;
+        }
+
+        $data = $this->preparePostData(
+            [
+                $commentType . '_id' => $typeId,
+                'content'            => $comment,
+            ]
+        );
+        /** @var object $result Result of the POST request. */
+        $result = $this->post('comments', $data);
+
+        return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
+    }
+
+    /**
+     * Alias for createComment('project', $projectId, $comment).
+     *
+     * @param int    $projectId The ID of the project.
+     * @param string $comment   The comment.
+     *
+     * @return array|bool An array containing the values of the new comment, or false on failure.
+     */
+    public function createCommentForProject(int $projectId, string $comment)
+    {
+        return $this->createComment('project', $projectId, $comment);
+    }
+
+    /**
      * Get a comment.
      *
-     * @param int $commentId ID of the comment.
+     * @param int $commentId The ID of the comment.
      *
-     * @return object|bool Object with values of the comment, or false on failure.
+     * @return array|bool An array containing the values of the comment, or false on failure.
      */
     public function getComment(int $commentId)
     {
@@ -162,28 +133,25 @@ trait TodoistCommentsTrait
         /** @var object $result Result of the GET request. */
         $result = $this->get('comments/' . $commentId);
 
-        if (200 === $result->getStatusCode()) {
-            return json_decode($result->getBody()->getContents());
-        }
-
-        return false;
+        return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
     }
 
     /**
      * Update a comment.
      *
-     * @param int    $commentId ID of the comment.
-     * @param string $content   New content of the comment.
+     * @param int    $commentId The ID of the comment.
+     * @param string $content   The new content of the comment.
      *
      * @return bool True on success, false on failure.
      */
     public function updateComment(int $commentId, string $content): bool
     {
-        if ('' === $content || ! $this->validateId($commentId)) {
+        $content = filter_var($content, FILTER_SANITIZE_STRING);
+        if ( ! strlen($content) || ! $this->validateId($commentId)) {
             return false;
         }
 
-        $data = $this->prepareRequestData(['content' => $content]);
+        $data = $this->preparePostData(['content' => $content]);
         /** @var object $result Result of the POST request. */
         $result = $this->post('comments/' . $commentId, $data);
 
@@ -193,7 +161,7 @@ trait TodoistCommentsTrait
     /**
      * Delete a comment.
      *
-     * @param int $commentId ID of the comment.
+     * @param int $commentId The ID of the comment.
      *
      * @return bool True on success, false on failure.
      */

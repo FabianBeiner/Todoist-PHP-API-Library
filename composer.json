@@ -35,18 +35,18 @@
     "source": "https://github.com/FabianBeiner/Todoist-PHP-API-Library/releases"
   },
   "require": {
-    "guzzlehttp/guzzle": "~6.3",
-    "php": ">=7.0",
+    "guzzlehttp/guzzle": "~6.5",
+    "php": ">=7.2",
     "ext-json": "*"
   },
   "require-dev": {
-    "phpunit/phpunit": "^7.2"
+    "phpunit/phpunit": "^8"
   },
   "scripts": {
     "test": "phpunit"
   },
   "scripts-descriptions": {
-    "test": "Run all phpunit tests."
+    "test": "Run all PHPUnit tests."
   },
   "autoload": {
     "psr-0": {

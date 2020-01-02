@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FabianBeiner\Todoist\Tests;
 
 use Exception;
@@ -8,6 +10,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class TodoistExceptionTest.
+ *
+ * @package FabianBeiner\Todoist\Tests
  */
 class TodoistExceptionTest extends TestCase
 {
@@ -19,11 +23,13 @@ class TodoistExceptionTest extends TestCase
     }
 
     /**
-     * @expectedException \FabianBeiner\Todoist\TodoistException
-     * @expectedExceptionMessage Some message.
+     * @throws \FabianBeiner\Todoist\TodoistException
      */
     public function testTodoistExceptionThrowable()
     {
+        $this->expectException('\FabianBeiner\Todoist\TodoistException');
+        $this->expectExceptionMessage('Some message.');
+
         throw new TodoistException('Some message.');
     }
 }
