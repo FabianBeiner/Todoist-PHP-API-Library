@@ -29,7 +29,7 @@ require __DIR__ . '/vendor/autoload.php';
 ## Usage
 
 ```php
-$Todoist = new FabianBeiner\Todoist\Todoist('YOUR_API_TOKEN');
+$Todoist = new FabianBeiner\Todoist\TodoistClient('YOUR_API_TOKEN');
 ```
 
 [Please have a look at the Wiki of this project.](https://github.com/FabianBeiner/Todoist-PHP-API-Library/wiki) It contains a list of all available methods and related usage examples.
