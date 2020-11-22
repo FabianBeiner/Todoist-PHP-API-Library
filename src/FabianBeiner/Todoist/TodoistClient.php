@@ -50,10 +50,11 @@ class TodoistClient extends GuzzleClient
      *
      * @param string $apiToken     API token to access the Todoist API.
      * @param string $languageCode 2-letter code that specifies the language for due_string parameters.
+     * @param array  $guzzleConf   Configuration to be passed to Guzzle client.
      *
      * @throws \FabianBeiner\Todoist\TodoistException
      */
-    public function __construct(string $apiToken, string $languageCode = 'en')
+    public function __construct(string $apiToken, string $languageCode = 'en', array $guzzleConf = [])
     {
         $apiToken = trim($apiToken);
         if (40 !== strlen($apiToken)) {
@@ -68,13 +69,15 @@ class TodoistClient extends GuzzleClient
         $defaults = [
             'headers'     => [
                 'Accept-Encoding' => 'gzip',
-                'Authorization'   => sprintf('Bearer %s', $apiToken),
             ],
             'http_errors' => false,
             'timeout'     => 10,
-            'base_uri'    => $this->restApiUrl,
         ];
 
-        parent::__construct($defaults);
+        $config                             = array_replace_recursive($defaults, $guzzleConf);
+        $config['base_uri']                 = $this->restApiUrl;
+        $config['headers']['Authorization'] = sprintf('Bearer %s', $apiToken);
+
+        parent::__construct($config);
     }
 }
