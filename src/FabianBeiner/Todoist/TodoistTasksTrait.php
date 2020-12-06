@@ -30,7 +30,7 @@ trait TodoistTasksTrait
         $path = 'tasks';
         if (count($options)) {
             $query = http_build_query($options, null, '&', PHP_QUERY_RFC3986);
-            $path  = $path . $query;
+            $path  = $path . '?' . $query;
         }
         /** @var object $result Result of the GET request. */
         $result = $this->get($path);
