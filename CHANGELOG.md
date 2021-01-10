@@ -1,10 +1,13 @@
 # Changelog
 All notable changes to this project get documented in this file. _Unless I forget it. Sorry._
 
+## 1.1.0 - 2021-01-09
+### Changed
+- Updated depenencies (Guzzle & PHPUnit) to latest versions. _(Thanks, @vdhicts)_
+
 ## 1.0.1 - 2020-11-22
 ### Changed
 - Reintroduced the possibility to pass on Guzzle Configuration as a third parameter to the constructor (`new TodoistClient(string $apiToken, string $languageCode = 'en', array $guzzleConf = [])`).
-
 
 ## 1.0.0 - 2020-01-02
 **This version is finally compatible with every available endpoint of the official REST API. Please check out the Wiki for more information on the methods, and many examples.**
