@@ -5,7 +5,9 @@
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @license https://opensource.org/licenses/MIT MIT
+ *
  * @version 1.2.0 <2022-01-26>
+ *
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
@@ -15,8 +17,6 @@ use GuzzleHttp\Client as GuzzleClient;
 
 /**
  * Class TodoistClient.
- *
- * @package FabianBeiner\Todoist
  */
 class TodoistClient extends GuzzleClient
 {

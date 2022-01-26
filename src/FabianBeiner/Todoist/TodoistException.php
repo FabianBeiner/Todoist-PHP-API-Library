@@ -5,6 +5,7 @@
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @license https://opensource.org/licenses/MIT MIT
+ *
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
@@ -14,8 +15,6 @@ use Exception;
 
 /**
  * Class TodoistException.
- *
- * @package FabianBeiner\Todoist
  */
 class TodoistException extends Exception
 {

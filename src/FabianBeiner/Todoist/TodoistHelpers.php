@@ -5,6 +5,7 @@
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @license https://opensource.org/licenses/MIT MIT
+ *
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
@@ -14,8 +15,6 @@ use GuzzleHttp\RequestOptions;
 
 /**
  * Trait TodoistHelpers.
- *
- * @package FabianBeiner\Todoist
  */
 trait TodoistHelpers
 {
@@ -26,6 +25,7 @@ trait TodoistHelpers
      * @param string $content    The content of the call.
      *
      * @throws TodoistException Exception.
+     *
      * @return array|bool       An array with or without data, false on failure.
      */
     final protected function handleResponse(int $statusCode, string $content)
@@ -53,6 +53,7 @@ trait TodoistHelpers
      * @param array $data The POST data as an array.
      *
      * @throws \Exception Exception.
+     *
      * @return array      Trimmed array with JSON data.
      */
     final protected function preparePostData(array $data = []): array

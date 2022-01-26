@@ -10,8 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class TodoistExceptionTest.
- *
- * @package FabianBeiner\Todoist\Tests
  */
 class TodoistExceptionTest extends TestCase
 {

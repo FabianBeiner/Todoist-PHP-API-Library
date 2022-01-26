@@ -5,6 +5,7 @@
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @license https://opensource.org/licenses/MIT MIT
+ *
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
@@ -12,8 +13,6 @@ namespace FabianBeiner\Todoist;
 
 /**
  * Trait TodoistCommentsTrait.
- *
- * @package FabianBeiner\Todoist
  */
 trait TodoistCommentsTrait
 {
