@@ -1,11 +1,11 @@
 <?php
 /**
- * PHP Client for Todoist
+ * Todoist-PHP-API-Library
  * A PHP client library that provides a native interface to the official Todoist REST API.
  *
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @license https://opensource.org/licenses/MIT MIT
- * @version 1.0.0 <2020-01-02>
+ * @version 1.2.0 <2022-01-26>
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
 
