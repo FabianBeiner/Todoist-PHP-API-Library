@@ -7,20 +7,20 @@
 
 ## Requirements
 
-- [PHP](https://php.net/): >=7.2
+- [PHP](https://php.net/): >=7.4
 - [Guzzle](https://github.com/guzzle/guzzle): ^7.0.1
 
 ## Installation
 
-The recommended way is using **[Composer](https://getcomposer.org/)**. If you don’t have Composer installed, follow the [install instructions](hhttps://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos).
+The recommended way is using **[Composer](https://getcomposer.org/)**. If you don’t have Composer installed, follow the [installation instructions](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos).
 
-Once Composer is installed, execute the following command in your project root to install this library:
+Once you have installed Composer, execute the following command in your project root to install this library:
 
-```sh
+```shell
 composer require fabian-beiner/todoist-php-api-library
 ```
 
-Finally, include the autoloader to your project:
+Finally, include the autoloader in your project:
 
 ```php
 require __DIR__ . '/vendor/autoload.php';
@@ -32,20 +32,20 @@ require __DIR__ . '/vendor/autoload.php';
 $Todoist = new FabianBeiner\Todoist\TodoistClient('YOUR_API_TOKEN');
 ```
 
-[Please have a look at the Wiki of this project.](https://github.com/FabianBeiner/Todoist-PHP-API-Library/wiki) It contains a list of all available methods and related usage examples.
+[Please look at the Wiki of this project.](https://github.com/FabianBeiner/Todoist-PHP-API-Library/wiki) It contains a list of all available methods and related usage examples.
 
 ## Obtain your API token
 
-[Click here](https://todoist.com/prefs/integrations) to find your API token at the bottom of that page.
+[Click here](https://todoist.com/app/settings/integrations) to find your API token at the bottom of that page.
 
-If the link doesn’t work, open the [Todoist web app](https://todoist.com/app), click on the gear icon ![gear icon image](.github/gear-icon.png), select “Settings,” then “Integrations.”
+If the link doesn’t work, open the [Todoist web app](https://todoist.com/app/), click on your profile image/icon, select “Settings,” then “Integrations.”
 
 ## Changelog
 
 👉 [CHANGELOG.md](https://github.com/FabianBeiner/Todoist-PHP-API-Library/blob/master/CHANGELOG.md)
 
 ## Contributing
-I’d be happy if you contribute to this library. Please try to follow the existing coding style and use proper comments in your commit message. Thanks! 🙇 
+I’d be happy if you contributed to this library. Please follow the existing coding style and use proper comments in your commit message. Thanks! 🙇
 
 ## License
 
@@ -53,4 +53,4 @@ I’d be happy if you contribute to this library. Please try to follow the exist
 
 ## Disclaimer
 
-The project is not created by, affiliated with, or supported by Doist.
+The project is not created by, affiliated with, or supported by Doist. 😢
