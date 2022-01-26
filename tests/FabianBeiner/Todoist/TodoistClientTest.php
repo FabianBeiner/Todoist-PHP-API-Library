@@ -10,8 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class TodoistClientTest.
- *
- * @package FabianBeiner\Todoist\Tests
  */
 class TodoistClientTest extends TestCase
 {
@@ -21,9 +19,9 @@ class TodoistClientTest extends TestCase
     private $apiToken = null;
 
     /**
-     * @var string Exemplary name for projects, labels, and other.
+     * @var string|null Exemplary name for projects, labels, and other.
      */
-    private $testName = null;
+    private ?string $testName = null;
 
     /**
      * @var object Todoist Client.
@@ -61,16 +59,13 @@ class TodoistClientTest extends TestCase
         $this->assertEquals(sprintf('Bearer %s', $this->apiToken), $headers['Authorization']);
     }
 
-    public function testGetAllProjects()
-    {
-        $allProjects = $this->Todoist->getAllProjects();
-        $this->assertArrayHasKey('id', $allProjects[0]);
-    }
-
     /**
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
      * @return int ID of the created project.
      */
-    public function testCreateProject()
+    public function testCreateProject(): int
     {
         $createProject = $this->Todoist->createProject($this->testName);
         $this->assertArrayHasKey('name', $createProject);
@@ -83,6 +78,9 @@ class TodoistClientTest extends TestCase
      * @depends testCreateProject
      *
      * @param $projectId
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function testGetProject($projectId)
     {
@@ -91,9 +89,23 @@ class TodoistClientTest extends TestCase
     }
 
     /**
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
+     * @return void
+     */
+    public function testGetAllProjects()
+    {
+        $allProjects = $this->Todoist->getAllProjects();
+        $this->assertArrayHasKey('id', $allProjects[0]);
+    }
+
+    /**
      * @depends testCreateProject
      *
      * @param $projectId
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function testUpdateProject($projectId)
     {
@@ -105,6 +117,22 @@ class TodoistClientTest extends TestCase
      * @depends testCreateProject
      *
      * @param $projectId
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \FabianBeiner\Todoist\TodoistException
+     */
+    public function testGetAllCollaborators($projectId)
+    {
+        $allCollaborators = $this->Todoist->getAllCollaborators($projectId);
+        $this->assertArrayHasKey('id', $allCollaborators[0]);
+    }
+
+    /**
+     * @depends testCreateProject
+     *
+     * @param $projectId
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function testDeleteProject($projectId)
     {
@@ -112,22 +140,22 @@ class TodoistClientTest extends TestCase
         $this->assertTrue($success);
     }
 
-    public function testGetAllLabels()
-    {
-        $allLabels = $this->Todoist->getAllLabels();
-        $this->assertArrayHasKey('id', $allLabels[0]);
-    }
-
     /**
      * @return int ID of the created label.
      */
-    public function testCreateLabel()
+    public function testCreateLabel(): int
     {
         $createLabel = $this->Todoist->createLabel($this->testName);
         $this->assertArrayHasKey('name', $createLabel);
         $this->assertEquals($this->testName, $createLabel['name']);
 
         return $createLabel['id'];
+    }
+
+    public function testGetAllLabels()
+    {
+        $allLabels = $this->Todoist->getAllLabels();
+        $this->assertArrayHasKey('id', $allLabels[0]);
     }
 
     /**
@@ -173,9 +201,12 @@ class TodoistClientTest extends TestCase
     }
 
     /**
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
      * @return int ID of the created section.
      */
-    public function testCreateSection()
+    public function testCreateSection(): int
     {
         $allProjects   = $this->Todoist->getAllProjects();
         $createSection = $this->Todoist->createSection($this->testName, $allProjects[0]['id']);
