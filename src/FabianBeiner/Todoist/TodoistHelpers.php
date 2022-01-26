@@ -40,6 +40,8 @@ trait TodoistHelpers
                 throw new TodoistException('Unable to access the API. Is the API token valid?');
             case 402:
                 throw new TodoistException('A non-premium user used a premium-only feature.');
+            case 500:
+                throw new TodoistException('An Internal Server Error occurred at Todoists end.');
             default:
                 return false;
         }
@@ -57,12 +59,11 @@ trait TodoistHelpers
     {
         array_walk_recursive($data, 'trim');
 
-        return array_merge(
-            ['headers' => [
-                'X-Request-Id' => bin2hex(random_bytes(16)),
-            ]],
-            [RequestOptions::JSON => $data]
-        );
+        return array_merge([
+                               'headers' => [
+                                   'X-Request-Id' => bin2hex(random_bytes(16)),
+                               ],
+                           ], [RequestOptions::JSON => $data]);
     }
 
     /**
@@ -74,7 +75,7 @@ trait TodoistHelpers
      */
     final protected function validateId(int $validateId): bool
     {
-        return (bool)filter_var($validateId, FILTER_VALIDATE_INT, [
+        return (bool) filter_var($validateId, FILTER_VALIDATE_INT, [
             'options' => ['min_range' => 1],
         ]);
     }
