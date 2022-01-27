@@ -21,18 +21,24 @@ trait TodoistCommentsTrait
      *
      * @param int $taskId The ID of the task.
      *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
      * @return array|bool An array containing all comments, or false on failure.
      */
-    public function getAllCommentsByTask($taskId)
+    public function getAllCommentsByTask(int $taskId)
     {
         return $this->getAllComments('task', $taskId);
     }
 
     /**
-     * Get all the comments.
+     * Returns an array of all comments for a given task or project.
      *
      * @param string $commentType Type can be "project" or "task."
      * @param int    $typeId      The ID of the project/task.
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return array|bool An array containing all comments, or false on failure.
      */
@@ -55,9 +61,12 @@ trait TodoistCommentsTrait
      *
      * @param int $projectId The ID of the project.
      *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
      * @return array|bool An array containing all comments, or false on failure.
      */
-    public function getAllCommentsByProject($projectId)
+    public function getAllCommentsByProject(int $projectId)
     {
         return $this->getAllComments('project', $projectId);
     }
@@ -68,6 +77,9 @@ trait TodoistCommentsTrait
      * @param int    $taskId  The ID of the task.
      * @param string $comment The comment.
      *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
      * @return array|bool An array containing the values of the new comment, or false on failure.
      */
     public function createCommentForTask(int $taskId, string $comment)
@@ -76,11 +88,15 @@ trait TodoistCommentsTrait
     }
 
     /**
-     * Create a new comment.
+     * Creates a new comment on a project or task and returns it as an array.
      *
      * @param string $commentType Type can be "project" or "task."
      * @param int    $typeId      The ID of the project/task.
      * @param string $comment     The comment.
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      *
      * @return array|bool An array containing the values of the new comment, or false on failure.
      */
@@ -91,12 +107,10 @@ trait TodoistCommentsTrait
             return false;
         }
 
-        $data = $this->preparePostData(
-            [
-                $commentType . '_id' => $typeId,
-                'content'            => $comment,
-            ]
-        );
+        $data = $this->preparePostData([
+                                           $commentType . '_id' => $typeId,
+                                           'content'            => $comment,
+                                       ]);
         /** @var object $result Result of the POST request. */
         $result = $this->post('comments', $data);
 
@@ -109,6 +123,9 @@ trait TodoistCommentsTrait
      * @param int    $projectId The ID of the project.
      * @param string $comment   The comment.
      *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
      * @return array|bool An array containing the values of the new comment, or false on failure.
      */
     public function createCommentForProject(int $projectId, string $comment)
@@ -117,9 +134,12 @@ trait TodoistCommentsTrait
     }
 
     /**
-     * Get a comment.
+     * Returns a single comment as an array.
      *
      * @param int $commentId The ID of the comment.
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return array|bool An array containing the values of the comment, or false on failure.
      */
@@ -136,10 +156,13 @@ trait TodoistCommentsTrait
     }
 
     /**
-     * Update a comment.
+     * Updates a comment.
      *
      * @param int    $commentId The ID of the comment.
      * @param string $content   The new content of the comment.
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException*@throws \Exception*@throws \Exception
+     * @throws \Exception
      *
      * @return bool True on success, false on failure.
      */
@@ -158,9 +181,11 @@ trait TodoistCommentsTrait
     }
 
     /**
-     * Delete a comment.
+     * Deletes a comment.
      *
      * @param int $commentId The ID of the comment.
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return bool True on success, false on failure.
      */
