@@ -124,7 +124,7 @@ class TodoistClientTest extends TestCase
     public function testGetAllCollaborators($projectId)
     {
         $allCollaborators = $this->Todoist->getAllCollaborators($projectId);
-        $this->assertArrayHasKey('id', $allCollaborators[0]);
+        $this->assertCount(0, $allCollaborators);
     }
 
     /**
@@ -141,6 +141,9 @@ class TodoistClientTest extends TestCase
     }
 
     /**
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
      * @return int ID of the created label.
      */
     public function testCreateLabel(): int
@@ -162,6 +165,9 @@ class TodoistClientTest extends TestCase
      * @depends testCreateLabel
      *
      * @param $labelId
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function testGetLabel($labelId)
     {
@@ -173,6 +179,8 @@ class TodoistClientTest extends TestCase
      * @depends testCreateLabel
      *
      * @param $labelId
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function testUpdateLabel($labelId)
     {
@@ -184,20 +192,13 @@ class TodoistClientTest extends TestCase
      * @depends testCreateLabel
      *
      * @param $labelId
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function testDeleteLabel($labelId)
     {
         $success = $this->Todoist->deleteLabel($labelId);
         $this->assertTrue($success);
-    }
-
-    /**
-     * @depends testCreateSection
-     */
-    public function testGetAllSections()
-    {
-        $allSections = $this->Todoist->getAllSections();
-        $this->assertArrayHasKey('id', $allSections[0]);
     }
 
     /**
@@ -218,8 +219,20 @@ class TodoistClientTest extends TestCase
 
     /**
      * @depends testCreateSection
+     */
+    public function testGetAllSections($sectionId)
+    {
+        $allSections = $this->Todoist->getAllSections($sectionId);
+        $this->assertArrayHasKey('id', $allSections[0]);
+    }
+
+    /**
+     * @depends testCreateSection
      *
      * @param $sectionId
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function testGetSection($sectionId)
     {
@@ -231,6 +244,8 @@ class TodoistClientTest extends TestCase
      * @depends testCreateSection
      *
      * @param $sectionId
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function testUpdateSection($sectionId)
     {
@@ -242,6 +257,8 @@ class TodoistClientTest extends TestCase
      * @depends testCreateSection
      *
      * @param $sectionId
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function testDeleteSection($sectionId)
     {
