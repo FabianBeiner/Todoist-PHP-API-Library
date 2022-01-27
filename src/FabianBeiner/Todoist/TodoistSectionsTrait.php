@@ -26,7 +26,7 @@ trait TodoistSectionsTrait
      *
      * @return array|bool An array containing all user sections, or false on failure.
      */
-    public function getAllSections(int $projectId = null)
+    public function getAllSections(int $projectId = 0)
     {
         if ( ! $this->validateId($projectId)) {
             /** @var object $result Result of the GET request. */
