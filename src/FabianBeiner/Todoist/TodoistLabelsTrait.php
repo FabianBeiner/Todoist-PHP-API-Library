@@ -17,7 +17,10 @@ namespace FabianBeiner\Todoist;
 trait TodoistLabelsTrait
 {
     /**
-     * Get all the labels.
+     * Returns an array containing all user labels.
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return array|bool An array containing all user labels, or false on failure.
      */
@@ -30,11 +33,15 @@ trait TodoistLabelsTrait
     }
 
     /**
-     * Create a new label.
+     * Creates a new label and returns its object as array.
      *
      * @param string $labelName          The name of the label.
      * @param array  $optionalParameters Optional parameters, see
      *                                   https://developer.todoist.com/rest/v1/#create-a-new-label.
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      *
      * @return array|bool An array containing the values of the new label, or false on failure.
      */
@@ -45,7 +52,15 @@ trait TodoistLabelsTrait
             return false;
         }
 
-        $postData = $this->preparePostData(array_merge(['name' => $labelName], $optionalParameters));
+        // Only allow valid optional parameters.
+        $validParameters    = [
+            'color',
+            'favorite',
+            'order',
+        ];
+        $filteredParameters = array_intersect_key($optionalParameters, array_flip($validParameters));
+
+        $postData = $this->preparePostData(array_merge(['name' => $labelName], $filteredParameters));
         /** @var object $result Result of the POST request. */
         $result = $this->post('labels', $postData);
 
@@ -53,9 +68,12 @@ trait TodoistLabelsTrait
     }
 
     /**
-     * Get a label.
+     * Returns a label by ID.
      *
      * @param int $labelId The ID of the label.
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return array|bool An array containing the label data related to the given id, or false on failure.
      */
@@ -72,21 +90,34 @@ trait TodoistLabelsTrait
     }
 
     /**
-     * Update a label.
+     * Updates a label.
      *
-     * @param int    $labelId      The ID of the label.
-     * @param string $newLabelName The new name of the label.
+     * @param int    $labelId            The ID of the label.
+     * @param string $newLabelName       The new name of the label.
+     * @param array  $optionalParameters Optional parameters, see
+     *                                   https://developer.todoist.com/rest/v1/#update-a-label.
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      *
      * @return bool True on success, false on failure.
      */
-    public function updateLabel(int $labelId, string $newLabelName): bool
+    public function updateLabel(int $labelId, string $newLabelName, array $optionalParameters = []): bool
     {
         $newLabelName = filter_var($newLabelName, FILTER_SANITIZE_STRING);
         if ( ! strlen($newLabelName) || ! $this->validateId($labelId)) {
             return false;
         }
 
-        $postData = $this->preparePostData(['name' => $newLabelName]);
+        // Only allow valid optional parameters.
+        $validParameters    = [
+            'color',
+            'favorite',
+            'order',
+        ];
+        $filteredParameters = array_intersect_key($optionalParameters, array_flip($validParameters));
+
+        $postData = $this->preparePostData(array_merge(['name' => $newLabelName], $filteredParameters));
         /** @var object $result Result of the POST request. */
         $result = $this->post('labels/' . $labelId, $postData);
 
@@ -97,6 +128,8 @@ trait TodoistLabelsTrait
      * Delete a label.
      *
      * @param int $labelId The ID of the label.
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return bool True on success, false on failure.
      */
