@@ -17,25 +17,39 @@ namespace FabianBeiner\Todoist;
 trait TodoistSectionsTrait
 {
     /**
-     * Get all the sections.
+     * Returns an array of all sections.
+     *
+     * @param int|null $projectId Filter sections by project ID.
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return array|bool An array containing all user sections, or false on failure.
      */
-    public function getAllSections()
+    public function getAllSections(int $projectId = null)
     {
-        /** @var object $result Result of the GET request. */
-        $result = $this->get('sections');
+        if ( ! $this->validateId($projectId)) {
+            /** @var object $result Result of the GET request. */
+            $result = $this->get('sections?project_id=' . $projectId);
+        } else {
+            /** @var object $result Result of the GET request. */
+            $result = $this->get('sections');
+        }
 
         return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
     }
 
     /**
-     * Create a new section.
+     * Creates a new section and returns it as an array.
      *
      * @param string $sectionName        The name of the section.
      * @param int    $projectId          The project ID this section should belong to.
      * @param array  $optionalParameters Optional parameters, see
      *                                   https://developer.todoist.com/rest/v1/#create-a-new-section.
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      *
      * @return array|bool An array containing the values of the new section, or false on failure.
      */
@@ -46,8 +60,14 @@ trait TodoistSectionsTrait
             return false;
         }
 
+        // Only allow valid optional parameters.
+        $validParameters    = [
+            'order',
+        ];
+        $filteredParameters = array_intersect_key($optionalParameters, array_flip($validParameters));
+
         $postData = $this->preparePostData(
-            array_merge(['name' => $sectionName, 'project_id' => $projectId], $optionalParameters)
+            array_merge(['name' => $sectionName, 'project_id' => $projectId], $filteredParameters)
         );
         /** @var object $result Result of the POST request. */
         $result = $this->post('sections', $postData);
@@ -56,9 +76,12 @@ trait TodoistSectionsTrait
     }
 
     /**
-     * Get a single section.
+     * Returns a single section as an array.
      *
      * @param int $sectionId The ID of the section.
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return array|bool An array containing the section data related to the given id, or false on failure.
      */
@@ -75,10 +98,13 @@ trait TodoistSectionsTrait
     }
 
     /**
-     * Update a section.
+     * Updates the section for the given ID.
      *
      * @param int    $sectionId      The ID of the section.
      * @param string $newSectionName The new name of the section.
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      *
      * @return bool True on success, false on failure.
      */
@@ -97,9 +123,11 @@ trait TodoistSectionsTrait
     }
 
     /**
-     * Delete a section.
+     * Deletes a section.
      *
      * @param int $sectionId The ID of the section.
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return bool True on success, false on failure.
      */
