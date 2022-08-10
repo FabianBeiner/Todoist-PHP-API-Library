@@ -47,7 +47,6 @@ trait TodoistProjectsTrait
      */
     public function createProject(string $projectName, array $optionalParameters = [])
     {
-        $projectName = filter_var($projectName, FILTER_SANITIZE_STRING);
         if ( ! strlen($projectName)) {
             return false;
         }
@@ -102,7 +101,6 @@ trait TodoistProjectsTrait
      */
     public function updateProject(int $projectId, string $newProjectName, array $optionalParameters = []): bool
     {
-        $newProjectName = filter_var($newProjectName, FILTER_SANITIZE_STRING);
         if ( ! strlen($newProjectName) || ! $this->validateId($projectId)) {
             return false;
         }

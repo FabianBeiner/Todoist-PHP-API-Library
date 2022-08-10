@@ -168,7 +168,6 @@ trait TodoistCommentsTrait
      */
     public function updateComment(int $commentId, string $content): bool
     {
-        $content = filter_var($content, FILTER_SANITIZE_STRING);
         if ( ! strlen($content) || ! $this->validateId($commentId)) {
             return false;
         }
