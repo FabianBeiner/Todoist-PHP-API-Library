@@ -108,9 +108,9 @@ trait TodoistCommentsTrait
         }
 
         $data = $this->preparePostData([
-                                           $commentType . '_id' => $typeId,
-                                           'content'            => $comment,
-                                       ]);
+            $commentType . '_id' => $typeId,
+            'content'            => $comment,
+        ]);å
         /** @var object $result Result of the POST request. */
         $result = $this->post('comments', $data);
 
