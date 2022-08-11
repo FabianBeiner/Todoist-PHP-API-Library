@@ -47,7 +47,6 @@ trait TodoistLabelsTrait
      */
     public function createLabel(string $labelName, array $optionalParameters = [])
     {
-        $labelName = filter_var($labelName, FILTER_SANITIZE_STRING);
         if ( ! strlen($labelName)) {
             return false;
         }
@@ -104,7 +103,6 @@ trait TodoistLabelsTrait
      */
     public function updateLabel(int $labelId, string $newLabelName, array $optionalParameters = []): bool
     {
-        $newLabelName = filter_var($newLabelName, FILTER_SANITIZE_STRING);
         if ( ! strlen($newLabelName) || ! $this->validateId($labelId)) {
             return false;
         }

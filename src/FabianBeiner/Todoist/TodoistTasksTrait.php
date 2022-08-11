@@ -48,7 +48,6 @@ trait TodoistTasksTrait
      */
     public function createTask(string $content, array $options = [])
     {
-        $content = filter_var($content, FILTER_SANITIZE_STRING);
         if ( ! strlen($content)) {
             return false;
         }
@@ -92,7 +91,6 @@ trait TodoistTasksTrait
      */
     public function updateTask(int $taskId, string $content = null, array $options = []): bool
     {
-        $content = filter_var($content, FILTER_SANITIZE_STRING);
         if ( ! $this->validateId($taskId)) {
             return false;
         }

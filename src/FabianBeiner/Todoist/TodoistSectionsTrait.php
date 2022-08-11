@@ -55,7 +55,6 @@ trait TodoistSectionsTrait
      */
     public function createSection(string $sectionName, int $projectId, array $optionalParameters = [])
     {
-        $sectionName = filter_var($sectionName, FILTER_SANITIZE_STRING);
         if ( ! strlen($sectionName) || ! $this->validateId($projectId)) {
             return false;
         }
@@ -110,7 +109,6 @@ trait TodoistSectionsTrait
      */
     public function updateSection(int $sectionId, string $newSectionName): bool
     {
-        $newSectionName = filter_var($newSectionName, FILTER_SANITIZE_STRING);
         if ( ! strlen($newSectionName) || ! $this->validateId($sectionId)) {
             return false;
         }

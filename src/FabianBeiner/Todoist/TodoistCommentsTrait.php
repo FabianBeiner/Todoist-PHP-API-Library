@@ -108,9 +108,9 @@ trait TodoistCommentsTrait
         }
 
         $data = $this->preparePostData([
-                                           $commentType . '_id' => $typeId,
-                                           'content'            => $comment,
-                                       ]);
+            $commentType . '_id' => $typeId,
+            'content'            => $comment,
+        ]);
         /** @var object $result Result of the POST request. */
         $result = $this->post('comments', $data);
 
@@ -168,7 +168,6 @@ trait TodoistCommentsTrait
      */
     public function updateComment(int $commentId, string $content): bool
     {
-        $content = filter_var($content, FILTER_SANITIZE_STRING);
         if ( ! strlen($content) || ! $this->validateId($commentId)) {
             return false;
         }
