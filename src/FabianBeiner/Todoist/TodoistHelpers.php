@@ -42,6 +42,8 @@ trait TodoistHelpers
                 throw new TodoistException('A non-premium user used a premium-only feature.');
             case 500:
                 throw new TodoistException('An Internal Server Error occurred at Todoists end.');
+            case 502:
+                throw new TodoistException('Todoist Internal Server Error occurred. Bad Gateway.');
             default:
                 return false;
         }
@@ -68,16 +70,14 @@ trait TodoistHelpers
     }
 
     /**
-     * Validates an ID to be a positive integer.
+     * Validates an ID that is not empty.
      *
-     * @param int $validateId The ID to be validated.
+     * @param string|null $validateId The ID to be validated.
      *
      * @return bool True on success, false on failure.
      */
-    final protected function validateId(int $validateId): bool
+    final protected function validateId(?string $validateId): bool
     {
-        return (bool) filter_var($validateId, FILTER_VALIDATE_INT, [
-            'options' => ['min_range' => 1],
-        ]);
+        return $validateId !== "";
     }
 }
