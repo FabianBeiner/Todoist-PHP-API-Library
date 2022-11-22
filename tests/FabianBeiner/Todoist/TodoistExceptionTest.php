@@ -6,12 +6,11 @@ namespace FabianBeiner\Todoist\Tests;
 
 use Exception;
 use FabianBeiner\Todoist\TodoistException;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class TodoistExceptionTest.
  */
-class TodoistExceptionTest extends TestCase
+class TodoistExceptionTest extends AbstractTodoistTestCase
 {
     public function testInstantiation()
     {
