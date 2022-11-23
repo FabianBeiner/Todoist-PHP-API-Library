@@ -63,10 +63,10 @@ trait TodoistHelpers
         array_walk_recursive($data, 'trim');
 
         return array_merge([
-           'headers' => [
-               'X-Request-Id' => bin2hex(random_bytes(16)),
-           ],
-       ], [RequestOptions::JSON => $data]);
+            'headers' => [
+                'X-Request-Id' => bin2hex(random_bytes(16)),
+            ],
+        ], [RequestOptions::JSON => $data]);
     }
 
     /**
