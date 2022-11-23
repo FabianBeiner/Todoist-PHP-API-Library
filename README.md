@@ -3,7 +3,7 @@
 # PHP Client for Todoist
 
 **This repository contains a PHP client library that provides a native interface to the official 
-[Todoist REST API (v1)](https://developer.todoist.com/rest/v1/).**
+[Todoist REST API (v2)](https://developer.todoist.com/rest/v2/).**
 
 ## Requirements
 
