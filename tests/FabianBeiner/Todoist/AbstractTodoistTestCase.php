@@ -36,5 +36,4 @@ abstract class AbstractTodoistTestCase extends TestCase
         self::$testName = 'PHPUnit-' . uniqid();
         self::$Todoist  = new TodoistClient(self::$apiToken);
     }
-
 }

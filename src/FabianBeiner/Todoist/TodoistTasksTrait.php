@@ -113,9 +113,9 @@ trait TodoistTasksTrait
     /**
      * Update a task.
      *
-     * @param string      $taskId             The ID of the task.
-     * @param array       $optionalParameters Possibility to add non-required parameters, see
-     *                                        https://developer.todoist.com/rest/v2#update-a-task
+     * @param string $taskId             The ID of the task.
+     * @param array  $optionalParameters Possibility to add non-required parameters, see
+     *                                   https://developer.todoist.com/rest/v2#update-a-task
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception

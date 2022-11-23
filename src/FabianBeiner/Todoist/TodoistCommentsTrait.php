@@ -50,7 +50,7 @@ trait TodoistCommentsTrait
      * Returns an array of all comments for a given task or project.
      *
      * @param string $commentType Type can be "project" or "task."
-     * @param string    $typeId      The ID of the project/task.
+     * @param string $typeId      The ID of the project/task.
      *
      * @throws \FabianBeiner\Todoist\TodoistException
      * @throws \GuzzleHttp\Exception\GuzzleException

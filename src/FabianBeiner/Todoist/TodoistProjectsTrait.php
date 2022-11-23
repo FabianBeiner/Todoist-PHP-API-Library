@@ -93,7 +93,7 @@ trait TodoistProjectsTrait
     /**
      * Updates the project for the given ID.
      *
-     * @param string $projectId      The ID of the project.
+     * @param string $projectId The ID of the project.
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
@@ -111,7 +111,7 @@ trait TodoistProjectsTrait
             'name',
             'color',
             'view_style',
-            'is_favorite'
+            'is_favorite',
         ];
         $filteredParameters = array_intersect_key($optionalParameters, array_flip($validParameters));
 

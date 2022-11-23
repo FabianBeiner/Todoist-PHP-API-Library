@@ -26,7 +26,7 @@ trait TodoistHelpers
      *
      * @throws TodoistException Exception.
      *
-     * @return array|bool       An array with or without data, false on failure.
+     * @return array|bool An array with or without data, false on failure.
      */
     final protected function handleResponse(int $statusCode, string $content)
     {
@@ -56,17 +56,17 @@ trait TodoistHelpers
      *
      * @throws \Exception Exception.
      *
-     * @return array      Trimmed array with JSON data.
+     * @return array Trimmed array with JSON data.
      */
     final protected function preparePostData(array $data = []): array
     {
         array_walk_recursive($data, 'trim');
 
         return array_merge([
-                               'headers' => [
-                                   'X-Request-Id' => bin2hex(random_bytes(16)),
-                               ],
-                           ], [RequestOptions::JSON => $data]);
+           'headers' => [
+               'X-Request-Id' => bin2hex(random_bytes(16)),
+           ],
+       ], [RequestOptions::JSON => $data]);
     }
 
     /**
@@ -78,6 +78,6 @@ trait TodoistHelpers
      */
     final protected function validateId(?string $validateId): bool
     {
-        return $validateId !== "";
+        return $validateId !== '';
     }
 }

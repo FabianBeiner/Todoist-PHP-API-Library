@@ -164,8 +164,8 @@ trait TodoistLabelsTrait
     /**
      * Renames all instances of a shared label.
      *
-     * @param string $sharedLabelName     The name of the existing label to rename.
-     * @param string $newSharedLabelName  The new name for the label.
+     * @param string $sharedLabelName    The name of the existing label to rename.
+     * @param string $newSharedLabelName The new name for the label.
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
@@ -180,7 +180,7 @@ trait TodoistLabelsTrait
 
         $postData = $this->preparePostData([
             'name'     => $sharedLabelName,
-            'new_name' => $newSharedLabelName
+            'new_name' => $newSharedLabelName,
         ]);
 
         /** @var object $result Result of the POST request. */
