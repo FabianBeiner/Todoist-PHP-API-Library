@@ -13,9 +13,9 @@ class TodoistSectionTest extends AbstractTodoistTestCase
      * @throws \FabianBeiner\Todoist\TodoistException
      * @throws \GuzzleHttp\Exception\GuzzleException
      *
-     * @return int ID of the created section.
+     * @return string ID of the created section.
      */
-    public function testCreateSection(): int
+    public function testCreateSection(): string
     {
         $allProjects   = self::$Todoist->getAllProjects();
         $createSection = self::$Todoist->createSection(self::$testName, $allProjects[0]['id']);
@@ -45,6 +45,7 @@ class TodoistSectionTest extends AbstractTodoistTestCase
     public function testGetSection($sectionId)
     {
         $section = self::$Todoist->getSection($sectionId);
+        $this->assertEquals($sectionId, $section['id']);
         $this->assertArrayHasKey('name', $section);
     }
 
@@ -57,8 +58,11 @@ class TodoistSectionTest extends AbstractTodoistTestCase
      */
     public function testUpdateSection($sectionId)
     {
-        $success = self::$Todoist->updateSection($sectionId, self::$testName . '-Renamed');
-        $this->assertTrue($success);
+        $sectionNewName = self::$testName . '-Renamed';
+        $sectionUpdated = self::$Todoist->updateSection($sectionId, $sectionNewName);
+        $this->assertArrayHasKey('name', $sectionUpdated);
+        $this->assertEquals($sectionNewName, $sectionUpdated['name']);
+        $this->assertEquals($sectionId, $sectionUpdated['id']);
     }
 
     /**
