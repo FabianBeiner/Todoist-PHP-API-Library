@@ -33,7 +33,7 @@ class TodoistClient extends GuzzleClient
     /**
      * @var string URL of the Todoist REST API.
      */
-    protected string $restApiUrl = 'https://api.todoist.com/rest/v1/';
+    protected string $restApiUrl = 'https://api.todoist.com/rest/v2/';
 
     /**
      * @var string 2-letter code that specifies the language for due_string parameters.
@@ -92,8 +92,9 @@ class TodoistClient extends GuzzleClient
             'headers'     => [
                 'Accept-Encoding' => 'gzip',
             ],
-            'http_errors' => false,
-            'timeout'     => 15,
+            'http_errors'     => false,
+            'timeout'         => 15,
+            'connect_timeout' => 30,
         ];
 
         $config                             = array_replace_recursive($defaults, $guzzleConf);

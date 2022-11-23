@@ -19,14 +19,14 @@ trait TodoistSectionsTrait
     /**
      * Returns an array of all sections.
      *
-     * @param int|null $projectId Filter sections by project ID.
+     * @param string|null $projectId Filter sections by project ID.
      *
      * @throws \FabianBeiner\Todoist\TodoistException
      * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return array|bool An array containing all user sections, or false on failure.
      */
-    public function getAllSections(int $projectId = 0)
+    public function getAllSections(?string $projectId = null)
     {
         if ( ! $this->validateId($projectId)) {
             /** @var object $result Result of the GET request. */
@@ -43,9 +43,9 @@ trait TodoistSectionsTrait
      * Creates a new section and returns it as an array.
      *
      * @param string $sectionName        The name of the section.
-     * @param int    $projectId          The project ID this section should belong to.
+     * @param string $projectId          The project ID this section should belong to.
      * @param array  $optionalParameters Optional parameters, see
-     *                                   https://developer.todoist.com/rest/v1/#create-a-new-section.
+     *                                   https://developer.todoist.com/rest/v2#create-a-new-section
      *
      * @throws \FabianBeiner\Todoist\TodoistException
      * @throws \GuzzleHttp\Exception\GuzzleException
@@ -53,14 +53,14 @@ trait TodoistSectionsTrait
      *
      * @return array|bool An array containing the values of the new section, or false on failure.
      */
-    public function createSection(string $sectionName, int $projectId, array $optionalParameters = [])
+    public function createSection(string $sectionName, string $projectId, array $optionalParameters = [])
     {
         if ( ! strlen($sectionName) || ! $this->validateId($projectId)) {
             return false;
         }
 
         // Only allow valid optional parameters.
-        $validParameters    = [
+        $validParameters = [
             'order',
         ];
         $filteredParameters = array_intersect_key($optionalParameters, array_flip($validParameters));
@@ -68,6 +68,7 @@ trait TodoistSectionsTrait
         $postData = $this->preparePostData(
             array_merge(['name' => $sectionName, 'project_id' => $projectId], $filteredParameters)
         );
+
         /** @var object $result Result of the POST request. */
         $result = $this->post('sections', $postData);
 
@@ -77,14 +78,14 @@ trait TodoistSectionsTrait
     /**
      * Returns a single section as an array.
      *
-     * @param int $sectionId The ID of the section.
+     * @param string $sectionId The ID of the section.
      *
      * @throws \FabianBeiner\Todoist\TodoistException
      * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return array|bool An array containing the section data related to the given id, or false on failure.
      */
-    public function getSection(int $sectionId)
+    public function getSection(string $sectionId)
     {
         if ( ! $this->validateId($sectionId)) {
             return false;
@@ -99,37 +100,38 @@ trait TodoistSectionsTrait
     /**
      * Updates the section for the given ID.
      *
-     * @param int    $sectionId      The ID of the section.
+     * @param string $sectionId      The ID of the section.
      * @param string $newSectionName The new name of the section.
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
      *
-     * @return bool True on success, false on failure.
+     * @return array|bool True on success, false on failure.
      */
-    public function updateSection(int $sectionId, string $newSectionName): bool
+    public function updateSection(string $sectionId, string $newSectionName)
     {
         if ( ! strlen($newSectionName) || ! $this->validateId($sectionId)) {
             return false;
         }
 
         $postData = $this->preparePostData(['name' => $newSectionName]);
+
         /** @var object $result Result of the POST request. */
         $result = $this->post('sections/' . $sectionId, $postData);
 
-        return 204 === $result->getStatusCode();
+        return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
     }
 
     /**
      * Deletes a section.
      *
-     * @param int $sectionId The ID of the section.
+     * @param string $sectionId The ID of the section.
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return bool True on success, false on failure.
      */
-    public function deleteSection(int $sectionId): bool
+    public function deleteSection(string $sectionId): bool
     {
         if ( ! $this->validateId($sectionId)) {
             return false;

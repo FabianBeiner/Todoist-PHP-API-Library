@@ -19,20 +19,25 @@ trait TodoistTasksTrait
     /**
      * Get active tasks.
      *
-     * @param array $options Possibility to add non-required parameters, see
-     *                       https://developer.todoist.com/rest/v1/#get-active-tasks.
+     * @param array $optionalParameters Possibility to add non-required parameters, see
+     *                                  https://developer.todoist.com/rest/v2#get-active-tasks
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return array|bool Returns an array containing all user active tasks, or false on failure.
      */
-    public function getAllTasks(array $options = [])
+    public function getAllTasks(array $optionalParameters = [])
     {
-        $path = 'tasks';
-        if (count($options)) {
-            $query = http_build_query($options, null, '&', PHP_QUERY_RFC3986);
-            $path  = $path . '?' . $query;
+        if (count($optionalParameters)) {
+            $query = http_build_query($optionalParameters, null, '&', PHP_QUERY_RFC3986);
+
+            /** @var object $result Result of the GET request. */
+            $result = $this->get('tasks?' . $query);
+        } else {
+            /** @var object $result Result of the GET request. */
+            $result = $this->get('tasks');
         }
-        /** @var object $result Result of the GET request. */
-        $result = $this->get($path);
 
         return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
     }
@@ -40,22 +45,45 @@ trait TodoistTasksTrait
     /**
      * Create a new task.
      *
-     * @param string $content The content of the task.
-     * @param array  $options Possibility to add non-required parameters, see
-     *                        https://developer.todoist.com/rest/v1/#create-a-new-task.
+     * @param string $content            The content of the task.
+     * @param array  $optionalParameters Possibility to add non-required parameters, see
+     *                                   https://developer.todoist.com/rest/v2#create-a-new-task
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      *
      * @return array|bool An array containing the values of the new task, or false on failure.
      */
-    public function createTask(string $content, array $options = [])
+    public function createTask(string $content, array $optionalParameters = [])
     {
         if ( ! strlen($content)) {
             return false;
         }
 
-        unset($options['content']);
-        $data = $this->preparePostData(array_merge(['content' => $content], $options));
+        // Only allow valid optional parameters.
+        $validParameters = [
+            'description',
+            'project_id',
+            'section_id',
+            'parent_id',
+            'order',
+            'labels',
+            'priority',
+            'due_string',
+            'due_date',
+            'due_datetime',
+            'due_lang',
+            'assignee_id',
+        ];
+        $filteredParameters = array_intersect_key($optionalParameters, array_flip($validParameters));
+
+        $postData = $this->preparePostData(
+            array_merge(['content' => $content], $filteredParameters)
+        );
+
         /** @var object $result Result of the POST request. */
-        $result = $this->post('tasks', $data);
+        $result = $this->post('tasks', $postData);
 
         return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
     }
@@ -63,11 +91,14 @@ trait TodoistTasksTrait
     /**
      * Get a task.
      *
-     * @param int $taskId The ID of the task.
+     * @param string $taskId The ID of the task.
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return array|bool An array containing the task data related to the given id, or false on failure.
      */
-    public function getTask(int $taskId)
+    public function getTask(string $taskId)
     {
         if ( ! $this->validateId($taskId)) {
             return false;
@@ -82,34 +113,51 @@ trait TodoistTasksTrait
     /**
      * Update a task.
      *
-     * @param int         $taskId  The ID of the task.
-     * @param string|null $content The content of the task or null.
-     * @param array       $options Possibility to add non-required parameters, see
-     *                             https://developer.todoist.com/rest/v1/#update-a-task.
+     * @param string $taskId             The ID of the task.
+     * @param array  $optionalParameters Possibility to add non-required parameters, see
+     *                                   https://developer.todoist.com/rest/v2#update-a-task
      *
-     * @return bool True on success, false on failure.
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     *
+     * @return array|bool True on success, false on failure.
      */
-    public function updateTask(int $taskId, string $content = null, array $options = []): bool
+    public function updateTask(string $taskId, array $optionalParameters = [])
     {
         if ( ! $this->validateId($taskId)) {
             return false;
         }
 
-        $data = $this->preparePostData(array_merge($options, ['content' => $content]));
+        // Only allow valid optional parameters.
+        $validParameters = [
+            'content',
+            'description',
+            'labels',
+            'priority',
+            'due_string',
+            'due_date',
+            'due_datetime',
+            'due_lang',
+            'assignee_id',
+        ];
+        $filteredParameters = array_intersect_key($optionalParameters, array_flip($validParameters));
+
+        $data = $this->preparePostData($filteredParameters);
+
         /** @var object $result Result of the POST request. */
         $result = $this->post('tasks/' . $taskId, $data);
 
-        return 204 === $result->getStatusCode();
+        return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
     }
 
     /**
      * Close a task.
      *
-     * @param int $taskId The ID of the task.
+     * @param string $taskId The ID of the task.
      *
      * @return bool True on success, false on failure.
      */
-    public function closeTask(int $taskId): bool
+    public function closeTask(string $taskId): bool
     {
         if ( ! $this->validateId($taskId)) {
             return false;
@@ -124,11 +172,11 @@ trait TodoistTasksTrait
     /**
      * Reopen a task.
      *
-     * @param int $taskId The ID of the task.
+     * @param string $taskId The ID of the task.
      *
      * @return bool True on success, false on failure.
      */
-    public function reopenTask(int $taskId): bool
+    public function reopenTask(string $taskId): bool
     {
         if ( ! $this->validateId($taskId)) {
             return false;
@@ -143,11 +191,11 @@ trait TodoistTasksTrait
     /**
      * Delete a task.
      *
-     * @param int $taskId The ID of the task.
+     * @param string $taskId The ID of the task.
      *
      * @return bool True on success, false on failure.
      */
-    public function deleteTask(int $taskId): bool
+    public function deleteTask(string $taskId): bool
     {
         if ( ! $this->validateId($taskId)) {
             return false;

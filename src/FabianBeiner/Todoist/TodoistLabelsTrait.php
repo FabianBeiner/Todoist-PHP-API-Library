@@ -37,7 +37,7 @@ trait TodoistLabelsTrait
      *
      * @param string $labelName          The name of the label.
      * @param array  $optionalParameters Optional parameters, see
-     *                                   https://developer.todoist.com/rest/v1/#create-a-new-label.
+     *                                   https://developer.todoist.com/rest/v2#create-a-new-personal-label
      *
      * @throws \FabianBeiner\Todoist\TodoistException
      * @throws \GuzzleHttp\Exception\GuzzleException
@@ -52,14 +52,15 @@ trait TodoistLabelsTrait
         }
 
         // Only allow valid optional parameters.
-        $validParameters    = [
-            'color',
-            'favorite',
+        $validParameters = [
             'order',
+            'color',
+            'is_favorite',
         ];
         $filteredParameters = array_intersect_key($optionalParameters, array_flip($validParameters));
 
         $postData = $this->preparePostData(array_merge(['name' => $labelName], $filteredParameters));
+
         /** @var object $result Result of the POST request. */
         $result = $this->post('labels', $postData);
 
@@ -69,14 +70,14 @@ trait TodoistLabelsTrait
     /**
      * Returns a label by ID.
      *
-     * @param int $labelId The ID of the label.
+     * @param string $labelId The ID of the label.
      *
      * @throws \FabianBeiner\Todoist\TodoistException
      * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return array|bool An array containing the label data related to the given id, or false on failure.
      */
-    public function getLabel(int $labelId)
+    public function getLabel(string $labelId)
     {
         if ( ! $this->validateId($labelId)) {
             return false;
@@ -91,47 +92,48 @@ trait TodoistLabelsTrait
     /**
      * Updates a label.
      *
-     * @param int    $labelId            The ID of the label.
-     * @param string $newLabelName       The new name of the label.
+     * @param string $labelId            The ID of the label.
      * @param array  $optionalParameters Optional parameters, see
-     *                                   https://developer.todoist.com/rest/v1/#update-a-label.
+     *                                   https://developer.todoist.com/rest/v2#update-a-personal-label
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
      *
-     * @return bool True on success, false on failure.
+     * @return array|bool True on success, false on failure.
      */
-    public function updateLabel(int $labelId, string $newLabelName, array $optionalParameters = []): bool
+    public function updateLabel(string $labelId, array $optionalParameters = [])
     {
-        if ( ! strlen($newLabelName) || ! $this->validateId($labelId)) {
+        if ( ! $this->validateId($labelId)) {
             return false;
         }
 
         // Only allow valid optional parameters.
-        $validParameters    = [
-            'color',
-            'favorite',
+        $validParameters = [
+            'name',
             'order',
+            'color',
+            'is_favorite',
         ];
         $filteredParameters = array_intersect_key($optionalParameters, array_flip($validParameters));
 
-        $postData = $this->preparePostData(array_merge(['name' => $newLabelName], $filteredParameters));
+        $postData = $this->preparePostData($filteredParameters);
+
         /** @var object $result Result of the POST request. */
         $result = $this->post('labels/' . $labelId, $postData);
 
-        return 204 === $result->getStatusCode();
+        return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
     }
 
     /**
      * Delete a label.
      *
-     * @param int $labelId The ID of the label.
+     * @param string $labelId The ID of the label.
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return bool True on success, false on failure.
      */
-    public function deleteLabel(int $labelId): bool
+    public function deleteLabel(string $labelId): bool
     {
         if ( ! $this->validateId($labelId)) {
             return false;
@@ -139,6 +141,74 @@ trait TodoistLabelsTrait
 
         /** @var object $result Result of the DELETE request. */
         $result = $this->delete('labels/' . $labelId);
+
+        return 204 === $result->getStatusCode();
+    }
+
+    /**
+     * Returns an array containing all shared labels.
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
+     * @return array|bool An array containing all shared labels, or false on failure.
+     */
+    public function getAllSharedLabels()
+    {
+        /** @var object $result Result of the GET request. */
+        $result = $this->get('labels/shared');
+
+        return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
+    }
+
+    /**
+     * Renames all instances of a shared label.
+     *
+     * @param string $sharedLabelName    The name of the existing label to rename.
+     * @param string $newSharedLabelName The new name for the label.
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     *
+     * @return bool True on success, false on failure.
+     */
+    public function renameSharedLabels(string $sharedLabelName, string $newSharedLabelName): bool
+    {
+        if ( ! strlen($sharedLabelName) || ! strlen($newSharedLabelName)) {
+            return false;
+        }
+
+        $postData = $this->preparePostData([
+            'name'     => $sharedLabelName,
+            'new_name' => $newSharedLabelName,
+        ]);
+
+        /** @var object $result Result of the POST request. */
+        $result = $this->post('labels/shared/rename', $postData);
+
+        return 204 === $result->getStatusCode();
+    }
+
+    /**
+     * Removes all instances of a shared label.
+     *
+     * @param string $sharedLabelName The name of the label to remove.
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     *
+     * @return bool True on success, false on failure.
+     */
+    public function removeSharedLabels(string $sharedLabelName): bool
+    {
+        if ( ! strlen($sharedLabelName)) {
+            return false;
+        }
+
+        $postData = $this->preparePostData(['name' => $sharedLabelName]);
+
+        /** @var object $result Result of the POST request. */
+        $result = $this->post('labels/shared/remove', $postData);
 
         return 204 === $result->getStatusCode();
     }
