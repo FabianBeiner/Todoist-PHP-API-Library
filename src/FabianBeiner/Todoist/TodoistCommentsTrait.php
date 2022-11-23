@@ -32,6 +32,21 @@ trait TodoistCommentsTrait
     }
 
     /**
+     * Alias for getAllComments('project', $projectId).
+     *
+     * @param string $projectId The ID of the project.
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
+     * @return array|bool An array containing all comments, or false on failure.
+     */
+    public function getAllCommentsByProject(string $projectId)
+    {
+        return $this->getAllComments('project', $projectId);
+    }
+
+    /**
      * Returns an array of all comments for a given task or project.
      *
      * @param string $commentType Type can be "project" or "task."
@@ -58,21 +73,6 @@ trait TodoistCommentsTrait
     }
 
     /**
-     * Alias for getAllComments('project', $projectId).
-     *
-     * @param string $projectId The ID of the project.
-     *
-     * @throws \FabianBeiner\Todoist\TodoistException
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     *
-     * @return array|bool An array containing all comments, or false on failure.
-     */
-    public function getAllCommentsByProject(string $projectId)
-    {
-        return $this->getAllComments('project', $projectId);
-    }
-
-    /**
      * Alias for createComment('task', $taskId, $comment).
      *
      * @param string $taskId  The ID of the task.
@@ -86,6 +86,22 @@ trait TodoistCommentsTrait
     public function createCommentForTask(string $taskId, string $comment)
     {
         return $this->createComment('task', $taskId, $comment);
+    }
+
+    /**
+     * Alias for createComment('project', $projectId, $comment).
+     *
+     * @param string $projectId The ID of the project.
+     * @param string $comment   The comment.
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
+     * @return array|bool An array containing the values of the new comment, or false on failure.
+     */
+    public function createCommentForProject(string $projectId, string $comment)
+    {
+        return $this->createComment('project', $projectId, $comment);
     }
 
     /**
@@ -117,22 +133,6 @@ trait TodoistCommentsTrait
         $result = $this->post('comments', $data);
 
         return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
-    }
-
-    /**
-     * Alias for createComment('project', $projectId, $comment).
-     *
-     * @param string $projectId The ID of the project.
-     * @param string $comment   The comment.
-     *
-     * @throws \FabianBeiner\Todoist\TodoistException
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     *
-     * @return array|bool An array containing the values of the new comment, or false on failure.
-     */
-    public function createCommentForProject(string $projectId, string $comment)
-    {
-        return $this->createComment('project', $projectId, $comment);
     }
 
     /**
