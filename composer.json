@@ -35,7 +35,7 @@
     "source": "https://github.com/FabianBeiner/Todoist-PHP-API-Library/releases"
   },
   "require": {
-    "guzzlehttp/guzzle": "^7.4",
+    "guzzlehttp/guzzle": "~6.5 || ^7.4",
     "php": ">=7.4",
     "ext-json": "*"
   },
