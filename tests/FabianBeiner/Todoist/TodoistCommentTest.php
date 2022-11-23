@@ -94,7 +94,7 @@ class TodoistCommentTest extends AbstractTodoistTestCase
     public function testUpdateComment($commentId)
     {
         $commentNewContent = self::$testName . '-Renamed';
-        $comment = self::$Todoist->updateComment($commentId, $commentNewContent);
+        $comment           = self::$Todoist->updateComment($commentId, $commentNewContent);
         $this->assertArrayHasKey('content', $comment);
         $this->assertEquals($commentNewContent, $comment['content']);
         $this->assertEquals($commentId, $comment['id']);

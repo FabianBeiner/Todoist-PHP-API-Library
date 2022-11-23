@@ -179,7 +179,7 @@ trait TodoistLabelsTrait
         }
 
         $postData = $this->preparePostData([
-            'name' => $sharedLabelName,
+            'name'     => $sharedLabelName,
             'new_name' => $newSharedLabelName
         ]);
 

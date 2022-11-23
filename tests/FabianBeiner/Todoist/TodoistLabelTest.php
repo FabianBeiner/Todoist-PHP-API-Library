@@ -59,7 +59,7 @@ class TodoistLabelTest extends AbstractTodoistTestCase
     public function testUpdateLabel($labelId)
     {
         $labelNewName = self::$testName . '-Renamed';
-        $label = self::$Todoist->updateLabel($labelId, ['name' => $labelNewName]);
+        $label        = self::$Todoist->updateLabel($labelId, ['name' => $labelNewName]);
         $this->assertArrayHasKey('name', $label);
         $this->assertEquals($labelNewName, $label['name']);
         $this->assertEquals($labelId, $label['id']);

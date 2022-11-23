@@ -64,7 +64,7 @@ class TodoistTaskTest extends AbstractTodoistTestCase
     public function testUpdateTask($taskId)
     {
         $taskNewContent = self::$testName . '-Renamed';
-        $taskUpdated = self::$Todoist->updateTask($taskId, ['content' => $taskNewContent]);
+        $taskUpdated    = self::$Todoist->updateTask($taskId, ['content' => $taskNewContent]);
         $this->assertArrayHasKey('content', $taskUpdated);
         $this->assertEquals($taskNewContent, $taskUpdated['content']);
         $this->assertEquals($taskId, $taskUpdated['id']);

@@ -92,8 +92,8 @@ class TodoistClient extends GuzzleClient
             'headers'     => [
                 'Accept-Encoding' => 'gzip',
             ],
-            'http_errors' => false,
-            'timeout'     => 15,
+            'http_errors'     => false,
+            'timeout'         => 15,
             'connect_timeout' => 30,
         ];
 

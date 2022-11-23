@@ -33,7 +33,7 @@ trait TodoistTasksTrait
             $query = http_build_query($optionalParameters, null, '&', PHP_QUERY_RFC3986);
 
             /** @var object $result Result of the GET request. */
-            $result = $this->get('tasks?'. $query);
+            $result = $this->get('tasks?' . $query);
         } else {
             /** @var object $result Result of the GET request. */
             $result = $this->get('tasks');
