@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FabianBeiner\Todoist\Tests;
+namespace FabianBeiner\Todoist\Tests\FabianBeiner\Todoist;
 
 /**
  * Class TodoistSectionTest.
@@ -27,6 +27,11 @@ class TodoistSectionTest extends AbstractTodoistTestCase
 
     /**
      * @depends testCreateSection
+     *
+     * @param $sectionId
+     *
+     * @throws \FabianBeiner\Todoist\TodoistException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function testGetAllSections($sectionId)
     {

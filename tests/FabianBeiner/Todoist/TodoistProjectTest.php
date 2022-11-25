@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FabianBeiner\Todoist\Tests;
+namespace FabianBeiner\Todoist\Tests\FabianBeiner\Todoist;
 
 /**
  * Class TodoistProjectTest.
@@ -46,7 +46,7 @@ class TodoistProjectTest extends AbstractTodoistTestCase
      *
      * @return void
      */
-    public function testGetAllProjects()
+    public function testGetAllProjects(): void
     {
         $allProjects = self::$Todoist->getAllProjects();
         $this->assertArrayHasKey('id', $allProjects[0]);
