@@ -2,13 +2,16 @@
 
 declare(strict_types=1);
 
-namespace FabianBeiner\Todoist\Tests;
+namespace FabianBeiner\Todoist\Tests\FabianBeiner\Todoist;
 
 /**
  * Class TodoistCommentTest.
  */
 class TodoistCommentTest extends AbstractTodoistTestCase
 {
+    private array $createdProjects = [];
+    private array $createdTasks    = [];
+
     /**
      * @throws \FabianBeiner\Todoist\TodoistException
      * @throws \GuzzleHttp\Exception\GuzzleException
@@ -20,6 +23,7 @@ class TodoistCommentTest extends AbstractTodoistTestCase
         $createTask = self::$Todoist->createTask(self::$testName);
         $this->assertArrayHasKey('id', $createTask);
         $this->assertEquals(self::$testName, $createTask['content']);
+        $this->createdTasks[] = $createTask['id'];
 
         $createComment = self::$Todoist->createCommentForTask($createTask['id'], self::$testName);
         $this->assertArrayHasKey('id', $createComment);
@@ -38,6 +42,7 @@ class TodoistCommentTest extends AbstractTodoistTestCase
         $createTask = self::$Todoist->createTask(self::$testName);
         $this->assertArrayHasKey('id', $createTask);
         $this->assertEquals(self::$testName, $createTask['content']);
+        $this->createdTasks[] = $createTask['id'];
 
         $createComment = self::$Todoist->createCommentForTask($createTask['id'], self::$testName);
         $this->assertArrayHasKey('id', $createComment);
@@ -58,6 +63,8 @@ class TodoistCommentTest extends AbstractTodoistTestCase
         $createProject = self::$Todoist->createProject(self::$testName);
         $this->assertArrayHasKey('id', $createProject);
         $this->assertEquals(self::$testName, $createProject['name']);
+        $this->createdProjects[] = $createProject['id'];
+
 
         $createComment = self::$Todoist->createCommentForProject($createProject['id'], self::$testName);
         $this->assertArrayHasKey('id', $createComment);
@@ -111,5 +118,24 @@ class TodoistCommentTest extends AbstractTodoistTestCase
     {
         $success = self::$Todoist->deleteComment($commentId);
         $this->assertTrue($success);
+    }
+
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
+     * @return void
+     */
+    protected function tearDown(): void
+    {
+        if (count($this->createdTasks)) {
+            foreach ($this->createdTasks as $taskId) {
+                self::$Todoist->deleteTask($taskId);
+            }
+        }
+        if (count($this->createdProjects)) {
+            foreach ($this->createdProjects as $projectId) {
+                self::$Todoist->deleteProject($projectId);
+            }
+        }
     }
 }
