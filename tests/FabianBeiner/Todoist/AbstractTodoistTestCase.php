@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FabianBeiner\Todoist\Tests;
+namespace FabianBeiner\Todoist\Tests\FabianBeiner\Todoist;
 
 use FabianBeiner\Todoist\TodoistClient;
 use PHPUnit\Framework\TestCase;
@@ -13,17 +13,17 @@ use PHPUnit\Framework\TestCase;
 abstract class AbstractTodoistTestCase extends TestCase
 {
     /**
-     * @var string API taken from env.
+     * @var ?string API taken from env.
      */
     protected static ?string $apiToken;
 
     /**
-     * @var string Exemplary name for projects, labels, and other.
+     * @var ?string Exemplary name for projects, labels, and other.
      */
     protected static ?string $testName;
 
     /**
-     * @var TodoistClient Todoist Client.
+     * @var ?TodoistClient Todoist Client.
      */
     protected static ?TodoistClient $Todoist;
 
