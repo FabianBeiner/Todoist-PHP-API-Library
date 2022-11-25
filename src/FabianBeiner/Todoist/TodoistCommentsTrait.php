@@ -121,8 +121,8 @@ trait TodoistCommentsTrait
     {
         $commentType = strtolower($commentType);
         if (('project' !== $commentType && 'task' !== $commentType) || ! $this->validateId($typeId) || ! strlen(
-                $comment
-            )) {
+            $comment
+        )) {
             return false;
         }
 
