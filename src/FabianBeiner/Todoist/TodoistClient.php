@@ -6,7 +6,7 @@
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @license https://opensource.org/licenses/MIT MIT
  *
- * @version 1.2.0 <2022-01-26>
+ * @version 2.0.0 <2022-11-25>
  *
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
@@ -89,12 +89,12 @@ class TodoistClient extends GuzzleClient
         }
 
         $defaults = [
-            'headers'     => [
+            'headers'         => [
                 'Accept-Encoding' => 'gzip',
             ],
             'http_errors'     => false,
-            'timeout'         => 15,
-            'connect_timeout' => 30,
+            'timeout'         => 15, // Time to execute something at the API.
+            'connect_timeout' => 15, // Time to connect to the API.
         ];
 
         $config                             = array_replace_recursive($defaults, $guzzleConf);
