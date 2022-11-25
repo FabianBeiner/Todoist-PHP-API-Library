@@ -17,7 +17,7 @@ CODE_OF_CONDUCT.md export-ignore
 ISSUE_TEMPLATE.md  export-ignore
 phpunit.xml.dist   export-ignore
 
-# The following settings are based on the May 10th, 2019 release of
+# The following settings are based on the July 12th, 2022 release of
 # https://github.com/alexkaratarakis/gitattributes/blob/master/Web.gitattributes
 # by Alexander Karatarakis.
 
@@ -43,7 +43,7 @@ phpunit.xml.dist   export-ignore
 *.bat      text eol=crlf
 *.cmd      text eol=crlf
 *.coffee   text
-*.css      text
+*.css      text diff=css
 *.html     text diff=html
 *.htm      text diff=html
 *.inc      text
@@ -72,20 +72,18 @@ phpunit.xml.dist   export-ignore
 *.tsx      text
 *.xhtml    text diff=html
 *.xml      text
+.husky/*   text eol=lf
 
 # Configs
-*.bowerrc         text
 *.cnf             text
 *.config          text
 *.conf            text
 *.dist            text
 *.iml             text
 *.lock            text -diff
-*.npmignore       text
+*.toml            text
 *.yaml            text
 *.yml             text
-.babelrc          text
-.browserslistrc   text
 .editorconfig     text
 .env              text
 .gitattributes    text
@@ -94,22 +92,24 @@ phpunit.xml.dist   export-ignore
 browserslist      text
 Makefile          text
 makefile          text
-package-lock.json text -diff
+package-lock.json text eol=lf -diff
+package.json      text eol=lf
+pnpm-lock.yaml    text eol=lf -diff
+yarn.lock         text -diff
 
 # Docker
-*.dockerignore text
 Dockerfile     text
 
 # Documentation
 *.ipynb      text
-*.markdown   text
-*.mdown      text
-*.md         text
+*.markdown   text diff=markdown
+*.mdown      text diff=markdown
+*.md         text diff=markdown
 *.mdtext     text
 *.mdtxt      text
-*.mdwn       text
-*.mkdn       text
-*.mkd        text
+*.mdwn       text diff=markdown
+*.mkdn       text diff=markdown
+*.mkd        text diff=markdown
 *.txt        text
 *COPYRIGHT*  text
 *README*     text
@@ -139,8 +139,7 @@ TODO         text
 *.woff  binary
 
 # Heroku
-.slugignore text
-Procfile    text
+Procfile text
 
 # Images
 *.ai   binary
@@ -166,15 +165,6 @@ Procfile    text
 *.wbmp binary
 *.webp binary
 
-# Linters
-.csslintrc    text
-.eslintrc     text
-.htmlhintrc   text
-.jscsrc       text
-.jshintignore text
-.jshintrc     text
-.stylelintrc  text
-
 # Misc
 *.log text
 *.url text
@@ -182,6 +172,7 @@ Procfile    text
 # Templates
 *.dot        text
 *.ejs        text
+*.erb        text
 *.haml       text
 *.handlebars text
 *.hbs        text
@@ -191,6 +182,7 @@ Procfile    text
 *.mustache   text
 *.njk        text
 *.phtml      text
+*.svelte     text
 *.tmpl       text
 *.tpl        text
 *.twig       text
@@ -202,6 +194,7 @@ Procfile    text
 *.as   binary
 *.asf  binary
 *.asx  binary
+*.avi  binary
 *.fla  binary
 *.flv  binary
 *.m4v  binary
@@ -214,3 +207,9 @@ Procfile    text
 *.swc  binary
 *.swf  binary
 *.webm binary
+
+# RC files (like .babelrc or .eslintrc)
+*.*rc text
+
+# Ignore files (like .npmignore or .gitignore)
+*.*ignore text
