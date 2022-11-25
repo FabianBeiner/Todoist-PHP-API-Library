@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FabianBeiner\Todoist\Tests;
+namespace FabianBeiner\Todoist\Tests\FabianBeiner\Todoist;
 
 use GuzzleHttp\Psr7\Uri;
 
