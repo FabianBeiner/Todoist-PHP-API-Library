@@ -1,9 +1,21 @@
 # Changelog
 All notable changes to this project get documented in this file. _Unless I forget it. Sorry._
 
+## 2.0.0 - 2022-11-25
+### Changed
+- Updated the library to work with v2 API. _(Thanks, @Valkyrie00)_
+- Removed PHP 7.x support (EOL), prepared for PHP 8.2.
+- Improved tests.
+- Some more code cleanups and fixes.
+
+## 1.1.1 - 2022-08-11
+### Changed
+- Updated dependencies (Guzzle & PHPUnit) to latest versions.
+- Removed deprecated FILTER_SANITIZE_STRING. _(Thanks, @dvdheiden)_
+
 ## 1.1.0 - 2021-01-09
 ### Changed
-- Updated depenencies (Guzzle & PHPUnit) to latest versions. _(Thanks, @vdhicts)_
+- Updated dependencies (Guzzle & PHPUnit) to latest versions. _(Thanks, @vdhicts)_
 
 ## 1.0.1 - 2020-11-22
 ### Changed
@@ -37,7 +49,7 @@ All notable changes to this project get documented in this file. _Unless I forge
 
 ## 0.7.0 - 2018-03-22
 ### Changed
-- Merged latest version from @balazscsaba2006.
+- Merged the latest version from @balazscsaba2006.
 - Updated some coding style settings.
 
 ## 0.6.0 - 2018-03-06
@@ -74,7 +86,7 @@ All notable changes to this project get documented in this file. _Unless I forge
 ## 0.1.0 - 2014-12-21
 ### Added
 - Started to code this library.
-- Implemented loginUser() to login a user.
+- Implemented loginUser() to log in a user.
 - Aliased loginUser() as getUserDetails(), because that’s what it does. ;)
 - Implemented testToken() to check if the internally set token is valid.
 - Implemented static getTimezones(), which returns all the different time zones Todoist supports.
