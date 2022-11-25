@@ -24,7 +24,7 @@ trait TodoistProjectsTrait
      *
      * @return array|bool An array containing all active user projects, or false on failure.
      */
-    public function getAllProjects()
+    public function getAllProjects(): bool|array
     {
         /** @var object $result Result of the GET request. */
         $result = $this->get('projects');
@@ -45,14 +45,14 @@ trait TodoistProjectsTrait
      *
      * @return array|bool An array containing the values of the new project, or false on failure.
      */
-    public function createProject(string $projectName, array $optionalParameters = [])
+    public function createProject(string $projectName, array $optionalParameters = []): bool|array
     {
         if ( ! strlen($projectName)) {
             return false;
         }
 
         // Only allow valid optional parameters.
-        $validParameters = [
+        $validParameters    = [
             'color',
             'parent_id',
             'view_style',
@@ -78,7 +78,7 @@ trait TodoistProjectsTrait
      *
      * @return array|bool An array containing the project data related to the given id, or false on failure.
      */
-    public function getProject(string $projectId)
+    public function getProject(string $projectId): bool|array
     {
         if ( ! $this->validateId($projectId)) {
             return false;
@@ -100,14 +100,14 @@ trait TodoistProjectsTrait
      *
      * @return array|bool True on success, false on failure.
      */
-    public function updateProject(string $projectId, array $optionalParameters = [])
+    public function updateProject(string $projectId, array $optionalParameters = []): bool|array
     {
         if ( ! $this->validateId($projectId)) {
             return false;
         }
 
         // Only allow valid optional parameters.
-        $validParameters = [
+        $validParameters    = [
             'name',
             'color',
             'view_style',
@@ -154,7 +154,7 @@ trait TodoistProjectsTrait
      *
      * @return array|bool An array containing all collaborators of a shared project.
      */
-    public function getAllCollaborators(string $projectId)
+    public function getAllCollaborators(string $projectId): bool|array
     {
         if ( ! $this->validateId($projectId)) {
             return false;
