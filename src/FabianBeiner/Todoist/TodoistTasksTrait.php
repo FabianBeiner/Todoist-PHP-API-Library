@@ -27,7 +27,7 @@ trait TodoistTasksTrait
      *
      * @return array|bool Returns an array containing all user active tasks, or false on failure.
      */
-    public function getAllTasks(array $optionalParameters = [])
+    public function getAllTasks(array $optionalParameters = []): bool|array
     {
         if (count($optionalParameters)) {
             $query = http_build_query($optionalParameters, null, '&', PHP_QUERY_RFC3986);
@@ -55,14 +55,14 @@ trait TodoistTasksTrait
      *
      * @return array|bool An array containing the values of the new task, or false on failure.
      */
-    public function createTask(string $content, array $optionalParameters = [])
+    public function createTask(string $content, array $optionalParameters = []): bool|array
     {
         if ( ! strlen($content)) {
             return false;
         }
 
         // Only allow valid optional parameters.
-        $validParameters = [
+        $validParameters    = [
             'description',
             'project_id',
             'section_id',
@@ -98,7 +98,7 @@ trait TodoistTasksTrait
      *
      * @return array|bool An array containing the task data related to the given id, or false on failure.
      */
-    public function getTask(string $taskId)
+    public function getTask(string $taskId): bool|array
     {
         if ( ! $this->validateId($taskId)) {
             return false;
@@ -122,14 +122,14 @@ trait TodoistTasksTrait
      *
      * @return array|bool True on success, false on failure.
      */
-    public function updateTask(string $taskId, array $optionalParameters = [])
+    public function updateTask(string $taskId, array $optionalParameters = []): bool|array
     {
         if ( ! $this->validateId($taskId)) {
             return false;
         }
 
         // Only allow valid optional parameters.
-        $validParameters = [
+        $validParameters    = [
             'content',
             'description',
             'labels',
@@ -155,6 +155,8 @@ trait TodoistTasksTrait
      *
      * @param string $taskId The ID of the task.
      *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
      * @return bool True on success, false on failure.
      */
     public function closeTask(string $taskId): bool
@@ -174,6 +176,8 @@ trait TodoistTasksTrait
      *
      * @param string $taskId The ID of the task.
      *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
      * @return bool True on success, false on failure.
      */
     public function reopenTask(string $taskId): bool
@@ -192,6 +196,8 @@ trait TodoistTasksTrait
      * Delete a task.
      *
      * @param string $taskId The ID of the task.
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      *
      * @return bool True on success, false on failure.
      */
