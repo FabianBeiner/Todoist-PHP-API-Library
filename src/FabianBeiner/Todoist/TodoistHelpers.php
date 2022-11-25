@@ -28,7 +28,7 @@ trait TodoistHelpers
      *
      * @return array|bool An array with or without data, false on failure.
      */
-    final protected function handleResponse(int $statusCode, string $content)
+    final protected function handleResponse(int $statusCode, string $content): bool|array
     {
         switch ($statusCode) {
             case 200:
@@ -43,7 +43,7 @@ trait TodoistHelpers
             case 500:
                 throw new TodoistException('An Internal Server Error occurred at Todoists end.');
             case 502:
-                throw new TodoistException('Todoist Internal Server Error occurred. Bad Gateway.');
+                throw new TodoistException('An Internal Server Error occurred at Todoists end (Bad Gateway).');
             default:
                 return false;
         }
@@ -63,10 +63,10 @@ trait TodoistHelpers
         array_walk_recursive($data, 'trim');
 
         return array_merge([
-            'headers' => [
-                'X-Request-Id' => bin2hex(random_bytes(16)),
-            ],
-        ], [RequestOptions::JSON => $data]);
+                               'headers' => [
+                                   'X-Request-Id' => bin2hex(random_bytes(16)),
+                               ],
+                           ], [RequestOptions::JSON => $data]);
     }
 
     /**
