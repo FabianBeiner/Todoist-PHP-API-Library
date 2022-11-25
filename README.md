@@ -7,8 +7,8 @@
 
 ## Requirements
 
-- [PHP](https://php.net/): >=7.4
-- [Guzzle](https://github.com/guzzle/guzzle): ^7.0.1
+- [PHP](https://php.net/): >=8.0
+- [Guzzle](https://github.com/guzzle/guzzle): ^7.5
 
 ## Installation
 
