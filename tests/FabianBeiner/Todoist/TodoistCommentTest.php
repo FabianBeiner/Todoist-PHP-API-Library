@@ -65,7 +65,6 @@ class TodoistCommentTest extends AbstractTodoistTestCase
         $this->assertEquals(self::$testName, $createProject['name']);
         $this->createdProjects[] = $createProject['id'];
 
-
         $createComment = self::$Todoist->createCommentForProject($createProject['id'], self::$testName);
         $this->assertArrayHasKey('id', $createComment);
         $this->assertArrayHasKey('content', $createComment);
