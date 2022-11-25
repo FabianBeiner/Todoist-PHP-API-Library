@@ -74,6 +74,8 @@ class TodoistTaskTest extends AbstractTodoistTestCase
      * @depends testCreateTask
      *
      * @param $taskId
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function testCloseTask($taskId)
     {
@@ -85,6 +87,8 @@ class TodoistTaskTest extends AbstractTodoistTestCase
      * @depends testCreateTask
      *
      * @param $taskId
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function testReopenTask($taskId)
     {
@@ -96,6 +100,8 @@ class TodoistTaskTest extends AbstractTodoistTestCase
      * @depends testCreateTask
      *
      * @param $taskId
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function testDeleteTask($taskId)
     {
