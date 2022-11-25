@@ -24,7 +24,7 @@ trait TodoistLabelsTrait
      *
      * @return array|bool An array containing all user labels, or false on failure.
      */
-    public function getAllLabels()
+    public function getAllLabels(): bool|array
     {
         /** @var object $result Result of the GET request. */
         $result = $this->get('labels');
@@ -45,14 +45,14 @@ trait TodoistLabelsTrait
      *
      * @return array|bool An array containing the values of the new label, or false on failure.
      */
-    public function createLabel(string $labelName, array $optionalParameters = [])
+    public function createLabel(string $labelName, array $optionalParameters = []): bool|array
     {
         if ( ! strlen($labelName)) {
             return false;
         }
 
         // Only allow valid optional parameters.
-        $validParameters = [
+        $validParameters    = [
             'order',
             'color',
             'is_favorite',
@@ -77,7 +77,7 @@ trait TodoistLabelsTrait
      *
      * @return array|bool An array containing the label data related to the given id, or false on failure.
      */
-    public function getLabel(string $labelId)
+    public function getLabel(string $labelId): bool|array
     {
         if ( ! $this->validateId($labelId)) {
             return false;
@@ -101,14 +101,14 @@ trait TodoistLabelsTrait
      *
      * @return array|bool True on success, false on failure.
      */
-    public function updateLabel(string $labelId, array $optionalParameters = [])
+    public function updateLabel(string $labelId, array $optionalParameters = []): bool|array
     {
         if ( ! $this->validateId($labelId)) {
             return false;
         }
 
         // Only allow valid optional parameters.
-        $validParameters = [
+        $validParameters    = [
             'name',
             'order',
             'color',
@@ -153,7 +153,7 @@ trait TodoistLabelsTrait
      *
      * @return array|bool An array containing all shared labels, or false on failure.
      */
-    public function getAllSharedLabels()
+    public function getAllSharedLabels(): bool|array
     {
         /** @var object $result Result of the GET request. */
         $result = $this->get('labels/shared');
