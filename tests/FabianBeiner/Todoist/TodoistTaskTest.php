@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FabianBeiner\Todoist\Tests;
+namespace FabianBeiner\Todoist\Tests\FabianBeiner\Todoist;
 
 /**
  * Class TodoistTaskTest.
@@ -48,7 +48,7 @@ class TodoistTaskTest extends AbstractTodoistTestCase
      *
      * @return void
      */
-    public function testGetAllTasks()
+    public function testGetAllTasks(): void
     {
         $allTasks = self::$Todoist->getAllTasks();
         $this->assertArrayHasKey('id', $allTasks[0]);
@@ -74,8 +74,6 @@ class TodoistTaskTest extends AbstractTodoistTestCase
      * @depends testCreateTask
      *
      * @param $taskId
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function testCloseTask($taskId)
     {
@@ -87,8 +85,6 @@ class TodoistTaskTest extends AbstractTodoistTestCase
      * @depends testCreateTask
      *
      * @param $taskId
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function testReopenTask($taskId)
     {
@@ -100,8 +96,6 @@ class TodoistTaskTest extends AbstractTodoistTestCase
      * @depends testCreateTask
      *
      * @param $taskId
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function testDeleteTask($taskId)
     {
