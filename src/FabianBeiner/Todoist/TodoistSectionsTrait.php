@@ -30,10 +30,10 @@ trait TodoistSectionsTrait
     {
         if ( ! $this->validateId($projectId)) {
             /** @var object $result Result of the GET request. */
-            $result = $this->get('sections?project_id=' . $projectId);
+            $result = $this->get('sections');
         } else {
             /** @var object $result Result of the GET request. */
-            $result = $this->get('sections');
+            $result = $this->get('sections?project_id=' . $projectId);
         }
 
         return $this->handleResponse($result->getStatusCode(), $result->getBody()->getContents());
