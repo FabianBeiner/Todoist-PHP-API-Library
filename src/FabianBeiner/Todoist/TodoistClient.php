@@ -6,7 +6,7 @@
  * @author  Fabian Beiner <fb@fabianbeiner.de>
  * @license https://opensource.org/licenses/MIT MIT
  *
- * @version 2.0.0 <2022-11-25>
+ * @version 2.0.1 <2022-12-20>
  *
  * @see     https://github.com/FabianBeiner/Todoist-PHP-API-Library
  */
