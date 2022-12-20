@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project get documented in this file. _Unless I forget it. Sorry._
 
+## 2.0.1 - 2022-12-20
+### Changed
+- Fixed `getAllSections` to use `projectId` correctly. _(Thanks, @GoldcarrotYamil)_
+
 ## 2.0.0 - 2022-11-25
 ### Changed
 - Updated the library to work with v2 API. _(Thanks, @Valkyrie00)_
